@@ -389,10 +389,10 @@
 const STORAGE_KEY = 'jsw_dashboard_data';
 
 const defaultOrgs = [
-    { id: 'policy', name: 'Policy Pro', desc: 'Healthcare Policy Management', icon: '📋', color: '#3b82f6', bg: '#dbeafe', director: 'Effy', role: 'Director of Development', avatar: 'E', avatarColor: '#3b82f6', projects: 2, active: 1, done: 1 },
-    { id: 'inventory', name: 'Inventory Pro', desc: 'Clinic Inventory Management', icon: '📦', color: '#10b981', bg: '#d1fae5', director: 'Effy', role: 'Director of Development', avatar: 'E', avatarColor: '#10b981', projects: 2, active: 1, done: 1 },
-    { id: 'payroll', name: 'Payroll Pro', desc: 'HR & Payroll System', icon: '💰', color: '#f59e0b', bg: '#fef3c7', director: 'Effy', role: 'Director of Development', avatar: 'E', avatarColor: '#f59e0b', projects: 1, active: 0, done: 0 },
-    { id: 'content', name: 'Content Studio', desc: 'Media & Marketing', icon: '🎬', color: '#ec4899', bg: '#fce7f3', director: 'Gretel', role: 'Content Director', avatar: 'G', avatarColor: '#ec4899', projects: 2, active: 1, done: 1 }
+    { id: 'policy', name: 'Policy Pro', desc: 'Healthcare Policy Management', icon: '📋', color: '#3b82f6', bg: '#dbeafe', director: 'Effy', role: 'Director of Development', avatar: 'E', avatarColor: '#3b82f6', projects: 2, active: 1, done: 1, url: 'https://jack108510.github.io/clinic-policy-manager/' },
+    { id: 'inventory', name: 'Inventory Pro', desc: 'Clinic Inventory Management', icon: '📦', color: '#10b981', bg: '#d1fae5', director: 'Effy', role: 'Director of Development', avatar: 'E', avatarColor: '#10b981', projects: 2, active: 1, done: 1, url: 'https://jack108510.github.io/clinic-inventory/' },
+    { id: 'payroll', name: 'Payroll Pro', desc: 'HR & Payroll System', icon: '💰', color: '#f59e0b', bg: '#fef3c7', director: 'Effy', role: 'Director of Development', avatar: 'E', avatarColor: '#f59e0b', projects: 1, active: 0, done: 0, url: 'https://jack108510.github.io/payroll-app/' },
+    { id: 'content', name: 'Content Studio', desc: 'Media & Marketing', icon: '🎬', color: '#ec4899', bg: '#fce7f3', director: 'Gretel', role: 'Content Director', avatar: 'G', avatarColor: '#ec4899', projects: 2, active: 1, done: 1, url: 'https://jack108510.github.io/content-studio/' }
 ];
 
 const defaultTasks = {
@@ -453,7 +453,7 @@ document.getElementById('modalOverlay').addEventListener('click', (e) => { if (e
 
 function renderOrgs() {
     const grid = document.getElementById('orgsGrid');
-    grid.innerHTML = defaultOrgs.map(org => '<div class="org-card" onclick="navigateTo(\'' + org.id + '\')"><div class="org-header"><div class="org-icon-lg ' + org.id + '">' + org.icon + '</div><div class="org-info"><h3>' + org.name + '</h3><p>' + org.desc + '</p></div></div><div class="org-director"><div class="director-avatar" style="background:' + org.avatarColor + ';">' + org.avatar + '</div><div class="director-info"><div class="director-name">' + org.director + '</div><div class="director-role">' + org.role + '</div></div></div><div class="org-stats"><div class="org-stat"><div class="org-stat-value">' + org.projects + '</div><div class="org-stat-label">Projects</div></div><div class="org-stat"><div class="org-stat-value">' + org.active + '</div><div class="org-stat-label">Active</div></div><div class="org-stat"><div class="org-stat-value">' + org.done + '</div><div class="org-stat-label">Done</div></div></div></div>').join('');
+    grid.innerHTML = defaultOrgs.map(org => '<div class="org-card" onclick="navigateTo(\'' + org.id + '\')"><div class="org-header"><div class="org-icon-lg ' + org.id + '">' + org.icon + '</div><div class="org-info"><h3>' + org.name + '</h3><p>' + org.desc + '</p></div></div><div class="org-director"><div class="director-avatar" style="background:' + org.avatarColor + ';">' + org.avatar + '</div><div class="director-info"><div class="director-name">' + org.director + '</div><div class="director-role">' + org.role + '</div></div></div><div class="org-stats"><div class="org-stat"><div class="org-stat-value">' + org.projects + '</div><div class="org-stat-label">Projects</div></div><div class="org-stat"><div class="org-stat-value">' + org.active + '</div><div class="org-stat-label">Active</div></div><div class="org-stat"><div class="org-stat-value">' + org.done + '</div><div class="org-stat-label">Done</div></div></div><div style="padding:12px 20px;border-top:1px solid var(--border);"><a href="' + org.url + '" target="_blank" onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:8px;color:var(--primary);text-decoration:none;font-size:0.85rem;font-weight:500;"><i class="fas fa-external-link-alt"></i> Open App</a></div></div>').join('');
 }
 
 function navigateTo(viewId) {
