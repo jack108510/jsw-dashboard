@@ -344,4 +344,237 @@
             <h1>Content Studio</h1>
             <p class="page-subtitle">Media & Marketing Production</p>
         </div>
-        <div class="header-actions"><span class="status-badge status-active"><i class="fas fa-circle
+        <div class="header-actions"><span class="status-badge status-active"><i class="fas fa-circle style="font-size:0.5rem;"></i> Active</span></div>
+    </div>
+    <div class="section">
+        <div class="setup-container">
+            <div class="setup-header">
+                <div class="setup-title"><i class="fas fa-cog"></i> Setup Tasks</div>
+                <div class="setup-progress">
+                    <div class="progress-bar-container"><div class="progress-bar-fill" id="contentProgress" style="width:0%;"></div></div>
+                    <span class="progress-text" id="contentProgressText">0/4 complete</span>
+                </div>
+            </div>
+            <div id="contentTasks"></div>
+        </div>
+    </div>
+</div>
+<div id="timeline" class="view">
+    <div class="page-header">
+        <div class="page-title-group">
+            <h1>Projects</h1>
+            <p class="page-subtitle">All projects across organizations</p>
+        </div>
+    </div>
+    <div class="timeline-grid" id="timelineGrid"></div>
+</div>
+<div id="team" class="view">
+    <div class="page-header">
+        <div class="page-title-group">
+            <h1>Team</h1>
+            <p class="page-subtitle">JSW Enterprises team members</p>
+        </div>
+    </div>
+    <div class="team-grid" id="teamGrid"></div>
+</div>
+</main>
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modalContent"></div>
+</div>
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Success!</span>
+</div>
+<script>
+const STORAGE_KEY = 'jsw_dashboard_data';
+
+const defaultOrgs = [
+    { id: 'policy', name: 'Policy Pro', desc: 'Healthcare Policy Management', icon: '📋', color: '#3b82f6', bg: '#dbeafe', director: 'Effy', role: 'Director of Development', avatar: 'E', avatarColor: '#3b82f6', projects: 2, active: 1, done: 1 },
+    { id: 'inventory', name: 'Inventory Pro', desc: 'Clinic Inventory Management', icon: '📦', color: '#10b981', bg: '#d1fae5', director: 'Effy', role: 'Director of Development', avatar: 'E', avatarColor: '#10b981', projects: 2, active: 1, done: 1 },
+    { id: 'payroll', name: 'Payroll Pro', desc: 'HR & Payroll System', icon: '💰', color: '#f59e0b', bg: '#fef3c7', director: 'Effy', role: 'Director of Development', avatar: 'E', avatarColor: '#f59e0b', projects: 1, active: 0, done: 0 },
+    { id: 'content', name: 'Content Studio', desc: 'Media & Marketing', icon: '🎬', color: '#ec4899', bg: '#fce7f3', director: 'Gretel', role: 'Content Director', avatar: 'G', avatarColor: '#ec4899', projects: 2, active: 1, done: 1 }
+];
+
+const defaultTasks = {
+    policy: [
+        { id: 'email', title: 'Configure Email', desc: 'Set up email integration for notifications', fields: [{label: 'Email Address', type: 'email', placeholder: 'admin@policypro.com'}, {label: 'App Password', type: 'password', placeholder: 'Enter app password'}] },
+        { id: 'github', title: 'Set up GitHub', desc: 'Connect GitHub repository', fields: [{label: 'Repository URL', type: 'url', placeholder: 'https://github.com/...'}, {label: 'Access Token', type: 'password', placeholder: 'Enter GitHub token'}] },
+        { id: 'team', title: 'Invite Team Members', desc: 'Add team members to the organization', fields: [{label: 'Team Member Email', type: 'email', placeholder: 'colleague@company.com'}, {label: 'Role', type: 'select', options: ['Developer', 'Viewer', 'Admin']}] },
+        { id: 'domain', title: 'Configure Domain', desc: 'Set up custom domain', fields: [{label: 'Domain Name', type: 'text', placeholder: 'app.yourcompany.com'}, {label: 'SSL Certificate', type: 'checkbox', label: 'Enable SSL'}] }
+    ],
+    inventory: [
+        { id: 'email', title: 'Configure Email', desc: 'Set up email for inventory alerts', fields: [{label: 'Alert Email', type: 'email', placeholder: 'alerts@inventorypro.com'}, {label: 'SMTP Server', type: 'text', placeholder: 'smtp.example.com'}] },
+        { id: 'github', title: 'Set up GitHub', desc: 'Connect GitHub repository', fields: [{label: 'Repository URL', type: 'url', placeholder: 'https://github.com/...'}, {label: 'Access Token', type: 'password', placeholder: 'Enter GitHub token'}] },
+        { id: 'team', title: 'Invite Team Members', desc: 'Add warehouse staff', fields: [{label: 'Team Member Email', type: 'email', placeholder: 'staff@company.com'}, {label: 'Role', type: 'select', options: ['Manager', 'Staff', 'Viewer']}] },
+        { id: 'suppliers', title: 'Add Suppliers', desc: 'Configure supplier database', fields: [{label: 'Supplier Name', type: 'text', placeholder: 'Supplier Co.'}, {label: 'Contact Email', type: 'email', placeholder: 'contact@supplier.com'}] }
+    ],
+    payroll: [
+        { id: 'email', title: 'Configure Email', desc: 'Set up payroll notifications', fields: [{label: 'HR Email', type: 'email', placeholder: 'hr@payrollpro.com'}, {label: 'Employee Portal URL', type: 'url', placeholder: 'https://portal.payrollpro.com'}] },
+        { id: 'github', title: 'Set up GitHub', desc: 'Connect repository for payroll modules', fields: [{label: 'Repository URL', type: 'url', placeholder: 'https://github.com/...'}, {label: 'Access Token', type: 'password', placeholder: 'Enter GitHub token'}] },
+        { id: 'team', title: 'Invite HR Team', desc: 'Add HR and payroll administrators', fields: [{label: 'Team Member Email', type: 'email', placeholder: 'hr@company.com'}, {label: 'Role', type: 'select', options: ['HR Admin', 'Payroll Manager', 'Viewer']}] },
+        { id: 'banking', title: 'Configure Banking', desc: 'Set up direct deposit', fields: [{label: 'Bank Name', type: 'text', placeholder: 'Bank of America'}, {label: 'Account Number', type: 'text', placeholder: '****1234'}] }
+    ],
+    content: [
+        { id: 'email', title: 'Configure Email', desc: 'Set up content notifications', fields: [{label: 'Editorial Email', type: 'email', placeholder: 'editor@contentstudio.com'}, {label: 'Notification Preferences', type: 'select', options: ['All', 'Important Only', 'Daily Digest']}] },
+        { id: 'github', title: 'Set up GitHub', desc: 'Connect content repository', fields: [{label: 'Repository URL', type: 'url', placeholder: 'https://github.com/...'}, {label: 'Access Token', type: 'password', placeholder: 'Enter GitHub token'}] },
+        { id: 'team', title: 'Invite Content Team', desc: 'Add editors and creators', fields: [{label: 'Team Member Email', type: 'email', placeholder: 'creator@company.com'}, {label: 'Role', type: 'select', options: ['Editor', 'Creator', 'Viewer']}] },
+        { id: 'social', title: 'Connect Social Media', desc: 'Link social media accounts', fields: [{label: 'Twitter Handle', type: 'text', placeholder: '@company'}, {label: 'LinkedIn URL', type: 'url', placeholder: 'https://linkedin.com/company/...'}] }
+    ]
+};
+
+const teamMembers = [
+    { name: 'Golias', role: 'CEO / Assistant', avatar: 'G', color: 'linear-gradient(135deg, #3b82f6, #1d4ed8)' },
+    { name: 'Effy', role: 'Director of Development', avatar: 'E', color: 'linear-gradient(135deg, #10b981, #059669)' },
+    { name: 'Gretel', role: 'Content Director', avatar: 'G', color: 'linear-gradient(135deg, #ec4899, #db2777)' },
+    { name: 'Stan', role: 'Research Director', avatar: 'S', color: 'linear-gradient(135deg, #f59e0b, #d97706)' },
+    { name: 'JR', role: 'Quality Control', avatar: 'J', color: 'linear-gradient(135deg, #6366f1, #4f46e5)' }
+];
+
+const agents = ['golias', 'effy', 'gretel', 'stan', 'jr'];
+
+function getFromStorage(key, fallback) {
+    try { const data = localStorage.getItem(key); return data ? JSON.parse(data) : fallback; } catch { return fallback; }
+}
+function saveToStorage(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch {} }
+
+function getData() { return getFromStorage(STORAGE_KEY, { activities: [], orgTasks: {} }); }
+function saveData(data) { saveToStorage(STORAGE_KEY, data); }
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMessage').textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function showModal(content) { document.getElementById('modalContent').innerHTML = content; document.getElementById('modalOverlay').classList.add('active'); }
+function hideModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+document.getElementById('modalOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) hideModal(); });
+
+function renderOrgs() {
+    const grid = document.getElementById('orgsGrid');
+    grid.innerHTML = defaultOrgs.map(org => '<div class="org-card" onclick="navigateTo(\'' + org.id + '\')"><div class="org-header"><div class="org-icon-lg ' + org.id + '">' + org.icon + '</div><div class="org-info"><h3>' + org.name + '</h3><p>' + org.desc + '</p></div></div><div class="org-director"><div class="director-avatar" style="background:' + org.avatarColor + ';">' + org.avatar + '</div><div class="director-info"><div class="director-name">' + org.director + '</div><div class="director-role">' + org.role + '</div></div></div><div class="org-stats"><div class="org-stat"><div class="org-stat-value">' + org.projects + '</div><div class="org-stat-label">Projects</div></div><div class="org-stat"><div class="org-stat-value">' + org.active + '</div><div class="org-stat-label">Active</div></div><div class="org-stat"><div class="org-stat-value">' + org.done + '</div><div class="org-stat-label">Done</div></div></div></div>').join('');
+}
+
+function navigateTo(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    document.querySelector('[data-view="' + viewId + '"]').classList.add('active');
+    if (viewId === 'policy') renderTasks('policy');
+    if (viewId === 'inventory') renderTasks('inventory');
+    if (viewId === 'payroll') renderTasks('payroll');
+    if (viewId === 'content') renderTasks('content');
+    if (viewId === 'timeline') renderTimeline();
+    if (viewId === 'team') renderTeam();
+}
+
+function renderTasks(orgId) {
+    const tasks = defaultTasks[orgId];
+    const data = getData();
+    const completed = data.orgTasks[orgId] || [];
+    const container = document.getElementById(orgId + 'Tasks');
+    container.innerHTML = tasks.map(task => {
+        const isChecked = completed.includes(task.id) ? 'checked' : '';
+        const titleClass = completed.includes(task.id) ? 'completed' : '';
+        const fieldsHtml = task.fields.map(f => {
+            if (f.type === 'select') return '<div class="field-group"><label>' + f.label + '</label><select><option>' + f.options.join('</option><option>') + '</option></select></div>';
+            if (f.type === 'checkbox') return '<div class="field-group"><label>' + f.label + '</label><input type="checkbox"></div>';
+            return '<div class="field-group"><label>' + f.label + '</label><input type="' + f.type + '" placeholder="' + (f.placeholder || '') + '"></div>';
+        }).join('');
+        return '<div class="setup-task"><div class="task-checkbox ' + isChecked + '" onclick="toggleTask(\'' + orgId + '\',\'' + task.id + '\')"><i class="fas fa-check"></i></div><div class="task-content"><div class="task-title ' + titleClass + '">' + task.title + '</div><div class="task-desc">' + task.desc + '</div></div><div class="task-action"><button onclick="showTaskFields(\'' + orgId + '\',\'' + task.id + '\')">Configure</button></div></div><div class="task-fields" id="' + orgId + '-' + task.id + '"><div class="field-row">' + fieldsHtml + '</div><button class="btn btn-primary" style="margin-top:12px;padding:8px 16px;font-size:0.8rem;" onclick="showToast(\'Settings saved!\')">Save Settings</button></div>';
+    }).join('');
+    const progress = (completed.length / tasks.length) * 100;
+    document.getElementById(orgId + 'Progress').style.width = progress + '%';
+    document.getElementById(orgId + 'ProgressText').textContent = completed.length + '/' + tasks.length + ' complete';
+}
+
+function toggleTask(orgId, taskId) {
+    const data = getData();
+    if (!data.orgTasks[orgId]) data.orgTasks[orgId] = [];
+    const idx = data.orgTasks[orgId].indexOf(taskId);
+    if (idx > -1) data.orgTasks[orgId].splice(idx, 1);
+    else data.orgTasks[orgId].push(taskId);
+    saveData(data);
+    renderTasks(orgId);
+    showToast('Task updated!');
+}
+
+function showTaskFields(orgId, taskId) {
+    document.getElementById(orgId + '-' + taskId).classList.toggle('show');
+}
+
+function renderTimeline() {
+    const data = getData();
+    const activities = data.activities || [];
+    const completed = activities.filter(a => a.status === 'completed');
+    const inProgress = activities.filter(a => a.status === 'in-progress');
+    const pending = activities.filter(a => a.status === 'pending');
+    const renderItems = items => items.length ? items.map(a => '<div class="timeline-card"><div class="timeline-card-title">' + a.title + '</div><div class="timeline-card-meta"><i class="fas fa-user"></i> ' + a.agent + (a.date ? ' - ' + a.date : '') + '</div></div>').join('') : '<p style="color:var(--gray-500);text-align:center;padding:20px;">No activities yet</p>';
+    document.getElementById('timelineGrid').innerHTML = '<div class="timeline-column"><div class="timeline-header completed"><i class="fas fa-check-circle"></i> Completed</div><div class="timeline-body">' + renderItems(completed) + '</div></div><div class="timeline-column"><div class="timeline-header in-progress"><i class="fas fa-spinner"></i> In Progress</div><div class="timeline-body">' + renderItems(inProgress) + '</div></div><div class="timeline-column"><div class="timeline-header pending"><i class="fas fa-hourglass-half"></i> Pending</div><div class="timeline-body">' + renderItems(pending) + '</div></div>';
+}
+
+function renderTeam() {
+    const grid = document.getElementById('teamGrid');
+    grid.innerHTML = teamMembers.map(m => '<div class="team-card"><div class="team-avatar" style="background:' + m.color + '">' + m.avatar + '</div><div class="team-name">' + m.name + '</div><div class="team-role">' + m.role + '</div></div>').join('');
+}
+
+function renderActivities(containerId, limit) {
+    const data = getData();
+    let activities = data.activities || [];
+    if (limit) activities = activities.slice(0, limit);
+    const iconColors = { 'Golias': '#3b82f6', 'Effy': '#10b981', 'Gretel': '#ec4899', 'Stan': '#f59e0b', 'JR': '#6366f1' };
+    const html = activities.length ? activities.map(a => '<div class="activity-item"><div class="activity-icon" style="background:' + (iconColors[a.agent] || '#6b7280') + ';color:white;">' + a.agent.charAt(0) + '</div><div class="activity-content"><div class="activity-text"><strong>' + a.agent + '</strong> - ' + a.title + '</div><div class="activity-meta"><i class="fas fa-calendar"></i> ' + (a.date || 'Today') + '</div></div></div>').join('') : '<div style="padding:24px;text-align:center;color:var(--gray-500);">No activities yet. Click "Log Activity" to add one.</div>';
+    document.getElementById(containerId).innerHTML = html;
+    document.getElementById('activityCount').textContent = (data.activities || []).length + ' activities';
+}
+
+function addActivity(agent, title, status) {
+    const data = getData();
+    data.activities.unshift({ agent, title, date: new Date().toISOString().split('T')[0], status });
+    saveData(data);
+    renderActivities('fullActivityList');
+    renderActivities('recentActivity', 5);
+    renderTimeline();
+}
+
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const viewId = item.getAttribute('data-view');
+        if (viewId) navigateTo(viewId);
+    });
+});
+
+document.querySelectorAll('[data-view]').forEach(btn => {
+    btn.addEventListener('click', () => navigateTo(btn.getAttribute('data-view')));
+});
+
+document.getElementById('btnAddActivity').addEventListener('click', () => {
+    showModal('<h2><i class="fas fa-plus-circle"></i> Log Activity</h2><div class="form-group"><label>Agent</label><select id="activityAgent"><option value="">Select agent...</option>' + agents.map(a => '<option value="' + a.charAt(0).toUpperCase() + a.slice(1) + '">' + a.charAt(0).toUpperCase() + a.slice(1) + '</option>').join('') + '</select></div><div class="form-group"><label>Activity</label><textarea id="activityText" rows="3" placeholder="What happened?"></textarea></div><div class="modal-actions"><button class="modal-btn secondary" onclick="hideModal()">Cancel</button><button class="modal-btn primary" id="saveActivity">Save Activity</button></div>');
+    document.getElementById('saveActivity').addEventListener('click', () => {
+        const agent = document.getElementById('activityAgent').value;
+        const text = document.getElementById('activityText').value;
+        if (!agent || !text) { showToast('Please fill in all fields'); return; }
+        addActivity(agent, text, 'completed');
+        hideModal();
+        showToast('Activity added successfully!');
+    });
+});
+
+document.getElementById('btnLogActivity2')?.addEventListener('click', () => document.getElementById('btnAddActivity').click());
+
+document.getElementById('btnRefresh').addEventListener('click', () => {
+    renderOrgs();
+    renderActivities('recentActivity', 5);
+    renderActivities('fullActivityList');
+    renderTeam();
+    showToast('Dashboard refreshed!');
+});
+
+renderOrgs();
+renderActivities('recentActivity', 5);
+renderActivities('fullActivityList');
+renderTeam();
+</script>
+</body>
+</html>
