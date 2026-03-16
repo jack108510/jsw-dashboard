@@ -507,14 +507,16 @@ function renderDashboard() {
     companyNavItem.innerHTML = `<div class="badge" style="background:${company.color}22;color:${company.color}">${company.emoji}</div><span>${company.name}</span>`;
     companyNav.appendChild(companyNavItem);
     
-    // Create company section in overview
+    // Create company section in overview - make the whole card clickable
     const companySection = document.createElement('div');
     companySection.className = 'company-section';
+    companySection.style.cursor = 'pointer';
+    companySection.onclick = () => navigateTo(`company-${company.id}`);
     companySection.innerHTML = `
       <div class="company-header">
         <div class="company-badge" style="background:${company.color}22">${company.emoji}</div>
         <div class="company-name">${company.name}</div>
-        <div class="company-count">${company.projects.length} project${company.projects.length !== 1 ? 's' : ''}</div>
+        <div class="company-count">${company.projects.length} project${company.projects.length !== 1 ? 's' : ''} <i class="fas fa-chevron-right" style="font-size:0.8rem;margin-left:8px;"></i></div>
       </div>
       <div class="pGrid"></div>
     `;
@@ -565,13 +567,16 @@ function renderDashboard() {
     companyView.className = 'view';
     companyView.innerHTML = `
       <div class="header">
-        <div><h1>${company.emoji} ${company.name}</h1><div class="header-s">Projects</div></div>
-        <button class="btn btnPri" onclick="openModal()"><i class="fas fa-plus"></i> Add Project</button>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <button class="btn" onclick="navigateTo('overview')" style="padding:10px 16px;"><i class="fas fa-arrow-left"></i> Back</button>
+          <div><h1>${company.emoji} ${company.name}</h1><div class="header-s">${company.projects.length} Projects</div></div>
+        </div>
       </div>
       <div class="stats">
-        <div class="stat statTot"><div class="statIcon"><i class="fas fa-boxes"></i></div><div class="statVal">${company.projects.length}</div><div class="statLab">Projects</div></div>
+        <div class="stat statTot"><div class="statIcon"><i class="fas fa-boxes"></i></div><div class="statVal">${company.projects.length}</div><div class="statLab">Total</div></div>
         <div class="stat statAct"><div class="statIcon"><i class="fas fa-rocket"></i></div><div class="statVal">${company.projects.filter(p => p.status === 'Live').length}</div><div class="statLab">Live</div></div>
         <div class="stat statPen"><div class="statIcon"><i class="fas fa-code"></i></div><div class="statVal">${company.projects.filter(p => p.status === 'Dev').length}</div><div class="statLab">Dev</div></div>
+        <div class="stat statCom"><div class="statIcon"><i class="fas fa-clock"></i></div><div class="statVal">${company.projects.filter(p => p.status === 'Planning').length}</div><div class="statLab">Planning</div></div>
       </div>
       <div class="pGrid"></div>
     `;
