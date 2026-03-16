@@ -24,101 +24,96 @@
         body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); min-height: 100vh; }
         
         /* Top Bar */
-        .topbar { height: 64px; background: var(--dark-mid); border-bottom: 1px solid var(--dark-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+        .topbar { height: 72px; background: var(--dark-mid); border-bottom: 1px solid var(--dark-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+        
         .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--success)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--success)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
         .logo-text { font-weight: 700; font-size: 1.1rem; }
         .logo-text span { color: var(--primary); }
         
-        .topbar-center { display: flex; gap: 8px; }
-        .tab-btn { padding: 8px 20px; border-radius: 8px; background: transparent; border: none; color: var(--gray); font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
-        .tab-btn:hover { background: var(--dark-light); color: var(--white); }
-        .tab-btn.active { background: var(--primary); color: var(--white); }
+        /* Company Tabs */
+        .company-tabs { display: flex; gap: 4px; }
+        .company-tab { padding: 10px 20px; border-radius: 8px; background: transparent; border: none; color: var(--gray); font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .company-tab:hover { background: var(--dark-light); color: var(--white); }
+        .company-tab.active { background: var(--dark-light); color: var(--white); }
+        .company-tab .dot { width: 8px; height: 8px; border-radius: 50%; }
         
         .topbar-right { display: flex; align-items: center; gap: 16px; }
         .status-badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(16, 185, 129, 0.15); border-radius: 20px; color: var(--success); font-size: 0.8rem; font-weight: 600; }
         .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
         
         /* Main Content */
-        .main { padding-top: 64px; min-height: 100vh; }
+        .main { padding-top: 72px; min-height: 100vh; }
         .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
         
-        /* Overview Tab */
-        .overview-tab { display: none; }
-        .overview-tab.active { display: block; }
+        /* Company View */
+        .company-view { display: none; }
+        .company-view.active { display: block; }
         
         /* Stats Row */
         .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
         .stat-card { background: var(--dark-mid); border-radius: 12px; padding: 20px; border: 1px solid var(--dark-light); }
-        .stat-card .label { font-size: 0.8rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .stat-card .label { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
         .stat-card .value { font-size: 2rem; font-weight: 700; }
         .stat-card .value.primary { color: var(--primary); }
         .stat-card .value.success { color: var(--success); }
         .stat-card .value.warning { color: var(--warning); }
+        .stat-card .value.danger { color: var(--danger); }
         
-        /* Companies Grid */
-        .section-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .companies-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+        /* Sections */
+        .section { margin-bottom: 32px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .section-title { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         
-        .company-card { background: var(--dark-mid); border-radius: 16px; border: 1px solid var(--dark-light); overflow: hidden; }
-        .company-header { padding: 20px; background: linear-gradient(135deg, var(--dark-light), transparent); border-bottom: 1px solid var(--dark-light); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .company-header:hover { background: var(--dark-light); }
-        .company-info { display: flex; align-items: center; gap: 12px; }
-        .company-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
-        .company-name { font-weight: 600; font-size: 1.1rem; }
-        .company-count { font-size: 0.85rem; color: var(--gray); }
-        .company-arrow { color: var(--gray); transition: 0.2s; }
-        .company-card.expanded .company-arrow { transform: rotate(180deg); }
+        /* Task Cards */
+        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+        .task-card { background: var(--dark-mid); border-radius: 12px; padding: 20px; border: 1px solid var(--dark-light); }
+        .task-card h4 { font-size: 0.95rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .task-card p { font-size: 0.85rem; color: var(--gray); margin-bottom: 12px; }
+        .task-meta { display: flex; gap: 16px; font-size: 0.75rem; color: var(--gray); }
+        .task-meta span { display: flex; align-items: center; gap: 4px; }
         
-        .company-projects { display: none; padding: 16px; background: var(--dark); }
-        .company-card.expanded .company-projects { display: block; }
+        .priority-high { border-left: 3px solid var(--danger); }
+        .priority-medium { border-left: 3px solid var(--warning); }
+        .priority-low { border-left: 3px solid var(--success); }
         
-        .project-list { display: flex; flex-direction: column; gap: 12px; }
-        .project-item { background: var(--dark-mid); border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
-        .project-info { display: flex; align-items: center; gap: 12px; flex: 1; }
-        .project-icon { width: 36px; height: 36px; background: var(--dark-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-        .project-name { font-weight: 500; }
-        .project-desc { font-size: 0.8rem; color: var(--gray); }
-        .project-status { padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
-        .status-live { background: rgba(16, 185, 129, 0.15); color: var(--success); }
-        .status-dev { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
-        .status-planning { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
-        .project-link { padding: 8px 16px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 0.85rem; transition: 0.2s; }
-        .project-link:hover { background: var(--primary-dark); }
+        .status-badge-item { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+        .status-done { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-progress { background: rgba(14, 165, 233, 0.2); color: var(--primary); }
+        .status-todo { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .status-blocked { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
         
-        /* Activity Tab */
-        .activity-tab { display: none; }
-        .activity-tab.active { display: block; }
+        /* Actions List */
+        .action-list { display: flex; flex-direction: column; gap: 12px; }
+        .action-item { background: var(--dark-mid); border-radius: 10px; padding: 16px; border: 1px solid var(--dark-light); display: flex; justify-content: space-between; align-items: center; }
+        .action-info h4 { font-size: 0.95rem; margin-bottom: 4px; }
+        .action-info p { font-size: 0.8rem; color: var(--gray); }
+        .action-btn { padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 0.85rem; }
+        .action-btn:hover { background: var(--primary-dark); }
         
-        .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
-        .activity-card { background: var(--dark-mid); border-radius: 12px; padding: 20px; border: 1px solid var(--dark-light); }
-        .activity-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .activity-avatar { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .activity-name { font-weight: 600; }
-        .activity-role { font-size: 0.8rem; color: var(--gray); }
-        .activity-status { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--success); margin-left: auto; }
-        .activity-task { background: var(--dark); border-radius: 8px; padding: 12px; font-size: 0.9rem; color: var(--gray); }
-        .activity-task strong { color: var(--primary); }
+        /* Project Links */
+        .project-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+        .project-link-card { background: var(--dark-mid); border-radius: 10px; padding: 16px; border: 1px solid var(--dark-light); display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: var(--white); transition: 0.2s; }
+        .project-link-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .project-link-info { display: flex; align-items: center; gap: 12px; }
+        .project-link-icon { width: 36px; height: 36px; background: var(--dark-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .project-link-name { font-weight: 500; }
+        .project-link-status { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.2); color: var(--success); }
         
-        /* Org Chart Tab */
-        .org-tab { display: none; }
-        .org-tab.active { display: block; }
+        /* Team Activity */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+        .team-card { background: var(--dark-mid); border-radius: 12px; padding: 20px; border: 1px solid var(--dark-light); }
+        .team-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .team-avatar { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .team-name { font-weight: 600; }
+        .team-role { font-size: 0.8rem; color: var(--gray); }
+        .team-status { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--success); }
+        .team-task { background: var(--dark); border-radius: 8px; padding: 12px; font-size: 0.85rem; color: var(--gray); }
+        .team-task strong { color: var(--primary); }
         
-        .org-chart { display: flex; flex-direction: column; align-items: center; gap: 0; }
-        .org-level { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
-        .org-node { background: var(--dark-mid); border-radius: 16px; padding: 24px; text-align: center; min-width: 180px; border: 2px solid var(--dark-light); }
-        .org-node.ceo { border-color: var(--primary); background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), var(--dark-mid)); }
-        .org-node.executive { border-color: var(--success); }
-        .org-node.director { border-color: var(--warning); }
-        .org-avatar { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; background: var(--dark-light); }
-        .org-name { font-weight: 600; margin-bottom: 4px; }
-        .org-title { font-size: 0.85rem; color: var(--gray); }
-        .org-connector { width: 2px; height: 32px; background: var(--dark-light); margin: 0 auto; }
-        
-        /* Settings Tab */
-        .settings-tab { display: none; }
-        .settings-tab.active { display: block; }
-        
+        /* Settings Panel */
+        .settings-panel { display: none; }
+        .settings-panel.active { display: block; }
         .settings-card { background: var(--dark-mid); border-radius: 12px; padding: 24px; margin-bottom: 20px; border: 1px solid var(--dark-light); }
         .settings-card h3 { margin-bottom: 16px; font-size: 1rem; }
         .form-group { margin-bottom: 16px; }
@@ -130,8 +125,8 @@
         
         @media (max-width: 768px) {
             .stats-row { grid-template-columns: repeat(2, 1fr); }
-            .companies-grid { grid-template-columns: 1fr; }
-            .topbar-center { display: none; }
+            .company-tabs { display: none; }
+            .task-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -143,14 +138,14 @@
             <div class="logo-text">Wilde <span>Automations</span></div>
         </div>
         
-        <div class="topbar-center">
-            <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
-            <button class="tab-btn" onclick="switchTab('activity')">Live Activity</button>
-            <button class="tab-btn" onclick="switchTab('org')">Org Chart</button>
-            <button class="tab-btn" onclick="switchTab('settings')">Settings</button>
+        <div class="company-tabs" id="companyTabs">
+            <!-- Generated by JS -->
         </div>
         
         <div class="topbar-right">
+            <button class="company-tab" onclick="showSettings()">
+                <i class="fas fa-cog"></i> Settings
+            </button>
             <div class="status-badge">
                 <span class="status-dot"></span>
                 All Systems Active
@@ -161,94 +156,14 @@
     <div class="main">
         <div class="container">
             
-            <!-- Overview Tab -->
-            <div id="overview" class="overview-tab active">
-                <!-- Stats -->
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <div class="label">Companies</div>
-                        <div class="value" id="statCompanies">2</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="label">Total Projects</div>
-                        <div class="value primary" id="statProjects">9</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="label">Live</div>
-                        <div class="value success" id="statLive">9</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="label">In Development</div>
-                        <div class="value warning" id="statDev">0</div>
-                    </div>
-                </div>
-                
-                <!-- Companies -->
-                <div class="section-title"><i class="fas fa-building"></i> Companies</div>
-                <div class="companies-grid" id="companiesGrid"></div>
+            <!-- Company Views -->
+            <div id="companyViews">
+                <!-- Generated by JS -->
             </div>
             
-            <!-- Activity Tab -->
-            <div id="activity" class="activity-tab">
-                <div class="section-title"><i class="fas fa-heartbeat"></i> Live Activity</div>
-                <div class="activity-grid" id="activityGrid"></div>
-            </div>
-            
-            <!-- Org Chart Tab -->
-            <div id="org" class="org-tab">
-                <div class="section-title"><i class="fas fa-sitemap"></i> Organization Chart</div>
-                <div class="org-chart">
-                    <!-- President -->
-                    <div class="org-level">
-                        <div class="org-node ceo">
-                            <div class="org-avatar">👑</div>
-                            <div class="org-name">Jack Lee</div>
-                            <div class="org-title">President</div>
-                        </div>
-                    </div>
-                    
-                    <div class="org-connector"></div>
-                    
-                    <!-- Chief of Staff -->
-                    <div class="org-level">
-                        <div class="org-node executive">
-                            <div class="org-avatar">🛡️</div>
-                            <div class="org-name">Golias</div>
-                            <div class="org-title">Chief of Staff</div>
-                        </div>
-                    </div>
-                    
-                    <div class="org-connector"></div>
-                    
-                    <!-- Directors -->
-                    <div class="org-level">
-                        <div class="org-node director">
-                            <div class="org-avatar">💻</div>
-                            <div class="org-name">Effy</div>
-                            <div class="org-title">Director of Development</div>
-                        </div>
-                        <div class="org-node director">
-                            <div class="org-avatar">🎨</div>
-                            <div class="org-name">Gretel</div>
-                            <div class="org-title">Content Director</div>
-                        </div>
-                        <div class="org-node director">
-                            <div class="org-avatar">🔍</div>
-                            <div class="org-name">Stan</div>
-                            <div class="org-title">Research Director</div>
-                        </div>
-                        <div class="org-node director">
-                            <div class="org-avatar">✅</div>
-                            <div class="org-name">JR</div>
-                            <div class="org-title">Quality Assurance</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Settings Tab -->
-            <div id="settings" class="settings-tab">
-                <div class="section-title"><i class="fas fa-cog"></i> Settings</div>
+            <!-- Settings Panel -->
+            <div id="settings" class="settings-panel">
+                <div class="section-title" style="margin-bottom: 24px;"><i class="fas fa-cog"></i> Settings</div>
                 
                 <div class="settings-card">
                     <h3>Add New Project</h3>
@@ -263,14 +178,6 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Status</label>
-                        <select id="newProjectStatus">
-                            <option value="Live">Live</option>
-                            <option value="Dev">In Development</option>
-                            <option value="Planning">Planning</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label>Description</label>
                         <textarea id="newProjectDesc" rows="2" placeholder="Brief description..."></textarea>
                     </div>
@@ -278,7 +185,7 @@
                         <label>App URL</label>
                         <input type="url" id="newProjectUrl" placeholder="https://...">
                     </div>
-                    <button class="project-link" onclick="addProject()">Add Project</button>
+                    <button class="action-btn" onclick="addProject()">Add Project</button>
                 </div>
                 
                 <div class="settings-card">
@@ -287,16 +194,13 @@
                         <label>Company Name</label>
                         <input type="text" id="newCompanyName" placeholder="e.g., New Company">
                     </div>
-                    <div class="form-group">
-                        <label>Color</label>
-                        <input type="color" id="newCompanyColor" value="#0ea5e9">
-                    </div>
-                    <button class="project-link" onclick="addCompany()">Add Company</button>
+                    <button class="action-btn" onclick="addCompany()">Add Company</button>
                 </div>
                 
                 <div class="settings-card">
-                    <h3>Data Management</h3>
-                    <button class="project-link" style="background: var(--danger);" onclick="resetData()">Reset to Defaults</button>
+                    <h3>Reset Data</h3>
+                    <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 12px;">Reset all data to default values.</p>
+                    <button class="action-btn" style="background: var(--danger);" onclick="resetData()">Reset to Defaults</button>
                 </div>
             </div>
             
@@ -304,9 +208,9 @@
     </div>
     
     <script>
-        const STORAGE_KEY = 'wilde-automations-data';
+        const STORAGE_KEY = 'wilde_mission_control';
         
-        // Default data
+        // Default Data
         const defaultData = {
             companies: [
                 {
@@ -319,6 +223,22 @@
                         { id: 'pricing', name: 'Price Management', desc: 'Pricing optimization dashboard', status: 'Live', url: 'https://jack108510.github.io/jsw-clinic-iq/' },
                         { id: 'payroll', name: 'Payroll App', desc: 'HR & Payroll management', status: 'Live', url: 'https://jack108510.github.io/jsw-payroll-pro/' },
                         { id: 'client', name: 'Client Hub', desc: 'Client communication', status: 'Live', url: 'https://jack108510.github.io/jsw-client-hub/' }
+                    ],
+                    completed: [
+                        { title: 'Dashboard v2 complete', date: '2026-03-16' },
+                        { title: 'Inventory Tool launched', date: '2026-03-15' },
+                        { title: 'Client Hub deployed', date: '2026-03-14' }
+                    ],
+                    inProgress: [
+                        { title: 'Adding localStorage persistence', priority: 'medium' }
+                    ],
+                    todo: [
+                        { title: 'Set up AWS server for n8n', priority: 'high' },
+                        { title: 'Add more Clinic IQ features', priority: 'medium' }
+                    ],
+                    actions: [
+                        { title: 'Provide AWS credentials', desc: 'Give SSH access for server setup', priority: 'high' },
+                        { title: 'Review new features', desc: 'Test and approve new functionality', priority: 'medium' }
                     ]
                 },
                 {
@@ -330,12 +250,34 @@
                         { id: 'ai-recep', name: 'AI Receptionist', desc: '24/7 AI phone answering', status: 'Live', url: 'https://jack108510.github.io/jsw-ai-receptionist/' },
                         { id: 'n8n', name: 'n8n Automation', desc: 'Workflow automation services', status: 'Live', url: 'https://jack108510.github.io/jsw-n8n-automation/' },
                         { id: 'policy', name: 'Policy Pro', desc: 'Policy management', status: 'Live', url: 'https://jack108510.github.io/clinic-policy-manager/' }
+                    ],
+                    completed: [
+                        { title: 'Wilde Automations website launched', date: '2026-03-16' },
+                        { title: 'Policy Pro landing page complete', date: '2026-03-16' },
+                        { title: 'Business plan created', date: '2026-03-16' }
+                    ],
+                    inProgress: [
+                        { title: 'Setting up client outreach', priority: 'medium' }
+                    ],
+                    todo: [
+                        { title: 'Find first automation clients', priority: 'high' },
+                        { title: 'Set up Discord integration', priority: 'medium' }
+                    ],
+                    actions: [
+                        { title: 'Provide Discord channel info', desc: 'Server ID or webhook URL', priority: 'medium' },
+                        { title: 'Approve outreach emails', desc: 'Review and approve email templates', priority: 'low' }
                     ]
                 }
+            ],
+            team: [
+                { name: 'Golias', role: 'Chief of Staff', icon: '🛡️', color: '#10b981', task: 'Managing operations and coordinating team' },
+                { name: 'Effy', role: 'Director of Development', icon: '💻', color: '#0ea5e9', task: 'Building and improving web applications' },
+                { name: 'Gretel', role: 'Content Director', icon: '🎨', color: '#ec4899', task: 'Designing and creating content' },
+                { name: 'Stan', role: 'Research Director', icon: '🔍', color: '#f59e0b', task: 'Researching opportunities and insights' },
+                { name: 'JR', role: 'Quality Assurance', icon: '✅', color: '#8b5cf6', task: 'Testing and ensuring quality' }
             ]
         };
         
-        // Load data from localStorage or use defaults
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
@@ -348,93 +290,33 @@
             return JSON.parse(JSON.stringify(defaultData));
         }
         
-        // Save data to localStorage
         function saveData() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
         
-        // Current data
+        function resetData() {
+            if (confirm('Reset all data to defaults?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+        
         let data = loadData();
+        let currentCompany = 'clinic-iq';
         
-        const activity = [
-            { name: 'Golias', role: 'Chief of Staff', icon: '🛡️', color: '#10b981', task: 'Managing operations and coordinating team' },
-            { name: 'Effy', role: 'Director of Development', icon: '💻', color: '#0ea5e9', task: 'Building and improving web applications' },
-            { name: 'Gretel', role: 'Content Director', icon: '🎨', color: '#ec4899', task: 'Designing and creating content' },
-            { name: 'Stan', role: 'Research Director', icon: '🔍', color: '#f59e0b', task: 'Researching opportunities and insights' },
-            { name: 'JR', role: 'Quality Assurance', icon: '✅', color: '#8b5cf6', task: 'Testing and ensuring quality' }
-        ];
+        function switchCompany(companyId) {
+            currentCompany = companyId;
+            document.querySelectorAll('.company-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-company="${companyId}"]`).classList.add('active');
+            document.querySelectorAll('.company-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`company-${companyId}`).classList.add('active');
+            document.getElementById('settings').classList.remove('active');
+        }
         
-        // Render
-        function render() {
-            // Stats
-            let total = 0, live = 0, dev = 0;
-            data.companies.forEach(c => {
-                c.projects.forEach(p => {
-                    total++;
-                    if (p.status === 'Live') live++;
-                    else dev++;
-                });
-            });
-            document.getElementById('statCompanies').textContent = data.companies.length;
-            document.getElementById('statProjects').textContent = total;
-            document.getElementById('statLive').textContent = live;
-            document.getElementById('statDev').textContent = dev;
-            
-            // Companies
-            let html = '';
-            data.companies.forEach((company, idx) => {
-                const projectHtml = company.projects.map(p => `
-                    <div class="project-item">
-                        <div class="project-info">
-                            <div class="project-icon">${p.id === 'inventory' ? '📦' : p.id === 'pricing' ? '💵' : p.id === 'payroll' ? '💰' : p.id === 'client' ? '🐾' : p.id === 'ai-recep' ? '🤖' : p.id === 'n8n' ? '🔄' : p.id === 'recruiting' ? '🏈' : p.id === 'ebay' ? '📦' : '📋'}</div>
-                            <div>
-                                <div class="project-name">${p.name}</div>
-                                <div class="project-desc">${p.desc}</div>
-                            </div>
-                        </div>
-                        <span class="project-status status-${p.status.toLowerCase()}">${p.status}</span>
-                        ${p.url ? `<a href="${p.url}" target="_blank" class="project-link">Open</a>` : ''}
-                    </div>
-                `).join('');
-                
-                html += `
-                    <div class="company-card" onclick="toggleCompany(this)">
-                        <div class="company-header">
-                            <div class="company-info">
-                                <div class="company-icon" style="background:${company.color}22; color:${company.color}">${company.icon}</div>
-                                <div>
-                                    <div class="company-name">${company.name}</div>
-                                    <div class="company-count">${company.projects.length} project${company.projects.length !== 1 ? 's' : ''}</div>
-                                </div>
-                            </div>
-                            <div class="company-arrow"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="company-projects">
-                            <div class="project-list">${projectHtml}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('companiesGrid').innerHTML = html;
-            
-            // Activity
-            let actHtml = '';
-            activity.forEach(a => {
-                actHtml += `
-                    <div class="activity-card">
-                        <div class="activity-header">
-                            <div class="activity-avatar" style="background:${a.color}22;">${a.icon}</div>
-                            <div>
-                                <div class="activity-name">${a.name}</div>
-                                <div class="activity-role">${a.role}</div>
-                            </div>
-                            <div class="activity-status"><span class="status-dot" style="background:${a.color}"></span> Active</div>
-                        </div>
-                        <div class="activity-task"><strong>Working on:</strong> ${a.task}</div>
-                    </div>
-                `;
-            });
-            document.getElementById('activityGrid').innerHTML = actHtml;
+        function showSettings() {
+            document.querySelectorAll('.company-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.company-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('settings').classList.add('active');
             
             // Populate company dropdown
             let optHtml = '<option value="">Select company...</option>';
@@ -444,25 +326,162 @@
             document.getElementById('newProjectCompany').innerHTML = optHtml;
         }
         
-        // Toggle
-        function toggleCompany(card) {
-            card.classList.toggle('expanded');
-        }
-        
-        // Tab switching
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.overview-tab, .activity-tab, .org-tab, .settings-tab').forEach(t => t.classList.remove('active'));
+        function render() {
+            // Company tabs
+            let tabsHtml = '';
+            data.companies.forEach(c => {
+                tabsHtml += `
+                    <button class="company-tab ${c.id === currentCompany ? 'active' : ''}" data-company="${c.id}" onclick="switchCompany('${c.id}')">
+                        <span class="dot" style="background:${c.color}"></span>
+                        ${c.icon} ${c.name}
+                    </button>
+                `;
+            });
+            document.getElementById('companyTabs').innerHTML = tabsHtml;
             
-            event.target.classList.add('active');
-            document.getElementById(tab).classList.add('active');
+            // Company views
+            let viewsHtml = '';
+            data.companies.forEach(company => {
+                const projectLinks = company.projects.map(p => `
+                    <a href="${p.url}" target="_blank" class="project-link-card">
+                        <div class="project-link-info">
+                            <div class="project-link-icon">📦</div>
+                            <div>
+                                <div class="project-link-name">${p.name}</div>
+                                <div style="font-size:0.75rem; color:var(--gray)">${p.desc}</div>
+                            </div>
+                        </div>
+                        <span class="project-link-status">${p.status}</span>
+                    </a>
+                `).join('');
+                
+                const completedHtml = company.completed.map(t => `
+                    <div class="task-card priority-low">
+                        <h4><i class="fas fa-check-circle" style="color:var(--success)"></i> ${t.title}</h4>
+                        <div class="task-meta"><span><i class="fas fa-calendar"></i> ${t.date}</span></div>
+                    </div>
+                `).join('');
+                
+                const progressHtml = company.inProgress.map(t => `
+                    <div class="task-card priority-${t.priority}">
+                        <h4><i class="fas fa-spinner fa-spin" style="color:var(--primary)"></i> ${t.title}</h4>
+                        <span class="status-badge-item status-progress">In Progress</span>
+                    </div>
+                `).join('');
+                
+                const todoHtml = company.todo.map(t => `
+                    <div class="task-card priority-${t.priority}">
+                        <h4><i class="fas fa-clock" style="color:var(--warning)"></i> ${t.title}</h4>
+                        <span class="status-badge-item status-todo">To Do</span>
+                    </div>
+                `).join('');
+                
+                const actionsHtml = company.actions.map(a => `
+                    <div class="action-item">
+                        <div class="action-info">
+                            <h4>${a.title}</h4>
+                            <p>${a.desc}</p>
+                        </div>
+                        <button class="action-btn" onclick="alert('Action: ${a.title}')">Mark Done</button>
+                    </div>
+                `).join('');
+                
+                const teamHtml = data.team.map(m => `
+                    <div class="team-card">
+                        <div class="team-header">
+                            <div class="team-avatar" style="background:${m.color}22; color:${m.color}">${m.icon}</div>
+                            <div>
+                                <div class="team-name">${m.name}</div>
+                                <div class="team-role">${m.role}</div>
+                            </div>
+                            <div class="team-status"><span class="status-dot" style="background:${m.color}"></span> Active</div>
+                        </div>
+                        <div class="team-task"><strong>Working on:</strong> ${m.task}</div>
+                    </div>
+                `).join('');
+                
+                viewsHtml += `
+                    <div id="company-${company.id}" class="company-view ${company.id === currentCompany ? 'active' : ''}">
+                        <h2 style="font-size:1.5rem; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+                            <span style="color:${company.color}">${company.icon}</span> ${company.name}
+                        </h2>
+                        
+                        <!-- Stats -->
+                        <div class="stats-row">
+                            <div class="stat-card">
+                                <div class="label">Projects</div>
+                                <div class="value primary">${company.projects.length}</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="label">Live</div>
+                                <div class="value success">${company.projects.filter(p => p.status === 'Live').length}</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="label">In Progress</div>
+                                <div class="value warning">${company.inProgress.length}</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="label">Actions Needed</div>
+                                <div class="value danger">${company.actions.length}</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Project Links -->
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title"><i class="fas fa-external-link-alt"></i> Project Links</div>
+                            </div>
+                            <div class="project-links">${projectLinks}</div>
+                        </div>
+                        
+                        <!-- Completed -->
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title"><i class="fas fa-check-circle" style="color:var(--success)"></i> Completed</div>
+                            </div>
+                            <div class="task-grid">${completedHtml}</div>
+                        </div>
+                        
+                        <!-- In Progress -->
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title"><i class="fas fa-spinner" style="color:var(--primary)"></i> In Progress</div>
+                            </div>
+                            <div class="task-grid">${progressHtml}</div>
+                        </div>
+                        
+                        <!-- To Do -->
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title"><i class="fas fa-clock" style="color:var(--warning)"></i> To Do</div>
+                            </div>
+                            <div class="task-grid">${todoHtml}</div>
+                        </div>
+                        
+                        <!-- Human Actions -->
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title"><i class="fas fa-user" style="color:var(--danger)"></i> Human Actions Needed</div>
+                            </div>
+                            <div class="action-list">${actionsHtml}</div>
+                        </div>
+                        
+                        <!-- Team -->
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title"><i class="fas fa-users"></i> Team Activity</div>
+                            </div>
+                            <div class="team-grid">${teamHtml}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('companyViews').innerHTML = viewsHtml;
         }
         
-        // Add project
         function addProject() {
             const name = document.getElementById('newProjectName').value;
             const companyId = document.getElementById('newProjectCompany').value;
-            const status = document.getElementById('newProjectStatus').value;
             const desc = document.getElementById('newProjectDesc').value;
             const url = document.getElementById('newProjectUrl').value;
             
@@ -477,23 +496,19 @@
                     id: name.toLowerCase().replace(/\s+/g, '-'),
                     name: name,
                     desc: desc,
-                    status: status,
+                    status: 'Planning',
                     url: url
                 });
                 saveData();
                 render();
-                // Clear form
                 document.getElementById('newProjectName').value = '';
                 document.getElementById('newProjectDesc').value = '';
                 document.getElementById('newProjectUrl').value = '';
             }
         }
         
-        // Add company
         function addCompany() {
             const name = document.getElementById('newCompanyName').value;
-            const color = document.getElementById('newCompanyColor').value;
-            
             if (!name) {
                 alert('Please enter a company name');
                 return;
@@ -503,24 +518,19 @@
                 id: name.toLowerCase().replace(/\s+/g, '-'),
                 name: name,
                 icon: '🏢',
-                color: color,
-                projects: []
+                color: '#' + Math.floor(Math.random()*16777215).toString(16),
+                projects: [],
+                completed: [],
+                inProgress: [],
+                todo: [],
+                actions: []
             });
             saveData();
             render();
             document.getElementById('newCompanyName').value = '';
         }
         
-        // Reset to defaults
-        function resetData() {
-            if (confirm('Are you sure you want to reset all data to defaults? This will remove any custom companies or projects.')) {
-                localStorage.removeItem(STORAGE_KEY);
-                data = JSON.parse(JSON.stringify(defaultData));
-                render();
-            }
-        }
-        
-        // Init
+        // Initialize
         render();
     </script>
 </body>
