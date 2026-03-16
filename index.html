@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSW Enterprises - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@zxing/library@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --dark-surface: #1e293b;
+            --dark-elevated: #334155;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #475569;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: linear-gradient(180deg, var(--dark-surface) 0%, var(--dark) 100%); border-right: 1px solid var(--border); padding: 20px; z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+        .logo h1 { font-size: 1.4rem; font-weight: 700; background: linear-gradient(135deg, var(--primary), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; color: var(--text-muted); cursor: pointer; transition: all 0.2s; margin-bottom: 8px; }
+        .nav-item:hover, .nav-item.active { background: var(--dark-elevated); color: var(--text); }
+        .nav-item.active { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+        
+        /* Main Content */
+        .main { margin-left: 260px; padding: 30px; }
+        
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h2 { font-size: 1.8rem; }
+        .status-badge { padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .status-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        
+        /* Dashboard Grid */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        
+        /* Cards */
+        .card { background: var(--dark-surface); border-radius: 16px; padding: 24px; border: 1px solid var(--border); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-header h3 { font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Stats */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px; }
+        .stat-card { background: var(--dark-surface); border-radius: 16px; padding: 20px; border: 1px solid var(--border); text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        
+        /* Activity Log */
+        .activity-item { display: flex; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .activity-icon.golias { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .activity-icon.effy { background: linear-gradient(135deg, #10b981, #059669); }
+        .activity-icon.gretel { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .activity-icon.stan { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .activity-icon.jr { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .activity-content { flex: 1; }
+        .activity-text { font-size: 0.95rem; }
+        .activity-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        
+        /* Org Chart */
+        .org-tree { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .org-level { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .org-card { background: var(--dark-elevated); border-radius: 12px; padding: 16px 24px; text-align: center; min-width: 140px; border: 2px solid var(--border); transition: all 0.3s; }
+        .org-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+        .org-card.owner { border-color: #f59e0b; background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.1)); }
+        .org-card.ceo { border-color: #667eea; }
+        .org-avatar { width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .org-name { font-weight: 600; font-size: 0.95rem; }
+        .org-role { font-size: 0.75rem; color: var(--text-muted); }
+        .org-connector { width: 2px; height: 20px; background: var(--border); }
+        
+        /* Timeline */
+        .timeline-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+        .timeline-item:last-child { border-bottom: none; }
+        .timeline-dot { width: 12px; height: 12px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+        .timeline-dot.completed { background: var(--success); }
+        .timeline-dot.in-progress { background: var(--warning); }
+        .timeline-dot.pending { background: var(--text-muted); }
+        .timeline-content { flex: 1; }
+        .timeline-title { font-weight: 600; }
+        .timeline-date { font-size: 0.8rem; color: var(--text-muted); }
+        
+        /* Add Activity Form */
+        .add-activity { display: flex; gap: 12px; margin-top: 20px; }
+        .add-activity select, .add-activity input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--dark); color: var(--text); }
+        .add-activity button { padding: 12px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; }
+        
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
+        
+        @media (max-width: 768px) {
+            .sidebar { width: 80px; padding: 10px; }
+            .main { margin-left: 80px; }
+            .logo h1, .nav-item span { display: none; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="logo">
+            <i class="fas fa-building" style="font-size: 1.5rem; color: var(--primary);"></i>
+            <h1>JSW</h1>
+        </div>
+        <div class="nav-item active" onclick="showView('dashboard')">
+            <i class="fas fa-th-large"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="showView('activity')">
+            <i class="fas fa-list"></i>
+            <span>Activity Log</span>
+        </div>
+        <div class="nav-item" onclick="showView('orgchart')">
+            <i class="fas fa-sitemap"></i>
+            <span>Org Chart</span>
+        </div>
+        <div class="nav-item" onclick="showView('timeline')">
+            <i class="fas fa-clock"></i>
+            <span>Timeline</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Dashboard View -->
+        <div id="dashboard" class="view active">
+            <div class="header">
+                <h2>📊 JSW Dashboard</h2>
+                <span class="status-badge status-active">● All Systems Active</span>
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalActivities">0</div>
+                    <div class="stat-label">Total Activities</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completedTasks">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="inProgressTasks">0</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pendingTasks">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-bolt"></i> Latest Activity</h3>
+                    </div>
+                    <div id="dashboardActivities"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-rocket"></i> Up Next</h3>
+                    </div>
+                    <div id="upNextList"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Activity View -->
+        <div id="activity" class="view">
+            <div class="header">
+                <h2>📋 Activity Log</h2>
+            </div>
+            <div class="card">
+                <div class="add-activity">
+                    <select id="activityAgent">
+                        <option value="golias">🛡️ Golias</option>
+                        <option value="effy">💻 Effy</option>
+                        <option value="gretel">🎬 Gretel</option>
+                        <option value="stan">🔍 Stan</option>
+                        <option value="jr">📋 JR</option>
+                    </select>
+                    <input type="text" id="activityText" placeholder="What happened?">
+                    <button onclick="addActivity()">Add</button>
+                </div>
+                <div id="fullActivityLog" style="margin-top: 24px;"></div>
+            </div>
+        </div>
+        
+        <!-- Org Chart View -->
+        <div id="orgchart" class="view">
+            <div class="header">
+                <h2>🏢 Corporate Structure</h2>
+            </div>
+            <div class="card">
+                <div class="org-tree">
+                    <div class="org-level">
+                        <div class="org-card owner">
+                            <div class="org-avatar">👑</div>
+                            <div class="org-name">Jack Wilde</div>
+                            <div class="org-role">Owner</div>
+                        </div>
+                    </div>
+                    <div class="org-connector"></div>
+                    <div class="org-level">
+                        <div class="org-card ceo">
+                            <div class="org-avatar">🛡️</div>
+                            <div class="org-name">Golias</div>
+                            <div class="org-role">CEO / Assistant</div>
+                        </div>
+                    </div>
+                    <div class="org-connector"></div>
+                    <div class="org-level">
+                        <div class="org-card">
+                            <div class="org-avatar">💻</div>
+                            <div class="org-name">Effy</div>
+                            <div class="org-role">Coder</div>
+                        </div>
+                        <div class="org-card">
+                            <div class="org-avatar">🎬</div>
+                            <div class="org-name">Gretel</div>
+                            <div class="org-role">Content</div>
+                        </div>
+                        <div class="org-card">
+                            <div class="org-avatar">🔍</div>
+                            <div class="org-name">Stan</div>
+                            <div class="org-role">Research</div>
+                        </div>
+                        <div class="org-card">
+                            <div class="org-avatar">📋</div>
+                            <div class="org-name">JR</div>
+                            <div class="org-role">Quality Control</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Timeline View -->
+        <div id="timeline" class="view">
+            <div class="header">
+                <h2>📅 Project Timeline</h2>
+            </div>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-check-circle" style="color: var(--success);"></i> Completed</h3>
+                    </div>
+                    <div id="completedList"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-spinner" style="color: var(--warning);"></i> In Progress</h3>
+                    </div>
+                    <div id="inProgressList"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-hourglass-half" style="color: var(--text-muted);"></i> Pending</h3>
+                    </div>
+                    <div id="pendingList"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Data Store
+        const DB_KEY = 'jsw_dashboard';
+        
+        // Initialize data
+        function getData() {
+            const data = localStorage.getItem(DB_KEY);
+            if (!data) {
+                const initial = {
+                    activities: [
+                        { agent: 'golias', text: 'JSW Enterprises initialized - First day online', timestamp: new Date().toISOString() },
+                        { agent: 'stan', text: 'Research complete - Policy Pro industry features', timestamp: new Date(Date.now() - 300000).toISOString() },
+                        { agent: 'jr', text: 'QC Review complete - Policy Pro bugs identified', timestamp: new Date(Date.now() - 240000).toISOString() },
+                        { agent: 'effy', text: 'Policy Pro fixes started', timestamp: new Date(Date.now() - 180000).toISOString() },
+                        { agent: 'gretel', text: 'Landing page upgrade completed', timestamp: new Date(Date.now() - 120000).toISOString() },
+                        { agent: 'effy', text: 'Payroll App SPEC.md created', timestamp: new Date(Date.now() - 60000).toISOString() }
+                    ],
+                    tasks: [
+                        { title: 'Policy Pro - Fix auth loop', status: 'in-progress', date: '2026-03-16' },
+                        { title: 'Policy Pro - Add acknowledgment tracking', status: 'in-progress', date: '2026-03-16' },
+                        { title: 'Policy Pro - Add audit trail', status: 'in-progress', date: '2026-03-16' },
+                        { title: 'Policy Pro - Version history', status: 'pending', date: '2026-03-17' },
+                        { title: 'Policy Pro - PDF export', status: 'pending', date: '2026-03-17' },
+                        { title: 'Payroll App - Build complete system', status: 'pending', date: '2026-03-18' },
+                        { title: 'JSW Dashboard - This dashboard!', status: 'completed', date: '2026-03-16' },
+                        { title: 'Policy Pro initial build', status: 'completed', date: '2026-03-15' },
+                        { title: 'GitHub repos setup', status: 'completed', date: '2026-03-15' },
+                        { title: 'Email configured', status: 'completed', date: '2026-03-15' }
+                    ]
+                };
+                localStorage.setItem(DB_KEY, JSON.stringify(initial));
+                return initial;
+            }
+            return JSON.parse(data);
+        }
+        
+        function saveData(data) {
+            localStorage.setItem(DB_KEY, JSON.stringify(data));
+        }
+        
+        function addActivity() {
+            const agent = document.getElementById('activityAgent').value;
+            const text = document.getElementById('activityText').value;
+            if (!text) return;
+            
+            const data = getData();
+            data.activities.unshift({
+                agent: agent,
+                text: text,
+                timestamp: new Date().toISOString()
+            });
+            saveData(data);
+            document.getElementById('activityText').value = '';
+            renderAll();
+        }
+        
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+        }
+        
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + ' min ago';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + ' hours ago';
+            return date.toLocaleDateString();
+        }
+        
+        function renderAll() {
+            const data = getData();
+            
+            // Stats
+            document.getElementById('totalActivities').textContent = data.activities.length;
+            const completed = data.tasks.filter(t => t.status === 'completed').length;
+            const inProgress = data.tasks.filter(t => t.status === 'in-progress').length;
+            const pending = data.tasks.filter(t => t.status === 'pending').length;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('inProgressTasks').textContent = inProgress;
+            document.getElementById('pendingTasks').textContent = pending;
+            
+            // Dashboard activities
+            const dashActivities = data.activities.slice(0, 5);
+            document.getElementById('dashboardActivities').innerHTML = dashActivities.map(a => `
+                <div class="activity-item">
+                    <div class="activity-icon ${a.agent}">${getAgentEmoji(a.agent)}</div>
+                    <div class="activity-content">
+                        <div class="activity-text">${a.text}</div>
+                        <div class="activity-meta">${getAgentName(a.agent)} • ${formatTime(a.timestamp)}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Up next
+            const upNext = data.tasks.filter(t => t.status === 'in-progress' || t.status === 'pending').slice(0, 5);
+            document.getElementById('upNextList').innerHTML = upNext.map(t => `
+                <div class="timeline-item">
+                    <div class="timeline-dot ${t.status}"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">${t.title}</div>
+                        <div class="timeline-date">${t.date}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Full activity log
+            document.getElementById('fullActivityLog').innerHTML = data.activities.map(a => `
+                <div class="activity-item">
+                    <div class="activity-icon ${a.agent}">${getAgentEmoji(a.agent)}</div>
+                    <div class="activity-content">
+                        <div class="activity-text">${a.text}</div>
+                        <div class="activity-meta">${getAgentName(a.agent)} • ${formatTime(a.timestamp)}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Timeline
+            document.getElementById('completedList').innerHTML = data.tasks.filter(t => t.status === 'completed').map(t => `
+                <div class="timeline-item">
+                    <div class="timeline-dot completed"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">${t.title}</div>
+                        <div class="timeline-date">${t.date}</div>
+                    </div>
+                </div>
+            `).join('') || '<p style="color:var(--text-muted)">No completed tasks</p>';
+            
+            document.getElementById('inProgressList').innerHTML = data.tasks.filter(t => t.status === 'in-progress').map(t => `
+                <div class="timeline-item">
+                    <div class="timeline-dot in-progress"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">${t.title}</div>
+                        <div class="timeline-date">${t.date}</div>
+                    </div>
+                </div>
+            `).join('') || '<p style="color:var(--text-muted)">No tasks in progress</p>';
+            
+            document.getElementById('pendingList').innerHTML = data.tasks.filter(t => t.status === 'pending').map(t => `
+                <div class="timeline-item">
+                    <div class="timeline-dot pending"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">${t.title}</div>
+                        <div class="timeline-date">${t.date}</div>
+                    </div>
+                </div>
+            `).join('') || '<p style="color:var(--text-muted)">No pending tasks</p>';
+        }
+        
+        function getAgentEmoji(agent) {
+            const emojis = { golias: '🛡️', effy: '💻', gretel: '🎬', stan: '🔍', jr: '📋' };
+            return emojis[agent] || '👤';
+        }
+        
+        function getAgentName(agent) {
+            const names = { golias: 'Golias', effy: 'Effy', gretel: 'Gretel', stan: 'Stan', jr: 'JR' };
+            return names[agent] || agent;
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', renderAll);
+    </script>
+</body>
+</html>
