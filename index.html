@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wilde Automations - Mission Control</title>
+    <title>JSW Enterprises - Mission Control</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -24,109 +24,303 @@
         body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); min-height: 100vh; }
         
         /* Top Bar */
-        .topbar { height: 72px; background: var(--dark-mid); border-bottom: 1px solid var(--dark-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+        .topbar { height: 64px; background: var(--dark-mid); border-bottom: 1px solid var(--dark-light); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
         
         .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--success)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .logo-text { font-weight: 700; font-size: 1.1rem; }
+        .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--success)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .logo-text { font-weight: 700; font-size: 1rem; }
         .logo-text span { color: var(--primary); }
         
-        /* Company Tabs */
-        .company-tabs { display: flex; gap: 4px; }
-        .company-tab { padding: 10px 20px; border-radius: 8px; background: transparent; border: none; color: var(--gray); font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
-        .company-tab:hover { background: var(--dark-light); color: var(--white); }
-        .company-tab.active { background: var(--dark-light); color: var(--white); }
-        .company-tab .dot { width: 8px; height: 8px; border-radius: 50%; }
-        
         .topbar-right { display: flex; align-items: center; gap: 16px; }
-        .status-badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(16, 185, 129, 0.15); border-radius: 20px; color: var(--success); font-size: 0.8rem; font-weight: 600; }
+        .status-badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(16, 185, 129, 0.15); border-radius: 20px; color: var(--success); font-size: 0.75rem; font-weight: 600; }
         .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
         
         /* Main Content */
-        .main { padding-top: 72px; min-height: 100vh; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+        .main { padding-top: 64px; min-height: 100vh; }
+        .container { max-width: 1600px; margin: 0 auto; padding: 24px; }
         
-        /* Company View */
-        .company-view { display: none; }
-        .company-view.active { display: block; }
+        /* Org Chart Section */
+        .section { margin-bottom: 32px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-title { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        
+        /* Org Chart */
+        .org-chart { background: var(--dark-mid); border-radius: 16px; padding: 32px; border: 1px solid var(--dark-light); }
+        .org-level { display: flex; justify-content: center; gap: 16px; margin-bottom: 40px; position: relative; }
+        .org-level:last-child { margin-bottom: 0; }
+        
+        .org-person { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            position: relative;
+            min-width: 140px;
+        }
+        
+        .org-card {
+            background: var(--dark);
+            border-radius: 12px;
+            padding: 16px;
+            border: 2px solid var(--dark-light);
+            text-align: center;
+            width: 140px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .org-card:hover { 
+            border-color: var(--primary); 
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.2);
+        }
+        
+        .org-avatar { 
+            width: 48px; 
+            height: 48px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.5rem; 
+            margin: 0 auto 8px;
+        }
+        
+        .org-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+        .org-role { font-size: 0.7rem; color: var(--gray); }
+        
+        .org-connector {
+            position: absolute;
+            top: -24px;
+            width: 2px;
+            height: 24px;
+            background: var(--dark-light);
+        }
+        
+        .org-level:not(:first-child) .org-person::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            width: 2px;
+            height: 20px;
+            background: var(--dark-light);
+        }
+        
+        .level-label {
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        
+        /* Two Column Layout */
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        
+        @media (max-width: 1200px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* Activity Log */
+        .activity-panel { 
+            background: var(--dark-mid); 
+            border-radius: 16px; 
+            padding: 24px; 
+            border: 1px solid var(--dark-light);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--dark-light);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .activity-item:last-child { border-bottom: none; }
+        
+        .activity-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .activity-content { flex: 1; }
+        .activity-name { font-weight: 600; font-size: 0.85rem; margin-bottom: 2px; }
+        .activity-task { font-size: 0.8rem; color: var(--gray); }
+        .activity-time { font-size: 0.7rem; color: var(--gray); margin-top: 4px; }
+        
+        .activity-status {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-break { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .status-meeting { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+        
+        /* Timeline */
+        .timeline-panel {
+            background: var(--dark-mid);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--dark-light);
+        }
+        
+        .timeline { 
+            position: relative; 
+            padding-left: 32px; 
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--dark-light);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 24px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .timeline-item:last-child { padding-bottom: 0; }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -28px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid var(--dark);
+        }
+        
+        .timeline-dot.completed { background: var(--success); }
+        .timeline-dot.in-progress { background: var(--warning); }
+        .timeline-dot.planned { background: var(--gray); }
+        
+        .timeline-date {
+            font-size: 0.7rem;
+            color: var(--gray);
+            margin-bottom: 4px;
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        
+        .timeline-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .timeline-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin-top: 8px;
+            background: rgba(14, 165, 233, 0.2);
+            color: var(--primary);
+        }
+        
+        /* Team Cards */
+        .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        
+        @media (max-width: 1000px) {
+            .team-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .team-card { 
+            background: var(--dark-mid); 
+            border-radius: 12px; 
+            padding: 20px; 
+            border: 1px solid var(--dark-light);
+            transition: all 0.2s ease;
+        }
+        
+        .team-card:hover { border-color: var(--primary); }
+        
+        .team-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .team-avatar { 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.3rem; 
+        }
+        .team-name { font-weight: 600; font-size: 0.95rem; }
+        .team-role { font-size: 0.75rem; color: var(--gray); }
+        
+        .team-status-indicator {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+        }
+        
+        .team-task { 
+            background: var(--dark); 
+            border-radius: 8px; 
+            padding: 12px; 
+            font-size: 0.8rem; 
+            color: var(--gray);
+            margin-top: 12px;
+        }
+        
+        .team-task strong { color: var(--primary); }
         
         /* Stats Row */
         .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
         .stat-card { background: var(--dark-mid); border-radius: 12px; padding: 20px; border: 1px solid var(--dark-light); }
-        .stat-card .label { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .stat-card .value { font-size: 2rem; font-weight: 700; }
-        .stat-card .value.primary { color: var(--primary); }
-        .stat-card .value.success { color: var(--success); }
-        .stat-card .value.warning { color: var(--warning); }
-        .stat-card .value.danger { color: var(--danger); }
-        
-        /* Sections */
-        .section { margin-bottom: 32px; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .section-title { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        
-        /* Task Cards */
-        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
-        .task-card { background: var(--dark-mid); border-radius: 12px; padding: 20px; border: 1px solid var(--dark-light); }
-        .task-card h4 { font-size: 0.95rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .task-card p { font-size: 0.85rem; color: var(--gray); margin-bottom: 12px; }
-        .task-meta { display: flex; gap: 16px; font-size: 0.75rem; color: var(--gray); }
-        .task-meta span { display: flex; align-items: center; gap: 4px; }
-        
-        .priority-high { border-left: 3px solid var(--danger); }
-        .priority-medium { border-left: 3px solid var(--warning); }
-        .priority-low { border-left: 3px solid var(--success); }
-        
-        .status-badge-item { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
-        .status-done { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .status-progress { background: rgba(14, 165, 233, 0.2); color: var(--primary); }
-        .status-todo { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .status-blocked { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        
-        /* Actions List */
-        .action-list { display: flex; flex-direction: column; gap: 12px; }
-        .action-item { background: var(--dark-mid); border-radius: 10px; padding: 16px; border: 1px solid var(--dark-light); display: flex; justify-content: space-between; align-items: center; }
-        .action-info h4 { font-size: 0.95rem; margin-bottom: 4px; }
-        .action-info p { font-size: 0.8rem; color: var(--gray); }
-        .action-btn { padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 0.85rem; }
-        .action-btn:hover { background: var(--primary-dark); }
-        
-        /* Project Links */
-        .project-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
-        .project-link-card { background: var(--dark-mid); border-radius: 10px; padding: 16px; border: 1px solid var(--dark-light); display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: var(--white); transition: 0.2s; }
-        .project-link-card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .project-link-info { display: flex; align-items: center; gap: 12px; }
-        .project-link-icon { width: 36px; height: 36px; background: var(--dark-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-        .project-link-name { font-weight: 500; }
-        .project-link-status { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        
-        /* Team Activity */
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
-        .team-card { background: var(--dark-mid); border-radius: 12px; padding: 20px; border: 1px solid var(--dark-light); }
-        .team-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .team-avatar { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-        .team-name { font-weight: 600; }
-        .team-role { font-size: 0.8rem; color: var(--gray); }
-        .team-status { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--success); }
-        .team-task { background: var(--dark); border-radius: 8px; padding: 12px; font-size: 0.85rem; color: var(--gray); }
-        .team-task strong { color: var(--primary); }
-        
-        /* Settings Panel */
-        .settings-panel { display: none; }
-        .settings-panel.active { display: block; }
-        .settings-card { background: var(--dark-mid); border-radius: 12px; padding: 24px; margin-bottom: 20px; border: 1px solid var(--dark-light); }
-        .settings-card h3 { margin-bottom: 16px; font-size: 1rem; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 0.85rem; color: var(--gray); margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; background: var(--dark); border: 1px solid var(--dark-light); border-radius: 8px; color: var(--white); font-size: 0.9rem; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
+        .stat-card .label { font-size: 0.7rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; }
         
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
         
-        @media (max-width: 768px) {
-            .stats-row { grid-template-columns: repeat(2, 1fr); }
-            .company-tabs { display: none; }
-            .task-grid { grid-template-columns: 1fr; }
+        /* Live indicator */
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
         }
     </style>
 </head>
@@ -135,17 +329,14 @@
     <div class="topbar">
         <div class="logo-area">
             <div class="logo-icon">⚡</div>
-            <div class="logo-text">Wilde <span>Automations</span></div>
-        </div>
-        
-        <div class="company-tabs" id="companyTabs">
-            <!-- Generated by JS -->
+            <div class="logo-text">JSW <span>Enterprises</span></div>
         </div>
         
         <div class="topbar-right">
-            <button class="company-tab" onclick="showSettings()">
-                <i class="fas fa-cog"></i> Settings
-            </button>
+            <div class="live-indicator">
+                <span class="live-dot"></span>
+                Live Activity
+            </div>
             <div class="status-badge">
                 <span class="status-dot"></span>
                 All Systems Active
@@ -156,51 +347,141 @@
     <div class="main">
         <div class="container">
             
-            <!-- Company Views -->
-            <div id="companyViews">
-                <!-- Generated by JS -->
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="label">Team Members</div>
+                    <div class="value" style="color: var(--primary)">8</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Active Projects</div>
+                    <div class="value" style="color: var(--success)">12</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Completed This Month</div>
+                    <div class="value" style="color: var(--warning)">24</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">In Progress</div>
+                    <div class="value" style="color: var(--primary)">8</div>
+                </div>
             </div>
             
-            <!-- Settings Panel -->
-            <div id="settings" class="settings-panel">
-                <div class="section-title" style="margin-bottom: 24px;"><i class="fas fa-cog"></i> Settings</div>
-                
-                <div class="settings-card">
-                    <h3>Add New Project</h3>
-                    <div class="form-group">
-                        <label>Project Name</label>
-                        <input type="text" id="newProjectName" placeholder="e.g., New App">
+            <!-- Org Chart -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title"><i class="fas fa-sitemap"></i> Organization Chart</div>
+                </div>
+                <div class="org-chart">
+                    <!-- Executive Level -->
+                    <div class="org-level">
+                        <div class="org-person">
+                            <div class="org-card" style="border-color: #f59e0b;">
+                                <div class="org-avatar" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;">👑</div>
+                                <div class="org-name">Jack Wilde</div>
+                                <div class="org-role">CEO / Founder</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Company</label>
-                        <select id="newProjectCompany">
-                            <option value="">Select company...</option>
-                        </select>
+                    
+                    <!-- Leadership Level -->
+                    <div class="org-level">
+                        <div class="org-person">
+                            <div class="org-card">
+                                <div class="org-avatar" style="background: rgba(14, 165, 233, 0.2); color: #0ea5e9;">🎯</div>
+                                <div class="org-name">Effy</div>
+                                <div class="org-role">Director of Development</div>
+                            </div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-card">
+                                <div class="org-avatar" style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6;">🛡️</div>
+                                <div class="org-name">JR</div>
+                                <div class="org-role">QA & Operations</div>
+                            </div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-card">
+                                <div class="org-avatar" style="background: rgba(236, 72, 153, 0.2); color: #ec4899;">🔍</div>
+                                <div class="org-name">Stan</div>
+                                <div class="org-role">Research Director</div>
+                            </div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-card">
+                                <div class="org-avatar" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">🎨</div>
+                                <div class="org-name">Gretel</div>
+                                <div class="org-role">Content Director</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="newProjectDesc" rows="2" placeholder="Brief description..."></textarea>
+                    
+                    <!-- Team Level -->
+                    <div class="org-level">
+                        <div class="org-person">
+                            <div class="org-card">
+                                <div class="org-avatar" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">🐒</div>
+                                <div class="org-name">Bongo</div>
+                                <div class="org-role">Developer</div>
+                            </div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-card">
+                                <div class="org-avatar" style="background: rgba(234, 179, 8, 0.2); color: #eab908;">🐕</div>
+                                <div class="org-name">Wilson</div>
+                                <div class="org-role">Developer</div>
+                            </div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-card">
+                                <div class="org-avatar" style="background: rgba(99, 102, 241, 0.2); color: #6366f1;">🐱</div>
+                                <div class="org-name">Frankie</div>
+                                <div class="org-role">Designer</div>
+                            </div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-card">
+                                <div class="org-avatar" style="background: rgba(20, 184, 166, 0.2); color: #14b8a6;">🎵</div>
+                                <div class="org-name">Joon</div>
+                                <div class="org-role">Content Creator</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>App URL</label>
-                        <input type="url" id="newProjectUrl" placeholder="https://...">
+                </div>
+            </div>
+            
+            <!-- Dashboard Grid: Activity + Timeline -->
+            <div class="dashboard-grid">
+                <!-- Live Activity Log -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title"><i class="fas fa-bolt" style="color: var(--warning)"></i> Live Activity</div>
                     </div>
-                    <button class="action-btn" onclick="addProject()">Add Project</button>
+                    <div class="activity-panel" id="activityLog">
+                        <!-- Activity items populated by JS -->
+                    </div>
                 </div>
                 
-                <div class="settings-card">
-                    <h3>Add New Company</h3>
-                    <div class="form-group">
-                        <label>Company Name</label>
-                        <input type="text" id="newCompanyName" placeholder="e.g., New Company">
+                <!-- Project Timeline -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title"><i class="fas fa-stream" style="color: var(--primary)"></i> Project Timeline</div>
                     </div>
-                    <button class="action-btn" onclick="addCompany()">Add Company</button>
+                    <div class="timeline-panel">
+                        <div class="timeline" id="projectTimeline">
+                            <!-- Timeline items populated by JS -->
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="settings-card">
-                    <h3>Reset Data</h3>
-                    <p style="color: var(--gray); font-size: 0.85rem; margin-bottom: 12px;">Reset all data to default values.</p>
-                    <button class="action-btn" style="background: var(--danger);" onclick="resetData()">Reset to Defaults</button>
+            </div>
+            
+            <!-- Team Status Cards -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title"><i class="fas fa-users"></i> Team Status</div>
+                </div>
+                <div class="team-grid" id="teamGrid">
+                    <!-- Team cards populated by JS -->
                 </div>
             </div>
             
@@ -208,330 +489,251 @@
     </div>
     
     <script>
-        const STORAGE_KEY = 'wilde_mission_control';
-        
-        // Default Data
-        const defaultData = {
-            companies: [
-                {
-                    id: 'clinic-iq',
-                    name: 'Clinic IQ',
-                    icon: '🏥',
-                    color: '#0ea5e9',
-                    projects: [
-                        { id: 'inventory', name: 'Inventory Tool', desc: 'Clinic inventory management', status: 'Live', url: 'https://jack108510.github.io/inventoryintaketool/' },
-                        { id: 'pricing', name: 'Price Management', desc: 'Pricing optimization dashboard', status: 'Live', url: 'https://jack108510.github.io/jsw-clinic-iq/' },
-                        { id: 'payroll', name: 'Payroll App', desc: 'HR & Payroll management', status: 'Live', url: 'https://jack108510.github.io/jsw-payroll-pro/' },
-                        { id: 'client', name: 'Client Hub', desc: 'Client communication', status: 'Live', url: 'https://jack108510.github.io/jsw-client-hub/' }
-                    ],
-                    completed: [
-                        { title: 'Dashboard v2 complete', date: '2026-03-16' },
-                        { title: 'Inventory Tool launched', date: '2026-03-15' },
-                        { title: 'Client Hub deployed', date: '2026-03-14' }
-                    ],
-                    inProgress: [
-                        { title: 'Adding localStorage persistence', priority: 'medium' }
-                    ],
-                    todo: [
-                        { title: 'Set up AWS server for n8n', priority: 'high' },
-                        { title: 'Add more Clinic IQ features', priority: 'medium' }
-                    ],
-                    actions: [
-                        { title: 'Provide AWS credentials', desc: 'Give SSH access for server setup', priority: 'high' },
-                        { title: 'Review new features', desc: 'Test and approve new functionality', priority: 'medium' }
-                    ]
-                },
-                {
-                    id: 'wilde-auto',
-                    name: 'Wilde Automations',
-                    icon: '⚡',
-                    color: '#10b981',
-                    projects: [
-                        { id: 'ai-recep', name: 'AI Receptionist', desc: '24/7 AI phone answering', status: 'Live', url: 'https://jack108510.github.io/jsw-ai-receptionist/' },
-                        { id: 'n8n', name: 'n8n Automation', desc: 'Workflow automation services', status: 'Live', url: 'https://jack108510.github.io/jsw-n8n-automation/' },
-                        { id: 'policy', name: 'Policy Pro', desc: 'Policy management', status: 'Live', url: 'https://jack108510.github.io/clinic-policy-manager/' }
-                    ],
-                    completed: [
-                        { title: 'Wilde Automations website launched', date: '2026-03-16' },
-                        { title: 'Policy Pro landing page complete', date: '2026-03-16' },
-                        { title: 'Business plan created', date: '2026-03-16' }
-                    ],
-                    inProgress: [
-                        { title: 'Setting up client outreach', priority: 'medium' }
-                    ],
-                    todo: [
-                        { title: 'Find first automation clients', priority: 'high' },
-                        { title: 'Set up Discord integration', priority: 'medium' }
-                    ],
-                    actions: [
-                        { title: 'Provide Discord channel info', desc: 'Server ID or webhook URL', priority: 'medium' },
-                        { title: 'Approve outreach emails', desc: 'Review and approve email templates', priority: 'low' }
-                    ]
-                }
-            ],
-            team: [
-                { name: 'Golias', role: 'Chief of Staff', icon: '🛡️', color: '#10b981', task: 'Managing operations and coordinating team' },
-                { name: 'Effy', role: 'Director of Development', icon: '💻', color: '#0ea5e9', task: 'Building and improving web applications' },
-                { name: 'Gretel', role: 'Content Director', icon: '🎨', color: '#ec4899', task: 'Designing and creating content' },
-                { name: 'Stan', role: 'Research Director', icon: '🔍', color: '#f59e0b', task: 'Researching opportunities and insights' },
-                { name: 'JR', role: 'Quality Assurance', icon: '✅', color: '#8b5cf6', task: 'Testing and ensuring quality' }
-            ]
-        };
-        
-        function loadData() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try {
-                    return JSON.parse(saved);
-                } catch (e) {
-                    console.error('Failed to parse saved data:', e);
-                }
+        // Team Data
+        const teamMembers = [
+            { 
+                name: 'Effy', 
+                role: 'Director of Development', 
+                icon: '🎯', 
+                color: '#0ea5e9', 
+                status: 'active',
+                task: 'Building Clinic IQ dashboard v2',
+                project: 'Clinic IQ Dashboard'
+            },
+            { 
+                name: 'JR', 
+                role: 'QA & Operations', 
+                icon: '🛡️', 
+                color: '#8b5cf6', 
+                status: 'active',
+                task: 'Running automated tests on payroll module',
+                project: 'Payroll Pro'
+            },
+            { 
+                name: 'Stan', 
+                role: 'Research Director', 
+                icon: '🔍', 
+                color: '#f59e0b', 
+                status: 'active',
+                task: 'Analyzing competitor automation tools',
+                project: 'Market Research'
+            },
+            { 
+                name: 'Gretel', 
+                role: 'Content Director', 
+                icon: '🎨', 
+                color: '#10b981', 
+                status: 'meeting',
+                task: 'In client strategy meeting',
+                project: 'Client Hub'
+            },
+            { 
+                name: 'Bongo', 
+                role: 'Developer', 
+                icon: '🐒', 
+                color: '#ef4444', 
+                status: 'active',
+                task: 'Fixing API integration bugs',
+                project: 'n8n Automation'
+            },
+            { 
+                name: 'Wilson', 
+                role: 'Developer', 
+                icon: '🐕', 
+                color: '#eab908', 
+                status: 'active',
+                task: 'Implementing new inventory features',
+                project: 'Inventory Tool'
+            },
+            { 
+                name: 'Frankie', 
+                role: 'Designer', 
+                icon: '🐱', 
+                color: '#6366f1', 
+                status: 'break',
+                task: 'On break - back in 15min',
+                project: 'Design System'
+            },
+            { 
+                name: 'Joon', 
+                role: 'Content Creator', 
+                icon: '🎵', 
+                color: '#14b8a6', 
+                status: 'active',
+                task: 'Creating tutorial videos for AI Receptionist',
+                project: 'Marketing'
             }
-            return JSON.parse(JSON.stringify(defaultData));
-        }
+        ];
         
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        }
-        
-        function resetData() {
-            if (confirm('Reset all data to defaults?')) {
-                localStorage.removeItem(STORAGE_KEY);
-                location.reload();
+        // Timeline Data
+        const timelineData = [
+            {
+                date: '2026-03-17',
+                title: 'Clinic IQ Dashboard v2',
+                desc: 'Effy deploying new features and bug fixes',
+                status: 'in-progress',
+                tag: 'Clinic IQ'
+            },
+            {
+                date: '2026-03-16',
+                title: 'Wilde Automations Website',
+                desc: 'Landing page and marketing site launched',
+                status: 'completed',
+                tag: 'Marketing'
+            },
+            {
+                date: '2026-03-15',
+                title: 'Inventory Tool v1.5',
+                desc: 'New reporting features and API integrations',
+                status: 'completed',
+                tag: 'Clinic IQ'
+            },
+            {
+                date: '2026-03-14',
+                title: 'Payroll Pro Launch',
+                desc: 'Complete payroll management system deployed',
+                status: 'completed',
+                tag: 'Clinic IQ'
+            },
+            {
+                date: '2026-03-20',
+                title: 'AI Receptionist Beta',
+                desc: 'Launch beta testing for AI phone answering',
+                status: 'planned',
+                tag: 'Wilde Auto'
+            },
+            {
+                date: '2026-03-25',
+                title: 'Client Hub 2.0',
+                desc: 'Major update with messaging and automation',
+                status: 'planned',
+                tag: 'Clinic IQ'
             }
-        }
+        ];
         
-        let data = loadData();
-        let currentCompany = 'clinic-iq';
-        
-        function switchCompany(companyId) {
-            currentCompany = companyId;
-            document.querySelectorAll('.company-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`[data-company="${companyId}"]`).classList.add('active');
-            document.querySelectorAll('.company-view').forEach(v => v.classList.remove('active'));
-            document.getElementById(`company-${companyId}`).classList.add('active');
-            document.getElementById('settings').classList.remove('active');
-        }
-        
-        function showSettings() {
-            document.querySelectorAll('.company-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.company-view').forEach(v => v.classList.remove('active'));
-            document.getElementById('settings').classList.add('active');
+        // Render Activity Log
+        function renderActivity() {
+            const container = document.getElementById('activityLog');
+            let html = '';
             
-            // Populate company dropdown
-            let optHtml = '<option value="">Select company...</option>';
-            data.companies.forEach(c => {
-                optHtml += `<option value="${c.id}">${c.icon} ${c.name}</option>`;
-            });
-            document.getElementById('newProjectCompany').innerHTML = optHtml;
-        }
-        
-        function render() {
-            // Company tabs
-            let tabsHtml = '';
-            data.companies.forEach(c => {
-                tabsHtml += `
-                    <button class="company-tab ${c.id === currentCompany ? 'active' : ''}" data-company="${c.id}" onclick="switchCompany('${c.id}')">
-                        <span class="dot" style="background:${c.color}"></span>
-                        ${c.icon} ${c.name}
-                    </button>
-                `;
-            });
-            document.getElementById('companyTabs').innerHTML = tabsHtml;
+            const now = new Date();
+            const times = ['2 min ago', '5 min ago', '12 min ago', '18 min ago', '25 min ago', '32 min ago', '41 min ago', '55 min ago'];
             
-            // Company views
-            let viewsHtml = '';
-            data.companies.forEach(company => {
-                const projectLinks = company.projects.map(p => `
-                    <a href="${p.url}" target="_blank" class="project-link-card">
-                        <div class="project-link-info">
-                            <div class="project-link-icon">📦</div>
-                            <div>
-                                <div class="project-link-name">${p.name}</div>
-                                <div style="font-size:0.75rem; color:var(--gray)">${p.desc}</div>
+            teamMembers.forEach((member, index) => {
+                const statusClass = member.status === 'active' ? 'status-active' : 
+                                   member.status === 'break' ? 'status-break' : 'status-meeting';
+                const statusText = member.status === 'active' ? 'Working' : 
+                                  member.status === 'break' ? 'On Break' : 'In Meeting';
+                
+                html += `
+                    <div class="activity-item">
+                        <div class="activity-avatar" style="background: ${member.color}22; color: ${member.color}">
+                            ${member.icon}
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-name">${member.name}</div>
+                            <div class="activity-task">${member.task}</div>
+                            <div class="activity-time">
+                                <span class="activity-status ${statusClass}">${statusText}</span>
+                                • ${times[index]}
                             </div>
                         </div>
-                        <span class="project-link-status">${p.status}</span>
-                    </a>
-                `).join('');
-                
-                const completedHtml = company.completed.map(t => `
-                    <div class="task-card priority-low">
-                        <h4><i class="fas fa-check-circle" style="color:var(--success)"></i> ${t.title}</h4>
-                        <div class="task-meta"><span><i class="fas fa-calendar"></i> ${t.date}</span></div>
                     </div>
-                `).join('');
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Render Timeline
+        function renderTimeline() {
+            const container = document.getElementById('projectTimeline');
+            let html = '';
+            
+            timelineData.forEach(item => {
+                const dotClass = item.status === 'completed' ? 'completed' : 
+                                item.status === 'in-progress' ? 'in-progress' : 'planned';
                 
-                const progressHtml = company.inProgress.map(t => `
-                    <div class="task-card priority-${t.priority}">
-                        <h4><i class="fas fa-spinner fa-spin" style="color:var(--primary)"></i> ${t.title}</h4>
-                        <span class="status-badge-item status-progress">In Progress</span>
+                html += `
+                    <div class="timeline-item">
+                        <div class="timeline-dot ${dotClass}"></div>
+                        <div class="timeline-date">${item.date}</div>
+                        <div class="timeline-title">${item.title}</div>
+                        <div class="timeline-desc">${item.desc}</div>
+                        <span class="timeline-tag">${item.tag}</span>
                     </div>
-                `).join('');
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Render Team Grid
+        function renderTeam() {
+            const container = document.getElementById('teamGrid');
+            let html = '';
+            
+            teamMembers.forEach(member => {
+                const statusColor = member.status === 'active' ? 'var(--success)' : 
+                                   member.status === 'break' ? 'var(--warning)' : '#8b5cf6';
+                const statusText = member.status === 'active' ? 'Active' : 
+                                  member.status === 'break' ? 'Break' : 'Meeting';
                 
-                const todoHtml = company.todo.map(t => `
-                    <div class="task-card priority-${t.priority}">
-                        <h4><i class="fas fa-clock" style="color:var(--warning)"></i> ${t.title}</h4>
-                        <span class="status-badge-item status-todo">To Do</span>
-                    </div>
-                `).join('');
-                
-                const actionsHtml = company.actions.map(a => `
-                    <div class="action-item">
-                        <div class="action-info">
-                            <h4>${a.title}</h4>
-                            <p>${a.desc}</p>
-                        </div>
-                        <button class="action-btn" onclick="alert('Action: ${a.title}')">Mark Done</button>
-                    </div>
-                `).join('');
-                
-                const teamHtml = data.team.map(m => `
+                html += `
                     <div class="team-card">
                         <div class="team-header">
-                            <div class="team-avatar" style="background:${m.color}22; color:${m.color}">${m.icon}</div>
+                            <div class="team-avatar" style="background: ${member.color}22; color: ${member.color}">
+                                ${member.icon}
+                            </div>
                             <div>
-                                <div class="team-name">${m.name}</div>
-                                <div class="team-role">${m.role}</div>
+                                <div class="team-name">${member.name}</div>
+                                <div class="team-role">${member.role}</div>
                             </div>
-                            <div class="team-status"><span class="status-dot" style="background:${m.color}"></span> Active</div>
-                        </div>
-                        <div class="team-task"><strong>Working on:</strong> ${m.task}</div>
-                    </div>
-                `).join('');
-                
-                viewsHtml += `
-                    <div id="company-${company.id}" class="company-view ${company.id === currentCompany ? 'active' : ''}">
-                        <h2 style="font-size:1.5rem; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
-                            <span style="color:${company.color}">${company.icon}</span> ${company.name}
-                        </h2>
-                        
-                        <!-- Stats -->
-                        <div class="stats-row">
-                            <div class="stat-card">
-                                <div class="label">Projects</div>
-                                <div class="value primary">${company.projects.length}</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="label">Live</div>
-                                <div class="value success">${company.projects.filter(p => p.status === 'Live').length}</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="label">In Progress</div>
-                                <div class="value warning">${company.inProgress.length}</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="label">Actions Needed</div>
-                                <div class="value danger">${company.actions.length}</div>
+                            <div class="team-status-indicator" style="color: ${statusColor}">
+                                <span style="width: 6px; height: 6px; background: ${statusColor}; border-radius: 50%;"></span>
+                                ${statusText}
                             </div>
                         </div>
-                        
-                        <!-- Project Links -->
-                        <div class="section">
-                            <div class="section-header">
-                                <div class="section-title"><i class="fas fa-external-link-alt"></i> Project Links</div>
-                            </div>
-                            <div class="project-links">${projectLinks}</div>
-                        </div>
-                        
-                        <!-- Completed -->
-                        <div class="section">
-                            <div class="section-header">
-                                <div class="section-title"><i class="fas fa-check-circle" style="color:var(--success)"></i> Completed</div>
-                            </div>
-                            <div class="task-grid">${completedHtml}</div>
-                        </div>
-                        
-                        <!-- In Progress -->
-                        <div class="section">
-                            <div class="section-header">
-                                <div class="section-title"><i class="fas fa-spinner" style="color:var(--primary)"></i> In Progress</div>
-                            </div>
-                            <div class="task-grid">${progressHtml}</div>
-                        </div>
-                        
-                        <!-- To Do -->
-                        <div class="section">
-                            <div class="section-header">
-                                <div class="section-title"><i class="fas fa-clock" style="color:var(--warning)"></i> To Do</div>
-                            </div>
-                            <div class="task-grid">${todoHtml}</div>
-                        </div>
-                        
-                        <!-- Human Actions -->
-                        <div class="section">
-                            <div class="section-header">
-                                <div class="section-title"><i class="fas fa-user" style="color:var(--danger)"></i> Human Actions Needed</div>
-                            </div>
-                            <div class="action-list">${actionsHtml}</div>
-                        </div>
-                        
-                        <!-- Team -->
-                        <div class="section">
-                            <div class="section-header">
-                                <div class="section-title"><i class="fas fa-users"></i> Team Activity</div>
-                            </div>
-                            <div class="team-grid">${teamHtml}</div>
+                        <div class="team-task">
+                            <strong>Working on:</strong> ${member.task}
                         </div>
                     </div>
                 `;
             });
-            document.getElementById('companyViews').innerHTML = viewsHtml;
+            
+            container.innerHTML = html;
         }
         
-        function addProject() {
-            const name = document.getElementById('newProjectName').value;
-            const companyId = document.getElementById('newProjectCompany').value;
-            const desc = document.getElementById('newProjectDesc').value;
-            const url = document.getElementById('newProjectUrl').value;
+        // Simulate live activity updates
+        function updateActivity() {
+            const tasks = [
+                'Code review for PR #142',
+                'Deploying to production',
+                'Writing unit tests',
+                'Updating documentation',
+                'Client call scheduled',
+                'Debugging integration issues',
+                'Designing new components',
+                'Optimizing database queries'
+            ];
             
-            if (!name || !companyId) {
-                alert('Please fill in required fields');
-                return;
-            }
-            
-            const company = data.companies.find(c => c.id === companyId);
-            if (company) {
-                company.projects.push({
-                    id: name.toLowerCase().replace(/\s+/g, '-'),
-                    name: name,
-                    desc: desc,
-                    status: 'Planning',
-                    url: url
-                });
-                saveData();
-                render();
-                document.getElementById('newProjectName').value = '';
-                document.getElementById('newProjectDesc').value = '';
-                document.getElementById('newProjectUrl').value = '';
-            }
-        }
-        
-        function addCompany() {
-            const name = document.getElementById('newCompanyName').value;
-            if (!name) {
-                alert('Please enter a company name');
-                return;
-            }
-            
-            data.companies.push({
-                id: name.toLowerCase().replace(/\s+/g, '-'),
-                name: name,
-                icon: '🏢',
-                color: '#' + Math.floor(Math.random()*16777215).toString(16),
-                projects: [],
-                completed: [],
-                inProgress: [],
-                todo: [],
-                actions: []
+            teamMembers.forEach((member, index) => {
+                if (member.status === 'active') {
+                    member.task = tasks[Math.floor(Math.random() * tasks.length)];
+                }
             });
-            saveData();
-            render();
-            document.getElementById('newCompanyName').value = '';
+            
+            renderActivity();
+            renderTeam();
         }
         
         // Initialize
-        render();
+        renderActivity();
+        renderTimeline();
+        renderTeam();
+        
+        // Update activity every 30 seconds
+        setInterval(updateActivity, 30000);
     </script>
 </body>
 </html>
