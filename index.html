@@ -172,6 +172,7 @@
         .status-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
         .status-break { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
         .status-meeting { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+        .status-standby { background: rgba(100, 116, 139, 0.2); color: var(--gray); }
         
         /* Timeline */
         .timeline-panel {
@@ -390,28 +391,28 @@
                             <div class="org-card">
                                 <div class="org-avatar" style="background: rgba(14, 165, 233, 0.2); color: #0ea5e9;">🎯</div>
                                 <div class="org-name">Effy</div>
-                                <div class="org-role">Director of Development</div>
+                                <div class="org-role">Software Engineer</div>
                             </div>
                         </div>
                         <div class="org-person">
                             <div class="org-card">
                                 <div class="org-avatar" style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6;">🛡️</div>
                                 <div class="org-name">JR</div>
-                                <div class="org-role">QA & Operations</div>
+                                <div class="org-role">QA Engineer</div>
                             </div>
                         </div>
                         <div class="org-person">
                             <div class="org-card">
                                 <div class="org-avatar" style="background: rgba(236, 72, 153, 0.2); color: #ec4899;">🔍</div>
                                 <div class="org-name">Stan</div>
-                                <div class="org-role">Research Director</div>
+                                <div class="org-role">Research Coordinator</div>
                             </div>
                         </div>
                         <div class="org-person">
                             <div class="org-card">
                                 <div class="org-avatar" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">🎨</div>
                                 <div class="org-name">Gretel</div>
-                                <div class="org-role">Content Director</div>
+                                <div class="org-role">Copywriter</div>
                             </div>
                         </div>
                     </div>
@@ -422,28 +423,28 @@
                             <div class="org-card">
                                 <div class="org-avatar" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">🐒</div>
                                 <div class="org-name">Bongo</div>
-                                <div class="org-role">Developer</div>
+                                <div class="org-role">Content Analyst</div>
                             </div>
                         </div>
                         <div class="org-person">
                             <div class="org-card">
                                 <div class="org-avatar" style="background: rgba(234, 179, 8, 0.2); color: #eab908;">🐕</div>
                                 <div class="org-name">Wilson</div>
-                                <div class="org-role">Developer</div>
+                                <div class="org-role">AI Automation Expert</div>
                             </div>
                         </div>
                         <div class="org-person">
                             <div class="org-card">
                                 <div class="org-avatar" style="background: rgba(99, 102, 241, 0.2); color: #6366f1;">🐱</div>
                                 <div class="org-name">Frankie</div>
-                                <div class="org-role">Designer</div>
+                                <div class="org-role">Secretary</div>
                             </div>
                         </div>
                         <div class="org-person">
                             <div class="org-card">
                                 <div class="org-avatar" style="background: rgba(20, 184, 166, 0.2); color: #14b8a6;">🎵</div>
                                 <div class="org-name">Joon</div>
-                                <div class="org-role">Content Creator</div>
+                                <div class="org-role">Social Media Manager</div>
                             </div>
                         </div>
                     </div>
@@ -493,75 +494,75 @@
         const teamMembers = [
             { 
                 name: 'Effy', 
-                role: 'Director of Development', 
+                role: 'Software Engineer', 
                 icon: '🎯', 
                 color: '#0ea5e9', 
                 status: 'active',
-                task: 'Building Clinic IQ dashboard v2',
-                project: 'Clinic IQ Dashboard'
+                task: 'Just built the JSW Dashboard',
+                project: 'JSW Dashboard'
             },
             { 
                 name: 'JR', 
-                role: 'QA & Operations', 
+                role: 'QA Engineer', 
                 icon: '🛡️', 
                 color: '#8b5cf6', 
                 status: 'active',
-                task: 'Running automated tests on payroll module',
-                project: 'Payroll Pro'
+                task: 'Just tested the JSW Dashboard',
+                project: 'JSW Dashboard'
             },
             { 
                 name: 'Stan', 
-                role: 'Research Director', 
+                role: 'Research Coordinator', 
                 icon: '🔍', 
                 color: '#f59e0b', 
-                status: 'active',
-                task: 'Analyzing competitor automation tools',
-                project: 'Market Research'
+                status: 'standby',
+                task: 'Standing by',
+                project: 'Research'
             },
             { 
                 name: 'Gretel', 
-                role: 'Content Director', 
+                role: 'Copywriter', 
                 icon: '🎨', 
                 color: '#10b981', 
-                status: 'meeting',
-                task: 'In client strategy meeting',
-                project: 'Client Hub'
+                status: 'standby',
+                task: 'Standing by',
+                project: 'Content'
             },
             { 
                 name: 'Bongo', 
-                role: 'Developer', 
+                role: 'Content Analyst', 
                 icon: '🐒', 
                 color: '#ef4444', 
-                status: 'active',
-                task: 'Fixing API integration bugs',
-                project: 'n8n Automation'
+                status: 'standby',
+                task: 'Standing by',
+                project: 'Content'
             },
             { 
                 name: 'Wilson', 
-                role: 'Developer', 
+                role: 'AI Automation Expert', 
                 icon: '🐕', 
                 color: '#eab908', 
                 status: 'active',
-                task: 'Implementing new inventory features',
-                project: 'Inventory Tool'
+                task: 'Fixing n8n, setting up 8 AM report',
+                project: 'Automation'
             },
             { 
                 name: 'Frankie', 
-                role: 'Designer', 
+                role: 'Secretary', 
                 icon: '🐱', 
                 color: '#6366f1', 
-                status: 'break',
-                task: 'On break - back in 15min',
-                project: 'Design System'
+                status: 'standby',
+                task: 'Standing by',
+                project: 'Admin'
             },
             { 
                 name: 'Joon', 
-                role: 'Content Creator', 
+                role: 'Social Media Manager', 
                 icon: '🎵', 
                 color: '#14b8a6', 
-                status: 'active',
-                task: 'Creating tutorial videos for AI Receptionist',
-                project: 'Marketing'
+                status: 'standby',
+                task: 'Will post reports',
+                project: 'Social Media'
             }
         ];
         
@@ -621,9 +622,11 @@
             
             teamMembers.forEach((member, index) => {
                 const statusClass = member.status === 'active' ? 'status-active' : 
-                                   member.status === 'break' ? 'status-break' : 'status-meeting';
+                                   member.status === 'break' ? 'status-break' : 
+                                   member.status === 'standby' ? 'status-standby' : 'status-meeting';
                 const statusText = member.status === 'active' ? 'Working' : 
-                                  member.status === 'break' ? 'On Break' : 'In Meeting';
+                                  member.status === 'break' ? 'On Break' :
+                                  member.status === 'standby' ? 'Standing By' : 'In Meeting';
                 
                 html += `
                     <div class="activity-item">
@@ -675,9 +678,11 @@
             
             teamMembers.forEach(member => {
                 const statusColor = member.status === 'active' ? 'var(--success)' : 
-                                   member.status === 'break' ? 'var(--warning)' : '#8b5cf6';
+                                   member.status === 'break' ? 'var(--warning)' : 
+                                   member.status === 'standby' ? 'var(--gray)' : '#8b5cf6';
                 const statusText = member.status === 'active' ? 'Active' : 
-                                  member.status === 'break' ? 'Break' : 'Meeting';
+                                  member.status === 'break' ? 'Break' :
+                                  member.status === 'standby' ? 'Standby' : 'Meeting';
                 
                 html += `
                     <div class="team-card">
