@@ -243,7 +243,7 @@
         // Supabase config
         const SUPABASE_URL = 'https://xacehhtgvubcqdoltazg.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhY2VoaHRndnViY3Fkb2x0YXpnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Mzk0Mjg2NywiZXhwIjoyMDg5NTE4ODY3fQ.5sqLtRtRnWEEuytTsfGhh1hmrQkTilL4Bd_rMrqmQ9A';
-        const WEBHOOK = 'https://practices-most-yang-litigation.trycloudflare.com/task';
+        const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484011426694697022/tzl0_nYIYCiPwxayAjxbzSl6hEvhty1DgcPjspnV9BKhoTNcnWKfwqQSEmlkxPLn2GPl';
         
         const companyInfo = {
             cliniciq: { name: 'Clinic IQ', icon: '🏥', team: [{n:'Frankie',r:'PM'},{n:'Gretel',r:'Design'},{n:'JR',r:'QA'}] },
@@ -381,15 +381,14 @@
             renderCompanyTasks();
             renderQueue();
             
-            // Auto-post if first
-            const all = getAllQueue();
-            if (all.length > 0 && all[0].text === text) {
-                fetch(WEBHOOK, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: '🎯 UP NEXT [' + companyInfo[currentCompany].name + ']: ' + text})
-                }).catch(() => {});
-            }
+            // Post to Discord
+            fetch(DISCORD_WEBHOOK, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    content: '🎯 **NEW TASK** [' + companyInfo[currentCompany].name + ']: ' + text
+                })
+            }).catch(() => {});
         }
         
         function renderCompanyTasks() {
@@ -435,19 +434,23 @@
             
             renderQueue();
             
-            // Post next
+            // Post to Discord
             const next = getAllQueue();
             if (next.length > 0) {
-                fetch(WEBHOOK, {
+                fetch(DISCORD_WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: '🎯 UP NEXT [' + (companyInfo[next[0].company] ? companyInfo[next[0].company].name : next[0].company) + ']: ' + next[0].text})
+                    body: JSON.stringify({
+                        content: '🎯 **UP NEXT** [' + (companyInfo[next[0].company] ? companyInfo[next[0].company].name : next[0].company) + ']: ' + next[0].text
+                    })
                 }).catch(() => {});
             } else {
-                fetch(WEBHOOK, {
+                fetch(DISCORD_WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: '✅ Queue complete!'})
+                    body: JSON.stringify({
+                        content: '✅ Queue is empty!'
+                    })
                 }).catch(() => {});
             }
         }
@@ -465,10 +468,12 @@
             
             const next = getAllQueue();
             if (next.length > 0) {
-                fetch(WEBHOOK, {
+                fetch(DISCORD_WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: '⏭️ Now: [' + (companyInfo[next[0].company] ? companyInfo[next[0].company].name : next[0].company) + '] ' + next[0].text})
+                    body: JSON.stringify({
+                        content: '⏭️ **SKIPPED** - Now: [' + (companyInfo[next[0].company] ? companyInfo[next[0].company].name : next[0].company) + ']: ' + next[0].text
+                    })
                 }).catch(() => {});
             }
         }
