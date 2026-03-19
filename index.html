@@ -62,12 +62,11 @@
         .view { display: none; }
         .view.active { display: block; }
         
-        /* Overview */
         .page-header { margin-bottom: 30px; }
         .page-header h1 { color: var(--rolex-green); font-size: 28px; margin-bottom: 8px; }
         .page-header p { color: #666; }
         
-        /* Task Queue Columns */
+        /* Task Queue */
         .task-columns { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 24px; }
         
         .task-column { 
@@ -90,17 +89,27 @@
             padding: 4px 12px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #666;
         }
         
-        .task-input-group { display: flex; gap: 8px; margin-bottom: 16px; }
-        .task-input { 
-            flex: 1; padding: 12px 16px; border: 2px solid var(--border); 
-            border-radius: 8px; font-size: 14px; outline: none;
+        /* Smart Task Input */
+        .smart-input { 
+            background: var(--gray); border-radius: 12px; padding: 16px; margin-bottom: 16px;
         }
-        .task-input:focus { border-color: var(--rolex-green); }
+        .smart-input input { 
+            width: 100%; padding: 12px 16px; border: 2px solid var(--border); 
+            border-radius: 8px; font-size: 14px; outline: none; margin-bottom: 12px;
+        }
+        .smart-input input:focus { border-color: var(--rolex-green); }
+        .smart-input-row { display: flex; gap: 8px; align-items: center; }
+        .smart-select { 
+            padding: 10px 14px; border: 2px solid var(--border); 
+            border-radius: 8px; font-size: 14px; background: white; cursor: pointer;
+        }
+        .smart-select:focus { border-color: var(--rolex-green); }
         .task-btn { 
-            padding: 12px 20px; background: var(--rolex-green); color: white; 
+            padding: 10px 20px; background: var(--rolex-green); color: white; 
             border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
         }
         
+        /* Task List */
         .task-list { list-style: none; }
         .task-item { 
             display: flex; align-items: center; justify-content: space-between;
@@ -109,7 +118,14 @@
         }
         .task-item.completed { opacity: 0.6; }
         .task-item.completed .task-text { text-decoration: line-through; color: #999; }
-        .task-text { flex: 1; cursor: pointer; }
+        .task-text { flex: 1; cursor: pointer; font-weight: 500; }
+        .task-assign { 
+            display: inline-block; padding: 3px 8px; border-radius: 6px; 
+            font-size: 11px; font-weight: 600; margin-left: 8px;
+        }
+        .assign-golias { background: #dbeafe; color: #1d4ed8; }
+        .assign-jack { background: #fef3c7; color: #b45309; }
+        .assign-company { background: #dcfce7; color: #15803d; }
         .task-meta { font-size: 12px; color: #999; margin-top: 4px; }
         .task-actions { display: flex; gap: 6px; }
         .move-btn {
@@ -193,7 +209,23 @@
             <div id="queue" class="view active">
                 <div class="page-header">
                     <h1>📋 Task Queue</h1>
-                    <p>Manage tasks for Jack and Golias</p>
+                    <p>Smart task management - assign to Golias, Jack, or a company</p>
+                </div>
+                
+                <!-- Smart Input -->
+                <div class="smart-input">
+                    <input type="text" id="smartTaskInput" placeholder="What needs to be done?">
+                    <div class="smart-input-row">
+                        <select class="smart-select" id="smartAssign">
+                            <option value="golias">🤖 Assign to Golias</option>
+                            <option value="jack">👤 Assign to Jack</option>
+                            <option value="cliniciq">🏥 Clinic IQ</option>
+                            <option value="wilde">⚙️ Wilde Automations</option>
+                            <option value="sam">📄 Uncle Sam's</option>
+                            <option value="westwood">🌐 Westwood</option>
+                        </select>
+                        <button class="task-btn" onclick="addSmartTask()">Add Task</button>
+                    </div>
                 </div>
                 
                 <div class="task-columns">
@@ -204,10 +236,6 @@
                             <h2>Golias Tasks</h2>
                             <span class="column-count" id="goliasCount">0</span>
                         </div>
-                        <div class="task-input-group">
-                            <input type="text" class="task-input" id="taskInput-golias" placeholder="Add task for Golias..." onkeypress="handleKeypress(event, 'golias')">
-                            <button class="task-btn" onclick="addTask('golias')">Add</button>
-                        </div>
                         <ul class="task-list" id="taskList-golias"></ul>
                     </div>
                     
@@ -217,10 +245,6 @@
                             <div class="column-icon">👤</div>
                             <h2>Jack's Tasks</h2>
                             <span class="column-count" id="jackCount">0</span>
-                        </div>
-                        <div class="task-input-group">
-                            <input type="text" class="task-input" id="taskInput-jack" placeholder="Add task for Jack..." onkeypress="handleKeypress(event, 'jack')">
-                            <button class="task-btn" onclick="addTask('jack')">Add</button>
                         </div>
                         <ul class="task-list" id="taskList-jack"></ul>
                     </div>
@@ -283,7 +307,7 @@
                 </div>
             </div>
 
-            <!-- Clinic IQ -->
+            <!-- Company Details -->
             <div id="cliniciq" class="view">
                 <button class="back-btn" onclick="showView('overview')">← Back</button>
                 <div class="company-detail">
@@ -302,7 +326,6 @@
                 </div>
             </div>
 
-            <!-- Wilde Automations -->
             <div id="wilde" class="view">
                 <button class="back-btn" onclick="showView('overview')">← Back</button>
                 <div class="company-detail">
@@ -320,7 +343,6 @@
                 </div>
             </div>
 
-            <!-- Uncle Sam's -->
             <div id="sam" class="view">
                 <button class="back-btn" onclick="showView('overview')">← Back</button>
                 <div class="company-detail">
@@ -337,7 +359,6 @@
                 </div>
             </div>
 
-            <!-- Westwood -->
             <div id="westwood" class="view">
                 <button class="back-btn" onclick="showView('overview')">← Back</button>
                 <div class="company-detail">
@@ -360,6 +381,14 @@
         const WEBHOOK_URL = 'https://hiv-finished-yeah-national.trycloudflare.com/task';
         
         const columns = ['golias', 'jack', 'completed'];
+        const assignLabels = {
+            golias: { text: 'Golias', class: 'assign-golias' },
+            jack: { text: 'Jack', class: 'assign-jack' },
+            cliniciq: { text: 'Clinic IQ', class: 'assign-company' },
+            wilde: { text: 'Wilde Auto', class: 'assign-company' },
+            sam: { text: 'Uncle Sam\'s', class: 'assign-company' },
+            westwood: { text: 'Westwood', class: 'assign-company' }
+        };
         
         function getTasks(column) {
             return JSON.parse(localStorage.getItem('jsw-tasks-' + column) || '[]');
@@ -380,10 +409,15 @@
                 return;
             }
             
-            list.innerHTML = tasks.map((t, i) => `
+            list.innerHTML = tasks.map((t, i) => {
+                const assignInfo = assignLabels[t.assign] || assignLabels.golias;
+                return `
                 <li class="task-item ${t.completed ? 'completed' : ''}">
                     <div>
-                        <div class="task-text" onclick="toggleTask('${column}', ${i})">${t.text}</div>
+                        <div class="task-text" onclick="toggleTask('${column}', ${i})">
+                            ${t.text}
+                            <span class="task-assign ${assignInfo.class}">${assignInfo.text}</span>
+                        </div>
                         <div class="task-meta">${t.time || ''}</div>
                     </div>
                     <div class="task-actions">
@@ -391,24 +425,33 @@
                         <button class="delete-btn" onclick="deleteTask('${column}', ${i})">✕</button>
                     </div>
                 </li>
-            `).join('');
+            `}).join('');
         }
         
-        function addTask(column) {
-            const input = document.getElementById('taskInput-' + column);
+        function addSmartTask() {
+            const input = document.getElementById('smartTaskInput');
+            const select = document.getElementById('smartAssign');
             const text = input.value.trim();
+            const assign = select.value;
+            
             if (!text) return;
             
-            const tasks = getTasks(column);
-            tasks.push({ text, time: new Date().toLocaleTimeString() });
-            saveTasks(column, tasks);
-            input.value = '';
-            renderTasks(column);
+            // Add to the appropriate column
+            const targetColumn = assign === 'jack' ? 'jack' : 'golias';
+            const tasks = getTasks(targetColumn);
+            tasks.push({ text, assign, time: new Date().toLocaleTimeString() });
+            saveTasks(targetColumn, tasks);
             
+            input.value = '';
+            renderTasks('golias');
+            renderTasks('jack');
+            
+            // Send to webhook
+            const label = assignLabels[assign].text;
             fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({task: '[' + column.toUpperCase() + '] ' + text})
+                body: JSON.stringify({task: `[${label}] ${text}`})
             }).catch(e => console.log('Webhook error:', e));
         }
         
@@ -431,17 +474,13 @@
             const task = tasks.splice(i, 1)[0];
             saveTasks(fromColumn, tasks);
             
-            let toColumn = fromColumn === 'golias' ? 'jack' : 'completed';
+            const toColumn = fromColumn === 'golias' ? 'jack' : 'completed';
             const newTasks = getTasks(toColumn);
             newTasks.push(task);
             saveTasks(toColumn, newTasks);
             
             renderTasks(fromColumn);
             renderTasks(toColumn);
-        }
-        
-        function handleKeypress(e, column) {
-            if (e.key === 'Enter') addTask(column);
         }
         
         function showView(viewId) {
@@ -451,6 +490,11 @@
             document.querySelector('[onclick="showView(\'' + viewId + '\')"]').classList.add('active');
             columns.forEach(c => renderTasks(c));
         }
+        
+        // Handle Enter key in smart input
+        document.getElementById('smartTaskInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addSmartTask();
+        });
         
         columns.forEach(c => renderTasks(c));
     </script>
