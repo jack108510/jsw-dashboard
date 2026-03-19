@@ -33,64 +33,50 @@
         .nav-btn:hover { background: var(--gray-100); }
         .nav-btn.active { background: var(--primary-bg); color: var(--primary); }
         
-        .main { padding: 80px 24px 40px; max-width: 1100px; margin: 0 auto; }
+        .main { padding: 80px 24px 40px; max-width: 1400px; margin: 0 auto; }
         .view { display: none; }
         .view.active { display: block; }
         .page-title { font-size: 22px; font-weight: 600; margin-bottom: 20px; }
         
-        /* Smart Queue */
-        .queue-section { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        /* Smart Queue - Main */
+        .main-queue { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
         .queue-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .queue-title { font-size: 14px; font-weight: 600; text-transform: uppercase; color: var(--gray-700); }
         .queue-badge { background: var(--primary-bg); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
         
-        /* Current Task */
         .current-task { background: linear-gradient(135deg, var(--primary-light), var(--primary)); border-radius: 10px; padding: 20px; color: white; margin-bottom: 16px; }
         .current-task-label { font-size: 11px; text-transform: uppercase; opacity: 0.8; margin-bottom: 8px; }
         .current-task-text { font-size: 18px; font-weight: 600; }
+        .current-task-company { font-size: 12px; opacity: 0.8; margin-top: 4px; }
         .current-task-actions { margin-top: 12px; display: flex; gap: 8px; }
         .btn-complete { padding: 8px 16px; background: white; color: var(--primary); border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
         .btn-skip { padding: 8px 16px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
         
-        /* Task List */
-        .task-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; }
-        .task-col { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px; }
-        .task-col-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid var(--gray-100); margin-bottom: 10px; }
-        .task-col-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--gray-700); }
-        .task-count { background: var(--primary-bg); color: var(--primary); padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+        /* Company Queues Grid */
+        .company-queues { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .company-queue { background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 16px; }
+        .company-queue-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--gray-100); }
+        .company-queue-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .company-queue-title { font-weight: 600; font-size: 14px; }
         
         .task-input-group { display: flex; gap: 6px; margin-bottom: 10px; }
         .task-input { flex: 1; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 13px; }
         .task-input:focus { outline: none; border-color: var(--primary-light); }
         .task-add-btn { padding: 8px 14px; background: var(--primary-light); color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 13px; }
         
-        .task-list { list-style: none; max-height: 300px; overflow-y: auto; }
-        .task-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--gray-100); }
+        .task-list { list-style: none; max-height: 200px; overflow-y: auto; }
+        .task-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--gray-100); }
         .task-item:last-child { border-bottom: none; }
-        .task-num { width: 24px; height: 24px; background: var(--gray-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; margin-right: 10px; }
+        .task-num { width: 20px; height: 20px; background: var(--gray-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; margin-right: 8px; }
         .task-item.active .task-num { background: var(--primary-light); color: white; }
-        .task-item.completed .task-num { background: var(--gray-300); text-decoration: line-through; }
         .task-text { flex: 1; font-size: 13px; cursor: pointer; }
-        .task-item.completed .task-text { text-decoration: line-through; color: var(--gray-500); }
-        .task-actions { display: flex; gap: 4px; }
-        .task-check { width: 18px; height: 18px; border: 1.5px solid var(--gray-300); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; }
-        .task-check:hover { border-color: var(--primary-light); }
-        .task-check.checked { background: var(--primary-light); border-color: var(--primary-light); color: white; }
         .task-delete { background: none; border: none; color: var(--gray-500); cursor: pointer; font-size: 14px; }
-        
-        /* Company Grid */
-        .company-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .company-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; }
-        .company-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-        .company-icon { font-size: 28px; margin-bottom: 8px; }
-        .company-name { font-weight: 600; font-size: 12px; }
         
         /* Company Detail */
         .company-detail { display: none; }
         .company-detail.active { display: block; }
         .company-detail-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
         .back-btn { padding: 8px 14px; background: var(--white); border: 1px solid var(--gray-200); border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--gray-700); }
-        .back-btn:hover { background: var(--gray-50); }
         .company-detail-title { display: flex; align-items: center; gap: 10px; }
         .company-detail-icon { width: 36px; height: 36px; background: var(--primary-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .company-detail-title h1 { font-size: 20px; }
@@ -119,8 +105,15 @@
         .org-name { font-weight: 600; font-size: 12px; }
         .org-role { font-size: 10px; color: var(--gray-500); }
         
-        @media (max-width: 768px) {
-            .task-grid { grid-template-columns: 1fr; }
+        /* Companies Grid */
+        .company-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .company-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; }
+        .company-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .company-icon { font-size: 28px; margin-bottom: 8px; }
+        .company-name { font-weight: 600; font-size: 12px; }
+        
+        @media (max-width: 900px) {
+            .company-queues { grid-template-columns: 1fr; }
             .company-grid { grid-template-columns: repeat(2, 1fr); }
             .detail-grid { grid-template-columns: 1fr; }
         }
@@ -133,26 +126,27 @@
             <span class="logo-text">JSW Enterprises</span>
         </div>
         <nav class="nav">
-            <button class="nav-btn active" onclick="showPage('queue')">Queue</button>
+            <button class="nav-btn active" onclick="showPage('queue')">Smart Queue</button>
             <button class="nav-btn" onclick="showPage('companies')">Companies</button>
             <button class="nav-btn" onclick="showPage('team')">Team</button>
         </nav>
     </header>
 
     <main class="main">
-        <!-- Queue Page -->
+        <!-- Smart Queue Page -->
         <div id="queue" class="view active">
             <h1 class="page-title">Smart Task Queue</h1>
             
-            <!-- Current Task -->
-            <div class="queue-section">
+            <!-- Main Current Task -->
+            <div class="main-queue">
                 <div class="queue-header">
                     <span class="queue-title">🔄 Currently Working On</span>
                     <span class="queue-badge" id="queueCount">0 tasks</span>
                 </div>
-                <div class="current-task" id="currentTask">
+                <div class="current-task">
                     <div class="current-task-label">Task #1</div>
                     <div class="current-task-text" id="currentTaskText">No tasks in queue</div>
+                    <div class="current-task-company" id="currentTaskCompany"></div>
                     <div class="current-task-actions">
                         <button class="btn-complete" onclick="completeTask()">✓ Complete</button>
                         <button class="btn-skip" onclick="skipTask()">→ Skip</button>
@@ -160,36 +154,62 @@
                 </div>
             </div>
             
-            <!-- All Tasks -->
-            <div class="task-grid">
-                <div class="task-col">
-                    <div class="task-col-header">
-                        <span class="task-col-title">Queue</span>
-                        <span class="task-count" id="count-queue">0</span>
+            <!-- Company Queues -->
+            <div class="company-queues">
+                <!-- Clinic IQ -->
+                <div class="company-queue">
+                    <div class="company-queue-header">
+                        <div class="company-queue-icon" style="background:#10B981">🏥</div>
+                        <span class="company-queue-title">Clinic IQ</span>
+                        <span class="queue-badge" id="count-cliniciq">0</span>
                     </div>
                     <div class="task-input-group">
-                        <input type="text" class="task-input" id="input-queue" placeholder="Add to queue..." onkeypress="handleEnter(event, 'queue')">
-                        <button class="task-add-btn" onclick="addTask('queue')">Add</button>
+                        <input type="text" class="task-input" id="input-cliniciq" placeholder="Add task..." onkeypress="handleEnter(event, 'cliniciq')">
+                        <button class="task-add-btn" onclick="addTask('cliniciq')">Add</button>
                     </div>
-                    <ul class="task-list" id="list-queue"></ul>
+                    <ul class="task-list" id="list-cliniciq"></ul>
                 </div>
-                <div class="task-col">
-                    <div class="task-col-header">
-                        <span class="task-col-title">My Tasks</span>
-                        <span class="task-count" id="count-mine">0</span>
+                
+                <!-- Wilde Automations -->
+                <div class="company-queue">
+                    <div class="company-queue-header">
+                        <div class="company-queue-icon" style="background:#F59E0B">⚙️</div>
+                        <span class="company-queue-title">Wilde Automations</span>
+                        <span class="queue-badge" id="count-wilde">0</span>
                     </div>
                     <div class="task-input-group">
-                        <input type="text" class="task-input" id="input-mine" placeholder="Add task..." onkeypress="handleEnter(event, 'mine')">
-                        <button class="task-add-btn" onclick="addTask('mine')">Add</button>
+                        <input type="text" class="task-input" id="input-wilde" placeholder="Add task..." onkeypress="handleEnter(event, 'wilde')">
+                        <button class="task-add-btn" onclick="addTask('wilde')">Add</button>
                     </div>
-                    <ul class="task-list" id="list-mine"></ul>
+                    <ul class="task-list" id="list-wilde"></ul>
                 </div>
-                <div class="task-col">
-                    <div class="task-col-header">
-                        <span class="task-col-title">Completed</span>
-                        <span class="task-count" id="count-done">0</span>
+                
+                <!-- Uncle Sam's -->
+                <div class="company-queue">
+                    <div class="company-queue-header">
+                        <div class="company-queue-icon" style="background:#8B5CF6">📄</div>
+                        <span class="company-queue-title">Uncle Sam's</span>
+                        <span class="queue-badge" id="count-sam">0</span>
                     </div>
-                    <ul class="task-list" id="list-done"></ul>
+                    <div class="task-input-group">
+                        <input type="text" class="task-input" id="input-sam" placeholder="Add task..." onkeypress="handleEnter(event, 'sam')">
+                        <button class="task-add-btn" onclick="addTask('sam')">Add</button>
+                    </div>
+                    <ul class="task-list" id="list-sam"></ul>
+                </div>
+                
+                <!-- Westwood -->
+                <div class="company-queue">
+                    <div class="company-queue-header">
+                        <div class="company-queue-icon" style="background:#3B82F6">🌐</div>
+                        <span class="company-queue-title">Westwood</span>
+                        <span class="queue-badge" id="count-westwood">0</span>
+                    </div>
+                    <div class="task-input-group">
+                        <input type="text" class="task-input" id="input-westwood" placeholder="Add task..." onkeypress="handleEnter(event, 'westwood')">
+                        <button class="task-add-btn" onclick="addTask('westwood')">Add</button>
+                    </div>
+                    <ul class="task-list" id="list-westwood"></ul>
                 </div>
             </div>
         </div>
@@ -227,18 +247,9 @@
                 </div>
             </div>
             <div class="detail-stats">
-                <div class="detail-stat">
-                    <div class="detail-stat-value" id="stat-active">0</div>
-                    <div class="detail-stat-label">Active Tasks</div>
-                </div>
-                <div class="detail-stat">
-                    <div class="detail-stat-value" id="stat-team">0</div>
-                    <div class="detail-stat-label">Team</div>
-                </div>
-                <div class="detail-stat">
-                    <div class="detail-stat-value" id="stat-done">0</div>
-                    <div class="detail-stat-label">Completed</div>
-                </div>
+                <div class="detail-stat"><div class="detail-stat-value" id="stat-active">0</div><div class="detail-stat-label">Active</div></div>
+                <div class="detail-stat"><div class="detail-stat-value" id="stat-team">0</div><div class="detail-stat-label">Team</div></div>
+                <div class="detail-stat"><div class="detail-stat-value" id="stat-done">0</div><div class="detail-stat-label">Completed</div></div>
             </div>
             <div class="detail-grid">
                 <div class="detail-card">
@@ -261,7 +272,7 @@
             <h1 class="page-title">Team</h1>
             <div class="org-chart">
                 <div class="org-row"><div class="org-person"><div class="org-avatar">👤</div><div class="org-name">Jack</div><div class="org-role">Owner</div></div></div>
-                <div class="org-row"><div class="org-person"><div class="org-avatar">🤖</div><div class="org-name">Golias</div><div class="org-role">Operations Manager</div></div></div>
+                <div class="org-row"><div class="org-person"><div class="org-avatar">🤖</div><div class="org-name">Golias</div><div class="org-role">Operations</div></div></div>
                 <div class="org-row">
                     <div class="org-person"><div class="org-avatar" style="background:#10B981">E</div><div class="org-name">Effy</div><div class="org-role">Engineer</div></div>
                     <div class="org-person"><div class="org-avatar" style="background:#6366F1">J</div><div class="org-name">JR</div><div class="org-role">QA</div></div>
@@ -279,23 +290,31 @@
     <script>
         const WEBHOOK = 'https://practices-most-yang-litigation.trycloudflare.com/task';
         
-        const companies = {
-            cliniciq: { name: 'Clinic IQ', icon: '🏥', team: [{name:'Frankie',role:'PM'},{name:'Gretel',role:'Design'},{name:'JR',role:'QA'}]},
-            wilde: { name: 'Wilde Automations', icon: '⚙️', team: [{name:'Wilson',role:'Lead'},{name:'Effy',role:'Engineer'}]},
-            sam: { name: "Uncle Sam's", icon: '📄', team: [{name:'Stan',role:'Research'}]},
-            westwood: { name: 'Westwood', icon: '🌐', team: [{name:'Bongo',role:'Content'}]}
+        const companyInfo = {
+            cliniciq: { name: 'Clinic IQ', icon: '🏥', color: '#10B981', team: [{n:'Frankie',r:'PM'},{n:'Gretel',r:'Design'},{n:'JR',r:'QA'}] },
+            wilde: { name: 'Wilde Automations', icon: '⚙️', color: '#F59E0B', team: [{n:'Wilson',r:'Lead'},{n:'Effy',r:'Engineer'}] },
+            sam: { name: "Uncle Sam's", icon: '📄', color: '#8B5CF6', team: [{n:'Stan',r:'Research'}] },
+            westwood: { name: 'Westwood', icon: '🌐', color: '#3B82F6', team: [{n:'Bongo',r:'Content'}] }
         };
         
+        const companies = ['cliniciq', 'wilde', 'sam', 'westwood'];
         let currentCompany = 'cliniciq';
-        const columns = ['queue', 'mine', 'done', 'company'];
         
-        function getTasks(key) { return JSON.parse(localStorage.getItem('jsw-' + key) || '[]'); }
-        function saveTasks(key, tasks) { localStorage.setItem('jsw-' + key, JSON.stringify(tasks)); }
+        function getQueue(company) { return JSON.parse(localStorage.getItem('jsw-q-' + company) || '[]'); }
+        function saveQueue(company, tasks) { localStorage.setItem('jsw-q-' + company, JSON.stringify(tasks)); }
         
-        function renderTasks(key) {
-            const tasks = getTasks(key);
-            const list = document.getElementById('list-' + key);
-            const count = document.getElementById('count-' + key);
+        function getAllQueue() {
+            let all = [];
+            companies.forEach(c => {
+                getQueue(c).forEach(t => all.push({text: t, company: c}));
+            });
+            return all;
+        }
+        
+        function renderQueue(company) {
+            const tasks = getQueue(company);
+            const list = document.getElementById('list-' + company);
+            const count = document.getElementById('count-' + company);
             if (count) count.textContent = tasks.length;
             if (!list) return;
             
@@ -304,172 +323,161 @@
                 return;
             }
             
-            list.innerHTML = tasks.map((t, i) => `
-                <li class="task-item ${t === getCurrentTask() ? 'active' : ''}">
+            list.innerHTML = tasks.map((t, i) => {
+                const allQ = getAllQueue();
+                const isFirst = allQ.length > 0 && allQ[0].company === company && allQ[0].text === t;
+                return `
+                <li class="task-item ${isFirst ? 'active' : ''}">
                     <div class="task-num">${i + 1}</div>
-                    <span class="task-text" onclick="toggleTask('${key}', ${i})">${t}</span>
-                    <div class="task-actions">
-                        <div class="task-check ${t.completed ? 'checked' : ''}" onclick="toggleTask('${key}', ${i})">${t.completed ? '✓' : ''}</div>
-                        <button class="task-delete" onclick="deleteTask('${key}', ${i})">×</button>
-                    </div>
+                    <span class="task-text">${t}</span>
+                    <button class="task-delete" onclick="deleteTask('${company}', ${i})">×</button>
                 </li>
-            `).join('');
-            
+            `}).join('');
+        }
+        
+        function renderAll() {
+            companies.forEach(c => renderQueue(c));
             updateCurrentTask();
         }
         
         function getCurrentTask() {
-            const queue = getTasks('queue');
-            return queue[0] || null;
+            const all = getAllQueue();
+            return all[0] || null;
         }
         
         function updateCurrentTask() {
-            const queue = getTasks('queue');
-            const current = queue[0];
+            const current = getCurrentTask();
             const taskText = document.getElementById('currentTaskText');
+            const taskCompany = document.getElementById('currentTaskCompany');
             const queueCount = document.getElementById('queueCount');
             
+            const total = getAllQueue().length;
+            queueCount.textContent = total + ' tasks';
+            
             if (current) {
-                taskText.textContent = current;
-                queueCount.textContent = queue.length + ' tasks';
+                taskText.textContent = current.text;
+                taskCompany.textContent = companyInfo[current.company].icon + ' ' + companyInfo[current.company].name;
             } else {
                 taskText.textContent = 'No tasks in queue';
-                queueCount.textContent = '0 tasks';
+                taskCompany.textContent = '';
             }
         }
         
-        function addTask(key) {
-            const input = document.getElementById('input-' + key);
+        function addTask(company) {
+            const input = document.getElementById('input-' + company);
             const text = input.value.trim();
             if (!text) return;
             
-            const tasks = getTasks(key);
-            tasks.push(text);
-            saveTasks(key, tasks);
+            const queue = getQueue(company);
+            queue.push(text);
+            saveQueue(company, queue);
             input.value = '';
             
-            // If added from company, auto-add to queue
-            if (key === 'company') {
-                const queue = getTasks('queue');
-                queue.push('[Company] ' + text);
-                saveTasks('queue', queue);
-                renderTasks('queue');
-                key = 'queue';
-            }
+            renderAll();
             
-            renderTasks(key);
-            
-            // Auto-post to Discord if it's #1 in queue
-            if (key === 'queue') {
-                const queue = getTasks('queue');
-                const taskNum = queue.indexOf(text) + 1;
-                const prefix = taskNum === 1 ? '🎯 ' : '📋 ';
+            // Auto-post to Discord if it's first in queue
+            const all = getAllQueue();
+            if (all[0].company === company && all[0].text === text) {
                 fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: prefix + (taskNum === 1 ? 'UP NEXT: ' : '') + text + ' (#' + taskNum + ')'})
+                    body: JSON.stringify({task: '🎯 UP NEXT [' + companyInfo[company].name + ']: ' + text})
                 }).catch(() => {});
             }
         }
         
+        function deleteTask(company, i) {
+            const queue = getQueue(company);
+            queue.splice(i, 1);
+            saveQueue(company, queue);
+            renderAll();
+        }
+        
         function completeTask() {
-            const queue = getTasks('queue');
-            if (!queue.length) return;
+            const current = getCurrentTask();
+            if (!current) return;
             
-            const done = getTasks('done');
-            done.unshift(queue[0]);
+            const queue = getQueue(current.company);
             queue.shift();
-            saveTasks('queue', queue);
-            saveTasks('done', done);
+            saveQueue(current.company, queue);
             
-            renderTasks('queue');
-            renderTasks('done');
-            updateCurrentTask();
+            renderAll();
             
-            // Auto-post next task to Discord
-            const nextTask = queue[0];
-            if (nextTask) {
+            // Post next task
+            const next = getCurrentTask();
+            if (next) {
                 fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: '🎯 UP NEXT: ' + nextTask + ' (#1)'})
+                    body: JSON.stringify({task: '🎯 UP NEXT [' + companyInfo[next.company].name + ']: ' + next.text})
                 }).catch(() => {});
             } else {
                 fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: '✅ Queue empty!'})
+                    body: JSON.stringify({task: '✅ Queue complete!'})
                 }).catch(() => {});
             }
         }
         
         function skipTask() {
-            const queue = getTasks('queue');
-            if (!queue.length) return;
+            const current = getCurrentTask();
+            if (!current) return;
             
-            const skipped = queue.shift();
-            queue.push(skipped); // Move to end
-            saveTasks('queue', queue);
-            renderTasks('queue');
-            updateCurrentTask();
-        }
-        
-        function toggleTask(key, i) {
-            const tasks = getTasks(key);
-            if (typeof tasks[i] === 'string') {
-                tasks[i] = { text: tasks[i], completed: !tasks[i].completed };
-            } else {
-                tasks[i].completed = !tasks[i].completed;
+            const queue = getQueue(current.company);
+            queue.shift();
+            queue.push(current.text);
+            saveQueue(current.company, queue);
+            
+            renderAll();
+            
+            const next = getCurrentTask();
+            if (next) {
+                fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({task: '⏭️ SKIPPED. Now: [' + companyInfo[next.company].name + '] ' + next.text})
+                }).catch(() => {});
             }
-            saveTasks(key, tasks);
-            renderTasks(key);
         }
         
-        function deleteTask(key, i) {
-            const tasks = getTasks(key);
-            tasks.splice(i, 1);
-            saveTasks(key, tasks);
-            renderTasks(key);
-        }
-        
-        function handleEnter(e, key) { if (e.key === 'Enter') addTask(key); }
+        function handleEnter(e, company) { if (e.key === 'Enter') addTask(company); }
         
         function showPage(page) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(page).classList.add('active');
-            document.querySelector(`[onclick="showPage('${page}')"]`).classList.add('active');
-            columns.forEach(c => renderTasks(c));
+            document.querySelector('[onclick="showPage(\'' + page + '\')"]').classList.add('active');
+            if (page === 'queue') renderAll();
         }
         
         function openCompany(company) {
             currentCompany = company;
-            const data = companies[company];
+            const data = companyInfo[company];
             document.getElementById('detail-icon').textContent = data.icon;
             document.getElementById('detail-name').textContent = data.name;
             document.getElementById('detail-team').innerHTML = data.team.map(t => `
                 <div class="team-member">
-                    <div class="team-avatar">${t.name[0]}</div>
-                    <div class="team-member-name">${t.name}</div>
-                    <div class="team-member-role">${t.role}</div>
+                    <div class="team-avatar">${t.n[0]}</div>
+                    <div class="team-member-name">${t.n}</div>
+                    <div class="team-member-role">${t.r}</div>
                 </div>
             `).join('');
-            
             document.getElementById('stat-team').textContent = data.team.length;
             
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById('company-detail').classList.add('active');
-            renderTasks('company');
+            renderQueue(company);
         }
         
         function closeCompany() {
             document.getElementById('company-detail').classList.remove('active');
             document.getElementById('queue').classList.add('active');
             document.querySelector('[onclick="showPage(\'queue\')"]').classList.add('active');
-            columns.forEach(c => renderTasks(c));
+            renderAll();
         }
         
-        columns.forEach(c => renderTasks(c));
+        renderAll();
     </script>
 </body>
 </html>
