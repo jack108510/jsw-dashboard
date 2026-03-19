@@ -33,13 +33,13 @@
         .nav-btn:hover { background: var(--gray-100); }
         .nav-btn.active { background: var(--primary-bg); color: var(--primary); }
         
-        .main { padding: 80px 24px 40px; max-width: 1400px; margin: 0 auto; }
+        .main { padding: 80px 24px 40px; max-width: 1000px; margin: 0 auto; }
         .view { display: none; }
         .view.active { display: block; }
         .page-title { font-size: 22px; font-weight: 600; margin-bottom: 20px; }
         
-        /* Smart Queue - Main */
-        .main-queue { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+        /* Smart Queue */
+        .queue-section { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .queue-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .queue-title { font-size: 14px; font-weight: 600; text-transform: uppercase; color: var(--gray-700); }
         .queue-badge { background: var(--primary-bg); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
@@ -52,25 +52,24 @@
         .btn-complete { padding: 8px 16px; background: white; color: var(--primary); border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
         .btn-skip { padding: 8px 16px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
         
-        /* Company Queues Grid */
-        .company-queues { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        .company-queue { background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 16px; }
-        .company-queue-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--gray-100); }
-        .company-queue-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-        .company-queue-title { font-weight: 600; font-size: 14px; }
+        /* Queue List */
+        .queue-list { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px; }
+        .queue-list-header { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--gray-500); margin-bottom: 12px; }
         
-        .task-input-group { display: flex; gap: 6px; margin-bottom: 10px; }
-        .task-input { flex: 1; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 13px; }
-        .task-input:focus { outline: none; border-color: var(--primary-light); }
-        .task-add-btn { padding: 8px 14px; background: var(--primary-light); color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 13px; }
-        
-        .task-list { list-style: none; max-height: 200px; overflow-y: auto; }
-        .task-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--gray-100); }
+        .task-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--gray-100); }
         .task-item:last-child { border-bottom: none; }
-        .task-num { width: 20px; height: 20px; background: var(--gray-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; margin-right: 8px; }
-        .task-item.active .task-num { background: var(--primary-light); color: white; }
-        .task-text { flex: 1; font-size: 13px; cursor: pointer; }
-        .task-delete { background: none; border: none; color: var(--gray-500); cursor: pointer; font-size: 14px; }
+        .task-num { width: 24px; height: 24px; background: var(--gray-200); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; margin-right: 12px; }
+        .task-item:first-child .task-num { background: var(--primary-light); color: white; }
+        .task-text { flex: 1; font-size: 14px; }
+        .task-company { font-size: 11px; color: var(--gray-500); margin-left: 8px; }
+        .task-delete { background: none; border: none; color: var(--gray-500); cursor: pointer; font-size: 16px; }
+        
+        /* Companies Grid */
+        .company-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .company-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; }
+        .company-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .company-icon { font-size: 28px; margin-bottom: 8px; }
+        .company-name { font-weight: 600; font-size: 13px; }
         
         /* Company Detail */
         .company-detail { display: none; }
@@ -81,14 +80,23 @@
         .company-detail-icon { width: 36px; height: 36px; background: var(--primary-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .company-detail-title h1 { font-size: 20px; }
         
-        .detail-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-        .detail-stat { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 12px; text-align: center; }
+        .detail-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+        .detail-stat { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px; text-align: center; }
         .detail-stat-value { font-size: 20px; font-weight: 700; color: var(--primary-light); }
         .detail-stat-label { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
         
         .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .detail-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px; }
         .detail-card-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--gray-500); margin-bottom: 10px; }
+        
+        .task-input-group { display: flex; gap: 6px; margin-bottom: 10px; }
+        .task-input { flex: 1; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 13px; }
+        .task-input:focus { outline: none; border-color: var(--primary-light); }
+        .task-add-btn { padding: 8px 14px; background: var(--primary-light); color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 13px; }
+        
+        .task-list { list-style: none; max-height: 250px; overflow-y: auto; }
+        .task-list-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--gray-100); }
+        .task-list-item:last-child { border-bottom: none; }
         
         .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         .team-member { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 6px; padding: 10px; text-align: center; }
@@ -105,15 +113,7 @@
         .org-name { font-weight: 600; font-size: 12px; }
         .org-role { font-size: 10px; color: var(--gray-500); }
         
-        /* Companies Grid */
-        .company-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .company-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; }
-        .company-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-        .company-icon { font-size: 28px; margin-bottom: 8px; }
-        .company-name { font-weight: 600; font-size: 12px; }
-        
-        @media (max-width: 900px) {
-            .company-queues { grid-template-columns: 1fr; }
+        @media (max-width: 768px) {
             .company-grid { grid-template-columns: repeat(2, 1fr); }
             .detail-grid { grid-template-columns: 1fr; }
         }
@@ -137,8 +137,8 @@
         <div id="queue" class="view active">
             <h1 class="page-title">Smart Task Queue</h1>
             
-            <!-- Main Current Task -->
-            <div class="main-queue">
+            <!-- Currently Working On -->
+            <div class="queue-section">
                 <div class="queue-header">
                     <span class="queue-title">🔄 Currently Working On</span>
                     <span class="queue-badge" id="queueCount">0 tasks</span>
@@ -154,63 +154,10 @@
                 </div>
             </div>
             
-            <!-- Company Queues -->
-            <div class="company-queues">
-                <!-- Clinic IQ -->
-                <div class="company-queue">
-                    <div class="company-queue-header">
-                        <div class="company-queue-icon" style="background:#10B981">🏥</div>
-                        <span class="company-queue-title">Clinic IQ</span>
-                        <span class="queue-badge" id="count-cliniciq">0</span>
-                    </div>
-                    <div class="task-input-group">
-                        <input type="text" class="task-input" id="input-cliniciq" placeholder="Add task..." onkeypress="handleEnter(event, 'cliniciq')">
-                        <button class="task-add-btn" onclick="addTask('cliniciq')">Add</button>
-                    </div>
-                    <ul class="task-list" id="list-cliniciq"></ul>
-                </div>
-                
-                <!-- Wilde Automations -->
-                <div class="company-queue">
-                    <div class="company-queue-header">
-                        <div class="company-queue-icon" style="background:#F59E0B">⚙️</div>
-                        <span class="company-queue-title">Wilde Automations</span>
-                        <span class="queue-badge" id="count-wilde">0</span>
-                    </div>
-                    <div class="task-input-group">
-                        <input type="text" class="task-input" id="input-wilde" placeholder="Add task..." onkeypress="handleEnter(event, 'wilde')">
-                        <button class="task-add-btn" onclick="addTask('wilde')">Add</button>
-                    </div>
-                    <ul class="task-list" id="list-wilde"></ul>
-                </div>
-                
-                <!-- Uncle Sam's -->
-                <div class="company-queue">
-                    <div class="company-queue-header">
-                        <div class="company-queue-icon" style="background:#8B5CF6">📄</div>
-                        <span class="company-queue-title">Uncle Sam's</span>
-                        <span class="queue-badge" id="count-sam">0</span>
-                    </div>
-                    <div class="task-input-group">
-                        <input type="text" class="task-input" id="input-sam" placeholder="Add task..." onkeypress="handleEnter(event, 'sam')">
-                        <button class="task-add-btn" onclick="addTask('sam')">Add</button>
-                    </div>
-                    <ul class="task-list" id="list-sam"></ul>
-                </div>
-                
-                <!-- Westwood -->
-                <div class="company-queue">
-                    <div class="company-queue-header">
-                        <div class="company-queue-icon" style="background:#3B82F6">🌐</div>
-                        <span class="company-queue-title">Westwood</span>
-                        <span class="queue-badge" id="count-westwood">0</span>
-                    </div>
-                    <div class="task-input-group">
-                        <input type="text" class="task-input" id="input-westwood" placeholder="Add task..." onkeypress="handleEnter(event, 'westwood')">
-                        <button class="task-add-btn" onclick="addTask('westwood')">Add</button>
-                    </div>
-                    <ul class="task-list" id="list-westwood"></ul>
-                </div>
+            <!-- Queue List -->
+            <div class="queue-list">
+                <div class="queue-list-header">Up Next</div>
+                <div id="queueItems"></div>
             </div>
         </div>
 
@@ -242,27 +189,32 @@
             <div class="company-detail-header">
                 <button class="back-btn" onclick="closeCompany()">← Back</button>
                 <div class="company-detail-title">
-                    <div class="company-detail-icon" id="detail-icon">🏥</div>
-                    <h1 id="detail-name">Company</h1>
+                    <div class="company-detail-icon" id="detailIcon">🏥</div>
+                    <h1 id="detailName">Company</h1>
                 </div>
             </div>
             <div class="detail-stats">
-                <div class="detail-stat"><div class="detail-stat-value" id="stat-active">0</div><div class="detail-stat-label">Active</div></div>
-                <div class="detail-stat"><div class="detail-stat-value" id="stat-team">0</div><div class="detail-stat-label">Team</div></div>
-                <div class="detail-stat"><div class="detail-stat-value" id="stat-done">0</div><div class="detail-stat-label">Completed</div></div>
+                <div class="detail-stat">
+                    <div class="detail-stat-value" id="statActive">0</div>
+                    <div class="detail-stat-label">Active Tasks</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-value" id="statTeam">0</div>
+                    <div class="detail-stat-label">Team Members</div>
+                </div>
             </div>
             <div class="detail-grid">
                 <div class="detail-card">
                     <div class="detail-card-title">Tasks</div>
                     <div class="task-input-group">
-                        <input type="text" class="task-input" id="input-company" placeholder="Add task..." onkeypress="handleEnter(event, 'company')">
-                        <button class="task-add-btn" onclick="addTask('company')">Add</button>
+                        <input type="text" class="task-input" id="inputCompany" placeholder="Add task..." onkeypress="handleEnter(event)">
+                        <button class="task-add-btn" onclick="addCompanyTask()">Add</button>
                     </div>
-                    <ul class="task-list" id="list-company"></ul>
+                    <ul class="task-list" id="companyTaskList"></ul>
                 </div>
                 <div class="detail-card">
                     <div class="detail-card-title">Team</div>
-                    <div class="team-grid" id="detail-team"></div>
+                    <div class="team-grid" id="companyTeam"></div>
                 </div>
             </div>
         </div>
@@ -291,14 +243,14 @@
         const WEBHOOK = 'https://practices-most-yang-litigation.trycloudflare.com/task';
         
         const companyInfo = {
-            cliniciq: { name: 'Clinic IQ', icon: '🏥', color: '#10B981', team: [{n:'Frankie',r:'PM'},{n:'Gretel',r:'Design'},{n:'JR',r:'QA'}] },
-            wilde: { name: 'Wilde Automations', icon: '⚙️', color: '#F59E0B', team: [{n:'Wilson',r:'Lead'},{n:'Effy',r:'Engineer'}] },
-            sam: { name: "Uncle Sam's", icon: '📄', color: '#8B5CF6', team: [{n:'Stan',r:'Research'}] },
-            westwood: { name: 'Westwood', icon: '🌐', color: '#3B82F6', team: [{n:'Bongo',r:'Content'}] }
+            cliniciq: { name: 'Clinic IQ', icon: '🏥', team: [{n:'Frankie',r:'PM'},{n:'Gretel',r:'Design'},{n:'JR',r:'QA'}] },
+            wilde: { name: 'Wilde Auto', icon: '⚙️', team: [{n:'Wilson',r:'Lead'},{n:'Effy',r:'Engineer'}] },
+            sam: { name: "Uncle Sam's", icon: '📄', team: [{n:'Stan',r:'Research'}] },
+            westwood: { name: 'Westwood', icon: '🌐', team: [{n:'Bongo',r:'Content'}] }
         };
         
         const companies = ['cliniciq', 'wilde', 'sam', 'westwood'];
-        let currentCompany = 'cliniciq';
+        let currentCompany = null;
         
         function getQueue(company) { return JSON.parse(localStorage.getItem('jsw-q-' + company) || '[]'); }
         function saveQueue(company, tasks) { localStorage.setItem('jsw-q-' + company, JSON.stringify(tasks)); }
@@ -311,105 +263,134 @@
             return all;
         }
         
-        function renderQueue(company) {
-            const tasks = getQueue(company);
-            const list = document.getElementById('list-' + company);
-            const count = document.getElementById('count-' + company);
-            if (count) count.textContent = tasks.length;
-            if (!list) return;
+        function renderQueue() {
+            const all = getAllQueue();
+            const container = document.getElementById('queueItems');
+            const count = document.getElementById('queueCount');
+            count.textContent = all.length + ' tasks';
             
-            if (tasks.length === 0) {
-                list.innerHTML = '<li style="color:#9CA3AF;justify-content:center;padding:20px;">No tasks</li>';
+            if (all.length === 0) {
+                container.innerHTML = '<div style="color:#9CA3AF;text-align:center;padding:20px;">No tasks in queue</div>';
                 return;
             }
             
-            list.innerHTML = tasks.map((t, i) => {
-                const allQ = getAllQueue();
-                const isFirst = allQ.length > 0 && allQ[0].company === company && allQ[0].text === t;
-                return `
-                <li class="task-item ${isFirst ? 'active' : ''}">
+            container.innerHTML = all.map((t, i) => `
+                <div class="task-item">
                     <div class="task-num">${i + 1}</div>
-                    <span class="task-text">${t}</span>
-                    <button class="task-delete" onclick="deleteTask('${company}', ${i})">×</button>
-                </li>
-            `}).join('');
-        }
-        
-        function renderAll() {
-            companies.forEach(c => renderQueue(c));
+                    <div class="task-text">
+                        ${t.text}
+                        <span class="task-company">${companyInfo[t.company].icon} ${companyInfo[t.company].name}</span>
+                    </div>
+                    <button class="task-delete" onclick="removeFromQueue('${t.company}', ${i})">×</button>
+                </div>
+            `).join('');
+            
             updateCurrentTask();
         }
         
-        function getCurrentTask() {
-            const all = getAllQueue();
-            return all[0] || null;
-        }
-        
         function updateCurrentTask() {
-            const current = getCurrentTask();
+            const all = getAllQueue();
             const taskText = document.getElementById('currentTaskText');
             const taskCompany = document.getElementById('currentTaskCompany');
-            const queueCount = document.getElementById('queueCount');
             
-            const total = getAllQueue().length;
-            queueCount.textContent = total + ' tasks';
-            
-            if (current) {
-                taskText.textContent = current.text;
-                taskCompany.textContent = companyInfo[current.company].icon + ' ' + companyInfo[current.company].name;
+            if (all.length > 0) {
+                taskText.textContent = all[0].text;
+                taskCompany.textContent = companyInfo[all[0].company].icon + ' ' + companyInfo[all[0].company].name;
             } else {
                 taskText.textContent = 'No tasks in queue';
                 taskCompany.textContent = '';
             }
         }
         
-        function addTask(company) {
-            const input = document.getElementById('input-' + company);
+        function addCompanyTask() {
+            if (!currentCompany) return;
+            const input = document.getElementById('inputCompany');
             const text = input.value.trim();
             if (!text) return;
             
-            const queue = getQueue(company);
+            const queue = getQueue(currentCompany);
             queue.push(text);
-            saveQueue(company, queue);
+            saveQueue(currentCompany, queue);
             input.value = '';
             
-            renderAll();
+            renderCompanyTasks();
+            renderQueue();
             
-            // Auto-post to Discord if it's first in queue
+            // Auto-post if first
             const all = getAllQueue();
-            if (all[0].company === company && all[0].text === text) {
+            if (all[0].company === currentCompany && all[0].text === text) {
                 fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: '🎯 UP NEXT [' + companyInfo[company].name + ']: ' + text})
+                    body: JSON.stringify({task: '🎯 UP NEXT [' + companyInfo[currentCompany].name + ']: ' + text})
                 }).catch(() => {});
             }
         }
         
-        function deleteTask(company, i) {
-            const queue = getQueue(company);
+        function renderCompanyTasks() {
+            if (!currentCompany) return;
+            const tasks = getQueue(currentCompany);
+            const list = document.getElementById('companyTaskList');
+            const active = document.getElementById('statActive');
+            const team = document.getElementById('statTeam');
+            
+            active.textContent = tasks.length;
+            team.textContent = companyInfo[currentCompany].team.length;
+            
+            if (tasks.length === 0) {
+                list.innerHTML = '<li style="color:#9CA3AF;text-align:center;padding:20px;">No tasks</li>';
+                return;
+            }
+            
+            list.innerHTML = tasks.map((t, i) => `
+                <li class="task-list-item">
+                    <span>${i + 1}. ${t}</span>
+                    <button class="task-delete" onclick="deleteCompanyTask(${i})">×</button>
+                </li>
+            `).join('');
+        }
+        
+        function deleteCompanyTask(i) {
+            const queue = getQueue(currentCompany);
             queue.splice(i, 1);
-            saveQueue(company, queue);
-            renderAll();
+            saveQueue(currentCompany, queue);
+            renderCompanyTasks();
+            renderQueue();
+        }
+        
+        function removeFromQueue(company, idx) {
+            const queue = getQueue(company);
+            const all = getAllQueue();
+            const taskToRemove = all[idx].text;
+            
+            // Find and remove this specific task
+            const companyQueue = getQueue(company);
+            const taskIndex = companyQueue.indexOf(taskToRemove);
+            if (taskIndex > -1) {
+                companyQueue.splice(taskIndex, 1);
+                saveQueue(company, companyQueue);
+            }
+            renderQueue();
         }
         
         function completeTask() {
-            const current = getCurrentTask();
-            if (!current) return;
+            const all = getAllQueue();
+            if (all.length === 0) return;
             
+            const current = all[0];
             const queue = getQueue(current.company);
             queue.shift();
             saveQueue(current.company, queue);
             
-            renderAll();
+            renderQueue();
             
-            // Post next task
-            const next = getCurrentTask();
-            if (next) {
+            // Post next
+            const next = getAllQueue();
+            if (next.length > 0) {
                 fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: '🎯 UP NEXT [' + companyInfo[next.company].name + ']: ' + next.text})
+                    body: JSON.stringify({task: '🎯 UP NEXT [' + companyInfo[next[0].company].name + ']: ' + next[0].text})
                 }).catch(() => {});
             } else {
                 fetch(WEBHOOK, {
@@ -421,63 +402,65 @@
         }
         
         function skipTask() {
-            const current = getCurrentTask();
-            if (!current) return;
+            const all = getAllQueue();
+            if (all.length === 0) return;
             
+            const current = all[0];
             const queue = getQueue(current.company);
             queue.shift();
             queue.push(current.text);
             saveQueue(current.company, queue);
             
-            renderAll();
+            renderQueue();
             
-            const next = getCurrentTask();
-            if (next) {
+            const next = getAllQueue();
+            if (next.length > 0) {
                 fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({task: '⏭️ SKIPPED. Now: [' + companyInfo[next.company].name + '] ' + next.text})
+                    body: JSON.stringify({task: '⏭️ Now: [' + companyInfo[next[0].company].name + '] ' + next[0].text})
                 }).catch(() => {});
             }
         }
         
-        function handleEnter(e, company) { if (e.key === 'Enter') addTask(company); }
+        function handleEnter(e) { if (e.key === 'Enter') addCompanyTask(); }
         
         function showPage(page) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(page).classList.add('active');
             document.querySelector('[onclick="showPage(\'' + page + '\')"]').classList.add('active');
-            if (page === 'queue') renderAll();
+            if (page === 'queue') renderQueue();
         }
         
         function openCompany(company) {
             currentCompany = company;
-            const data = companyInfo[company];
-            document.getElementById('detail-icon').textContent = data.icon;
-            document.getElementById('detail-name').textContent = data.name;
-            document.getElementById('detail-team').innerHTML = data.team.map(t => `
+            const info = companyInfo[company];
+            document.getElementById('detailIcon').textContent = info.icon;
+            document.getElementById('detailName').textContent = info.name;
+            document.getElementById('companyTeam').innerHTML = info.team.map(t => `
                 <div class="team-member">
                     <div class="team-avatar">${t.n[0]}</div>
                     <div class="team-member-name">${t.n}</div>
                     <div class="team-member-role">${t.r}</div>
                 </div>
             `).join('');
-            document.getElementById('stat-team').textContent = data.team.length;
+            
+            renderCompanyTasks();
             
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById('company-detail').classList.add('active');
-            renderQueue(company);
         }
         
         function closeCompany() {
+            currentCompany = null;
             document.getElementById('company-detail').classList.remove('active');
             document.getElementById('queue').classList.add('active');
             document.querySelector('[onclick="showPage(\'queue\')"]').classList.add('active');
-            renderAll();
+            renderQueue();
         }
         
-        renderAll();
+        renderQueue();
     </script>
 </body>
 </html>
