@@ -10,12 +10,15 @@
             --rolex-green: #004B2B;
             --rolex-light: #006B3D;
             --gold: #D4AF37;
+            --gold-light: #F4CF57;
             --white: #FFFFFF;
-            --gray-light: #F5F5F5;
-            --gray: #E5E5E5;
+            --gray-light: #F0F2F5;
+            --gray: #E1E4E8;
             --dark: #1a1a1a;
             --text: #333333;
             --text-muted: #666666;
+            --shadow: 0 4px 20px rgba(0,75,43,0.12);
+            --shadow-hover: 0 8px 30px rgba(0,75,43,0.2);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -28,126 +31,147 @@
             background: var(--rolex-green); height: 64px;
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 40px; position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
         }
         .logo { display: flex; align-items: center; gap: 12px; }
         .logo-icon {
             width: 40px; height: 40px;
-            background: linear-gradient(135deg, var(--gold), #B8962E);
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
             font-size: 18px; color: white;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.4);
         }
-        .logo h1 { color: white; font-size: 20px; font-weight: 600; }
+        .logo h1 { color: white; font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
         
         .nav { display: flex; gap: 4px; }
         .nav-btn {
-            padding: 10px 24px; background: transparent; border: none;
-            color: rgba(255,255,255,0.7); font-weight: 500; cursor: pointer; border-radius: 6px; transition: 0.2s;
+            padding: 10px 24px; background: rgba(255,255,255,0.1); border: none;
+            color: rgba(255,255,255,0.85); font-weight: 600; cursor: pointer; border-radius: 8px; transition: 0.2s;
+            font-size: 14px;
         }
-        .nav-btn:hover { background: rgba(255,255,255,0.1); color: white; }
-        .nav-btn.active { background: white; color: var(--rolex-green); }
+        .nav-btn:hover { background: rgba(255,255,255,0.2); color: white; transform: translateY(-1px); }
+        .nav-btn.active { background: white; color: var(--rolex-green); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         
         /* Main */
         .main { padding-top: 80px; padding-bottom: 40px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
         
         /* Views */
         .view { display: none; }
         .view.active { display: block; }
         
-        .page-title { color: var(--rolex-green); font-size: 28px; margin-bottom: 24px; }
+        .page-title { color: var(--rolex-green); font-size: 32px; margin-bottom: 24px; font-weight: 700; }
         
-        /* Task Columns */
-        .task-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        /* Task Columns - 3 columns with Golias biggest */
+        .task-columns { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 24px; }
         
         .task-column {
-            background: white; border-radius: 8px; padding: 24px;
-            border: 1px solid var(--gray);
+            background: white; border-radius: 16px; padding: 24px;
+            box-shadow: var(--shadow); border: 1px solid rgba(0,75,43,0.08);
         }
+        .task-column:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); transition: 0.2s; }
+        
         .column-header {
             display: flex; align-items: center; justify-content: space-between;
-            padding-bottom: 16px; border-bottom: 2px solid var(--rolex-green); margin-bottom: 16px;
+            padding-bottom: 16px; border-bottom: 3px solid var(--rolex-green); margin-bottom: 16px;
         }
-        .column-header h2 { color: var(--rolex-green); font-size: 18px; }
+        .column-header h2 { color: var(--rolex-green); font-size: 18px; font-weight: 700; }
+        .column-count {
+            background: var(--gray-light); padding: 4px 12px; border-radius: 20px;
+            font-size: 13px; font-weight: 600; color: var(--text-muted);
+        }
         
         .task-input-row { display: flex; gap: 8px; margin-bottom: 16px; }
         .task-input {
-            flex: 1; padding: 12px 16px; border: 2px solid var(--gray); border-radius: 6px; font-size: 14px; outline: none;
+            flex: 1; padding: 14px 18px; border: 2px solid var(--gray); border-radius: 10px; 
+            font-size: 14px; outline: none; transition: 0.2s;
         }
-        .task-input:focus { border-color: var(--rolex-green); }
+        .task-input:focus { border-color: var(--rolex-green); box-shadow: 0 0 0 3px rgba(0,75,43,0.1); }
         .add-btn {
-            padding: 12px 20px; background: var(--rolex-green); color: white;
-            border: none; border-radius: 6px; font-weight: 600; cursor: pointer;
+            padding: 14px 24px; background: var(--rolex-green); color: white;
+            border: none; border-radius: 10px; font-weight: 600; cursor: pointer;
+            transition: 0.2s; box-shadow: 0 4px 15px rgba(0,75,43,0.3);
         }
+        .add-btn:hover { background: var(--rolex-light); transform: translateY(-1px); }
         
         .task-list { list-style: none; }
         .task-item {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 12px; border-bottom: 1px solid var(--gray-light);
+            padding: 14px; border-bottom: 1px solid var(--gray-light);
+            transition: 0.2s;
         }
+        .task-item:hover { background: var(--gray-light); border-radius: 8px; }
         .task-item.completed { opacity: 0.5; }
         .task-item.completed span { text-decoration: line-through; }
-        .task-text { cursor: pointer; flex: 1; }
-        .task-actions { display: flex; gap: 6px; }
+        .task-text { cursor: pointer; flex: 1; font-weight: 500; }
+        .task-actions { display: flex; gap: 8px; }
         .check-btn {
-            width: 24px; height: 24px; border: 2px solid var(--rolex-green);
-            border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border: 2px solid var(--rolex-green);
+            border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
         }
+        .check-btn:hover { background: rgba(0,75,43,0.1); }
         .check-btn.checked { background: var(--rolex-green); color: white; }
         .delete-btn {
-            background: #dc2626; color: white; border: none;
-            padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;
+            background: #ef4444; color: white; border: none;
+            padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px;
+            transition: 0.2s;
         }
+        .delete-btn:hover { background: #dc2626; }
         
         /* Companies */
-        .company-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .company-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
         .company-bubble {
-            aspect-ratio: 1; background: white; border: 2px solid var(--gray);
-            border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.2s; text-align: center; padding: 20px;
+            aspect-ratio: 1; background: white; border: none;
+            border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s; text-align: center; padding: 24px;
+            box-shadow: var(--shadow);
         }
-        .company-bubble:hover { border-color: var(--rolex-green); transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,75,43,0.15); }
-        .company-bubble .icon { font-size: 32px; margin-bottom: 8px; }
-        .company-bubble .name { color: var(--rolex-green); font-weight: 600; font-size: 14px; }
+        .company-bubble:hover { transform: translateY(-8px) scale(1.05); box-shadow: var(--shadow-hover); }
+        .company-bubble .icon { font-size: 40px; margin-bottom: 12px; }
+        .company-bubble .name { color: var(--rolex-green); font-weight: 700; font-size: 15px; }
         
         /* Company Detail Modal */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200;
             display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px);
         }
         .modal-overlay.active { display: flex; }
         .modal {
-            background: white; border-radius: 12px; width: 90%; max-width: 800px; max-height: 80vh; overflow-y: auto;
+            background: white; border-radius: 20px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         .modal-header {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 24px; border-bottom: 1px solid var(--gray);
+            padding: 24px; border-bottom: 1px solid var(--gray);
         }
-        .modal-header h2 { color: var(--rolex-green); font-size: 24px; }
+        .modal-header h2 { color: var(--rolex-green); font-size: 26px; font-weight: 700; }
         .close-btn {
-            background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);
+            background: var(--gray-light); border: none; width: 40px; height: 40px;
+            border-radius: 50%; font-size: 20px; cursor: pointer; color: var(--text-muted);
+            transition: 0.2s;
         }
+        .close-btn:hover { background: #ef4444; color: white; }
         .modal-body { padding: 24px; }
         
         /* Team */
-        .org-chart { background: white; border-radius: 8px; padding: 40px; border: 1px solid var(--gray); }
-        .org-level { display: flex; justify-content: center; gap: 40px; margin-bottom: 50px; position: relative; }
-        .org-person {
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            position: relative;
-        }
+        .org-chart { background: white; border-radius: 20px; padding: 50px; box-shadow: var(--shadow); }
+        .org-level { display: flex; justify-content: center; gap: 50px; margin-bottom: 60px; position: relative; flex-wrap: wrap; }
+        .org-person { display: flex; flex-direction: column; align-items: center; text-align: center; }
         .org-avatar {
-            width: 80px; height: 80px; background: var(--rolex-green); border-radius: 50%;
+            width: 90px; height: 90px; background: var(--rolex-green); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 28px; color: white; font-weight: 700; margin-bottom: 12px;
+            font-size: 32px; color: white; font-weight: 700; margin-bottom: 14px;
+            box-shadow: 0 8px 25px rgba(0,75,43,0.3);
         }
-        .org-name { font-weight: 600; color: var(--dark); margin-bottom: 4px; }
-        .org-role { font-size: 13px; color: var(--text-muted); }
+        .org-name { font-weight: 700; color: var(--dark); font-size: 15px; margin-bottom: 4px; }
+        .org-role { font-size: 13px; color: var(--text-muted); font-weight: 500; }
         
-        .org-connector {
-            position: absolute; top: -25px; left: 50%; width: 2px; height: 25px; background: var(--gray);
+        @media (max-width: 1000px) {
+            .task-columns { grid-template-columns: 1fr; }
+            .company-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        .org-level:first-child .org-connector { display: none; }
-        
     </style>
 </head>
 <body>
@@ -171,20 +195,33 @@
                 <div class="task-columns">
                     <div class="task-column">
                         <div class="column-header">
-                            <h2>My Tasks</h2>
+                            <h2>🤖 Golias Tasks</h2>
+                            <span class="column-count" id="count-golias">0</span>
                         </div>
                         <div class="task-input-row">
-                            <input type="text" class="task-input" id="taskInput-mine" placeholder="Add a task..." onkeypress="handleKeypress(event, 'mine')">
+                            <input type="text" class="task-input" id="taskInput-golias" placeholder="Add task for Golias..." onkeypress="handleKeypress(event, 'golias')">
+                            <button class="add-btn" onclick="addTask('golias')">Add</button>
+                        </div>
+                        <ul class="task-list" id="taskList-golias"></ul>
+                    </div>
+                    <div class="task-column">
+                        <div class="column-header">
+                            <h2>👤 My Tasks</h2>
+                            <span class="column-count" id="count-mine">0</span>
+                        </div>
+                        <div class="task-input-row">
+                            <input type="text" class="task-input" id="taskInput-mine" placeholder="Add my task..." onkeypress="handleKeypress(event, 'mine')">
                             <button class="add-btn" onclick="addTask('mine')">Add</button>
                         </div>
                         <ul class="task-list" id="taskList-mine"></ul>
                     </div>
                     <div class="task-column">
                         <div class="column-header">
-                            <h2>Log Task</h2>
+                            <h2>📝 Log Task</h2>
+                            <span class="column-count" id="count-log">0</span>
                         </div>
                         <div class="task-input-row">
-                            <input type="text" class="task-input" id="taskInput-log" placeholder="Add a task..." onkeypress="handleKeypress(event, 'log')">
+                            <input type="text" class="task-input" id="taskInput-log" placeholder="Log a task..." onkeypress="handleKeypress(event, 'log')">
                             <button class="add-btn" onclick="addTask('log')">Add</button>
                         </div>
                         <ul class="task-list" id="taskList-log"></ul>
@@ -234,46 +271,14 @@
                         </div>
                     </div>
                     <div class="org-level">
-                        <div class="org-person">
-                            <div class="org-avatar" style="background:#10b981">E</div>
-                            <div class="org-name">Effy</div>
-                            <div class="org-role">Software Engineer</div>
-                        </div>
-                        <div class="org-person">
-                            <div class="org-avatar" style="background:#6366f1">J</div>
-                            <div class="org-name">JR</div>
-                            <div class="org-role">QA Engineer</div>
-                        </div>
-                        <div class="org-person">
-                            <div class="org-avatar" style="background:#f59e0b">W</div>
-                            <div class="org-name">Wilson</div>
-                            <div class="org-role">Lead Developer</div>
-                        </div>
-                        <div class="org-person">
-                            <div class="org-avatar" style="background:#ec4899">G</div>
-                            <div class="org-name">Gretel</div>
-                            <div class="org-role">Copywriter</div>
-                        </div>
-                        <div class="org-person">
-                            <div class="org-avatar" style="background:#8b5cf6">S</div>
-                            <div class="org-name">Stan</div>
-                            <div class="org-role">Research</div>
-                        </div>
-                        <div class="org-person">
-                            <div class="org-avatar" style="background:#3b82f6">B</div>
-                            <div class="org-name">Bongo</div>
-                            <div class="org-role">Content Analyst</div>
-                        </div>
-                        <div class="org-person">
-                            <div class="org-avatar" style="background:#14b8a6">F</div>
-                            <div class="org-name">Frankie</div>
-                            <div class="org-role">Secretary</div>
-                        </div>
-                        <div class="org-person">
-                            <div class="org-avatar" style="background:#f97316">J</div>
-                            <div class="org-name">Joon</div>
-                            <div class="org-role">Social Media</div>
-                        </div>
+                        <div class="org-person"><div class="org-avatar" style="background:#10b981">E</div><div class="org-name">Effy</div><div class="org-role">Software Engineer</div></div>
+                        <div class="org-person"><div class="org-avatar" style="background:#6366f1">J</div><div class="org-name">JR</div><div class="org-role">QA Engineer</div></div>
+                        <div class="org-person"><div class="org-avatar" style="background:#f59e0b">W</div><div class="org-name">Wilson</div><div class="org-role">Lead Developer</div></div>
+                        <div class="org-person"><div class="org-avatar" style="background:#ec4899">G</div><div class="org-name">Gretel</div><div class="org-role">Copywriter</div></div>
+                        <div class="org-person"><div class="org-avatar" style="background:#8b5cf6">S</div><div class="org-name">Stan</div><div class="org-role">Research</div></div>
+                        <div class="org-person"><div class="org-avatar" style="background:#3b82f6">B</div><div class="org-name">Bongo</div><div class="org-role">Content Analyst</div></div>
+                        <div class="org-person"><div class="org-avatar" style="background:#14b8a6">F</div><div class="org-name">Frankie</div><div class="org-role">Secretary</div></div>
+                        <div class="org-person"><div class="org-avatar" style="background:#f97316">J</div><div class="org-name">Joon</div><div class="org-role">Social Media</div></div>
                     </div>
                 </div>
             </div>
@@ -289,9 +294,7 @@
             </div>
             <div class="modal-body">
                 <div class="task-column">
-                    <div class="column-header">
-                        <h2>Tasks</h2>
-                    </div>
+                    <div class="column-header"><h2>Tasks</h2></div>
                     <div class="task-input-row">
                         <input type="text" class="task-input" id="taskInput-company" placeholder="Add a task..." onkeypress="handleKeypress(event, 'company')">
                         <button class="add-btn" onclick="addTask('company')">Add</button>
@@ -305,7 +308,7 @@
     <script>
         const WEBHOOK_URL = 'https://hiv-finished-yeah-national.trycloudflare.com/task';
         
-        const columns = ['mine', 'log', 'company'];
+        const columns = ['golias', 'mine', 'log', 'company'];
         const companyNames = { cliniciq: 'Clinic IQ', wilde: 'Wilde Automations', sam: "Uncle Sam's Procurement", westwood: 'The Westwood Network' };
         let currentCompany = 'cliniciq';
         
@@ -320,6 +323,8 @@
         function renderTasks(key) {
             const tasks = getTasks(key);
             const list = document.getElementById('taskList-' + key);
+            const count = document.getElementById('count-' + key);
+            if (count) count.textContent = tasks.length;
             if (!list) return;
             
             if (tasks.length === 0) {
@@ -370,9 +375,7 @@
             renderTasks(key);
         }
         
-        function handleKeypress(e, key) {
-            if (e.key === 'Enter') addTask(key);
-        }
+        function handleKeypress(e, key) { if (e.key === 'Enter') addTask(key); }
         
         function showView(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -389,9 +392,7 @@
             renderTasks('company');
         }
         
-        function closeModal() {
-            document.getElementById('companyModal').classList.remove('active');
-        }
+        function closeModal() { document.getElementById('companyModal').classList.remove('active'); }
         
         columns.forEach(c => renderTasks(c));
     </script>
