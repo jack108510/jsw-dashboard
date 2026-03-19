@@ -226,6 +226,15 @@
                     <div class="team-grid" id="companyTeam"></div>
                 </div>
             </div>
+            <!-- Notes/Ideas -->
+            <div class="detail-card" style="margin-top:12px;">
+                <div class="detail-card-title">💡 Ideas & Notes</div>
+                <div class="task-input-group">
+                    <input type="text" class="task-input" id="inputNote" placeholder="Jot down an idea..." onkeypress="handleNoteEnter(event)">
+                    <button class="task-add-btn" onclick="addNote()">Add</button>
+                </div>
+                <ul class="task-list" id="companyNotesList"></ul>
+            </div>
             <!-- Whiteboard -->
             <div class="detail-card" style="margin-top:12px;">
                 <div class="detail-card-title">📝 Company Whiteboard</div>
@@ -566,8 +575,9 @@
                 </div>
             `).join('');
             
-            // Load whiteboard
+            // Load whiteboard and notes
             document.getElementById('whiteboard').value = localStorage.getItem('jsw-whiteboard-' + company) || '';
+            renderCompanyNotes();
             
             renderCompanyTasks();
             
@@ -579,6 +589,82 @@
             if (!currentCompany) return;
             localStorage.setItem('jsw-whiteboard-' + currentCompany, document.getElementById('whiteboard').value);
         }
+        
+        // Notes functions
+        function getNotes(company) {
+            return JSON.parse(localStorage.getItem('jsw-notes-' + company) || '[]');
+        }
+        
+        function saveNotes(company, notes) {
+            localStorage.setItem('jsw-notes-' + company, JSON.stringify(notes));
+        }
+        
+        function renderCompanyNotes() {
+            if (!currentCompany) return;
+            const notes = getNotes(currentCompany);
+            const list = document.getElementById('companyNotesList');
+            
+            if (notes.length === 0) {
+                list.innerHTML = '<li style="color:#9CA3AF;text-align:center;padding:20px;">No ideas yet</li>';
+                return;
+            }
+            
+            list.innerHTML = notes.map((n, i) => `
+                <li class="task-list-item">
+                    <span>💡 ${n}</span>
+                    <div>
+                        <button class="task-add-btn" style="padding:4px 8px;margin-right:4px;" onclick="noteToTask(${i})">→ Task</button>
+                        <button class="task-delete" onclick="deleteNote(${i})">×</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+        
+        function addNote() {
+            if (!currentCompany) return;
+            const input = document.getElementById('inputNote');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const notes = getNotes(currentCompany);
+            notes.push(text);
+            saveNotes(currentCompany, notes);
+            input.value = '';
+            renderCompanyNotes();
+        }
+        
+        function deleteNote(i) {
+            if (!currentCompany) return;
+            const notes = getNotes(currentCompany);
+            notes.splice(i, 1);
+            saveNotes(currentCompany, notes);
+            renderCompanyNotes();
+        }
+        
+        async function noteToTask(i) {
+            if (!currentCompany) return;
+            const notes = getNotes(currentCompany);
+            const text = notes[i];
+            
+            // Add to task queue
+            await addTask(text, currentCompany);
+            
+            // Remove from notes
+            notes.splice(i, 1);
+            saveNotes(currentCompany, notes);
+            renderCompanyNotes();
+            
+            // Post to Discord
+            fetch(DISCORD_WEBHOOK, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    content: '🎯 **NEW TASK** [' + companyInfo[currentCompany].name + ']: ' + text
+                })
+            }).catch(() => {});
+        }
+        
+        function handleNoteEnter(e) { if (e.key === 'Enter') addNote(); }
         
         function closeCompany() {
             currentCompany = null;
