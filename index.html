@@ -104,6 +104,10 @@
         .team-member-name { font-weight: 600; font-size: 11px; }
         .team-member-role { font-size: 10px; color: var(--gray-500); }
         
+        /* Whiteboard */
+        .whiteboard { width: 100%; min-height: 200px; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 13px; font-family: monospace; resize: vertical; line-height: 1.5; }
+        .whiteboard:focus { outline: none; border-color: var(--primary-light); }
+        
         /* Team Page */
         .org-chart { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 32px; }
         .org-row { display: flex; justify-content: center; gap: 32px; margin-bottom: 32px; }
@@ -217,6 +221,12 @@
                     <div class="detail-card-title">Team</div>
                     <div class="team-grid" id="companyTeam"></div>
                 </div>
+            </div>
+            <!-- Whiteboard -->
+            <div class="detail-card" style="margin-top:12px;">
+                <div class="detail-card-title">📝 Company Whiteboard</div>
+                <textarea class="whiteboard" id="whiteboard" placeholder="Paste company details, important info, notes..." oninput="saveWhiteboard()"></textarea>
+            </div>
             </div>
         </div>
 
@@ -551,10 +561,18 @@
                 </div>
             `).join('');
             
+            // Load whiteboard
+            document.getElementById('whiteboard').value = localStorage.getItem('jsw-whiteboard-' + company) || '';
+            
             renderCompanyTasks();
             
             document.getElementById('queue').classList.remove('active'); document.getElementById('companies').classList.remove('active'); document.getElementById('team').classList.remove('active');
             document.getElementById('company-detail').classList.add('active');
+        }
+        
+        function saveWhiteboard() {
+            if (!currentCompany) return;
+            localStorage.setItem('jsw-whiteboard-' + currentCompany, document.getElementById('whiteboard').value);
         }
         
         function closeCompany() {
