@@ -170,21 +170,25 @@
         <div id="companies" class="view">
             <h1 class="page-title">Companies</h1>
             <div class="company-grid">
+                <div class="company-card" onclick="openCompany('jsw')">
+                    <div class="company-icon">🏢</div>
+                    <div class="company-name">JSW Enterprises</div>
+                </div>
                 <div class="company-card" onclick="openCompany('cliniciq')">
                     <div class="company-icon">🏥</div>
                     <div class="company-name">Clinic IQ</div>
                 </div>
                 <div class="company-card" onclick="openCompany('wilde')">
                     <div class="company-icon">⚙️</div>
-                    <div class="company-name">Wilde Auto</div>
+                    <div class="company-name">Wilde Automations</div>
                 </div>
                 <div class="company-card" onclick="openCompany('sam')">
                     <div class="company-icon">📄</div>
-                    <div class="company-name">Uncle Sam's</div>
+                    <div class="company-name">Uncle Sam's Procurement</div>
                 </div>
                 <div class="company-card" onclick="openCompany('westwood')">
                     <div class="company-icon">🌐</div>
-                    <div class="company-name">Westwood</div>
+                    <div class="company-name">The Westwood Network</div>
                 </div>
             </div>
         </div>
@@ -266,13 +270,14 @@
         const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484011426694697022/tzl0_nYIYCiPwxayAjxbzSl6hEvhty1DgcPjspnV9BKhoTNcnWKfwqQSEmlkxPLn2GPl';
         
         const companyInfo = {
+            jsw: { name: 'JSW Enterprises', icon: '🏢', team: [{n:'Jack',r:'Owner'},{n:'Golias',r:'Operations'}] },
             cliniciq: { name: 'Clinic IQ', icon: '🏥', team: [{n:'Frankie',r:'PM'},{n:'Gretel',r:'Design'},{n:'JR',r:'QA'}] },
-            wilde: { name: 'Wilde Auto', icon: '⚙️', team: [{n:'Wilson',r:'Lead'},{n:'Effy',r:'Engineer'}] },
-            sam: { name: "Uncle Sam's", icon: '📄', team: [{n:'Stan',r:'Research'}] },
-            westwood: { name: 'Westwood', icon: '🌐', team: [{n:'Bongo',r:'Content'}] }
+            wilde: { name: 'Wilde Automations', icon: '⚙️', team: [{n:'Wilson',r:'Lead'},{n:'Effy',r:'Engineer'}] },
+            sam: { name: "Uncle Sam's Procurement", icon: '📄', team: [{n:'Stan',r:'Research'}] },
+            westwood: { name: 'The Westwood Network', icon: '🌐', team: [{n:'Bongo',r:'Content'}] }
         };
         
-        const companies = ['cliniciq', 'wilde', 'sam', 'westwood'];
+        const companies = ['jsw', 'cliniciq', 'wilde', 'sam', 'westwood'];
         let currentCompany = null;
         let allTasks = [];
         
