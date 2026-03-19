@@ -4,396 +4,269 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSW Enterprises - Mission Control</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #10B981;
-            --primary-dark: #059669;
-            --primary-light: #34D399;
-            --primary-50: #ECFDF5;
-            --surface: #FFFFFF;
-            --surface-2: #F8FAFC;
-            --surface-3: #F1F5F9;
-            --border: #E2E8F0;
-            --text: #0F172A;
-            --text-secondary: #475569;
-            --text-muted: #94A3B8;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --primary: #059669;
+            --primary-light: #10B981;
+            --primary-bg: #ECFDF5;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-500: #6B7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif; 
-            background: var(--surface-2); color: var(--text); min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-50); color: var(--gray-900); }
         
-        .header {
-            background: var(--surface);
-            height: 56px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            border-bottom: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-        .logo { display: flex; align-items: center; gap: 8px; }
-        .logo-icon {
-            width: 28px; height: 28px;
-            background: var(--primary);
-            border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px; color: white; font-weight: 700;
-        }
-        .logo h1 { color: var(--text); font-size: 14px; font-weight: 600; }
+        /* Header */
+        .header { background: var(--white); height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 1px solid var(--gray-200); position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .logo { width: 32px; height: 32px; background: var(--primary-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
+        .logo-text { font-weight: 600; font-size: 15px; }
+        .nav { display: flex; gap: 4px; }
+        .nav-btn { padding: 8px 16px; background: transparent; border: none; border-radius: 6px; color: var(--gray-500); font-weight: 500; cursor: pointer; font-size: 13px; }
+        .nav-btn:hover { background: var(--gray-100); }
+        .nav-btn.active { background: var(--primary-bg); color: var(--primary); }
         
-        .nav { display: flex; gap: 1px; background: var(--surface-3); padding: 3px; border-radius: 8px; }
-        .nav-btn {
-            padding: 6px 14px; background: transparent; border: none;
-            color: var(--text-secondary); font-weight: 500; cursor: pointer; border-radius: 6px; 
-            transition: all 0.15s; font-size: 13px;
-        }
-        .nav-btn:hover { color: var(--text); }
-        .nav-btn.active { 
-            background: var(--surface);
-            color: var(--primary-dark);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .main { padding-top: 72px; padding-bottom: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        /* Main */
+        .main { padding: 80px 24px 40px; max-width: 1100px; margin: 0 auto; }
         
         .view { display: none; }
         .view.active { display: block; }
         
-        .page-title { 
-            color: var(--text); font-size: 20px; margin-bottom: 16px; 
-            font-weight: 600;
-        }
+        .page-header { margin-bottom: 24px; }
+        .page-title { font-size: 22px; font-weight: 600; }
         
-        /* Overview - 3 columns */
-        .task-columns { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; }
+        /* Task Columns */
+        .task-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; }
         
-        .task-column {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px; padding: 14px;
-            box-shadow: var(--shadow-sm);
-        }
+        .task-col { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 16px; }
+        .task-col-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--gray-100); margin-bottom: 12px; }
+        .task-col-title { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--gray-700); }
+        .task-count { background: var(--primary-bg); color: var(--primary); padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
         
-        .column-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding-bottom: 10px; margin-bottom: 10px;
-            border-bottom: 1px solid var(--surface-3);
-        }
-        .column-header h2 { color: var(--text); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .column-count {
-            background: var(--primary-50); color: var(--primary-dark); 
-            padding: 2px 8px; border-radius: 99px;
-            font-size: 11px; font-weight: 600;
-        }
-        
-        .task-input-row { display: flex; gap: 6px; margin-bottom: 10px; }
-        .task-input {
-            flex: 1; padding: 8px 12px; 
-            background: var(--surface-2);
-            border: 1px solid var(--border); border-radius: 7px; 
-            font-size: 13px; outline: none; color: var(--text);
-            transition: 0.15s;
-        }
-        .task-input::placeholder { color: var(--text-muted); }
-        .task-input:focus { 
-            border-color: var(--primary);
-            background: var(--surface);
-            box-shadow: 0 0 0 3px var(--primary-50);
-        }
-        .add-btn {
-            padding: 8px 14px; 
-            background: var(--primary);
-            color: white; border: none; border-radius: 7px; 
-            font-weight: 600; cursor: pointer; font-size: 13px;
-            transition: 0.15s;
-        }
-        .add-btn:hover { background: var(--primary-dark); }
+        .task-input-group { display: flex; gap: 6px; margin-bottom: 12px; }
+        .task-input { flex: 1; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 13px; }
+        .task-input:focus { outline: none; border-color: var(--primary-light); }
+        .task-add-btn { padding: 8px 14px; background: var(--primary-light); color: white; border: none; border-radius: 6px; font-weight: 500; cursor: pointer; font-size: 13px; }
         
         .task-list { list-style: none; }
-        .task-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 0; border-bottom: 1px solid var(--surface-3);
-            font-size: 13px;
-        }
+        .task-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--gray-100); }
         .task-item:last-child { border-bottom: none; }
-        .task-item.completed { opacity: 0.5; }
-        .task-item.completed .task-text { text-decoration: line-through; }
-        .task-text { cursor: pointer; flex: 1; }
+        .task-item.completed .task-item-text { text-decoration: line-through; color: var(--gray-500); }
+        .task-item-text { font-size: 13px; cursor: pointer; flex: 1; }
         .task-actions { display: flex; gap: 4px; }
-        .check-btn {
-            width: 18px; height: 18px; 
-            border: 1.5px solid var(--border);
-            border-radius: 4px; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center;
-            font-size: 10px; color: transparent;
-            transition: 0.15s;
-        }
-        .check-btn:hover { border-color: var(--primary); }
-        .check-btn.checked { background: var(--primary); border-color: var(--primary); color: white; }
-        .delete-btn {
-            background: transparent; color: var(--text-muted); border: none;
-            padding: 2px 6px; cursor: pointer; font-size: 14px;
-        }
-        .delete-btn:hover { color: #EF4444; }
+        .task-check { width: 18px; height: 18px; border: 1.5px solid var(--gray-300); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; }
+        .task-check:hover { border-color: var(--primary-light); }
+        .task-check.checked { background: var(--primary-light); border-color: var(--primary-light); color: white; }
+        .task-delete { background: none; border: none; color: var(--gray-500); cursor: pointer; font-size: 14px; }
         
         /* Company Grid */
-        .company-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .company-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 10px; display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; cursor: pointer; padding: 24px 10px;
-            transition: 0.2s;
-        }
-        .company-card:hover { 
-            border-color: var(--primary);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-        .company-card .icon { font-size: 28px; margin-bottom: 8px; }
-        .company-card .name { color: var(--text); font-weight: 600; font-size: 12px; }
+        .company-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .company-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 24px; text-align: center; cursor: pointer; transition: 0.15s; }
+        .company-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .company-icon { font-size: 28px; margin-bottom: 8px; }
+        .company-name { font-weight: 600; font-size: 13px; }
         
-        /* Company Detail - Full Dashboard */
+        /* Company Detail */
         .company-detail { display: none; }
         .company-detail.active { display: block; }
+        .company-detail-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .back-btn { padding: 8px 14px; background: var(--white); border: 1px solid var(--gray-200); border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--gray-700); }
+        .back-btn:hover { background: var(--gray-50); }
+        .company-detail-title { display: flex; align-items: center; gap: 10px; }
+        .company-detail-icon { width: 36px; height: 36px; background: var(--primary-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .company-detail-title h1 { font-size: 20px; }
         
-        .company-detail-header {
-            display: flex; align-items: center; gap: 16px;
-            margin-bottom: 20px;
-        }
-        .back-btn {
-            padding: 8px 14px; background: var(--surface); border: 1px solid var(--border);
-            border-radius: 7px; cursor: pointer; font-size: 13px; color: var(--text-secondary);
-            transition: 0.15s;
-        }
-        .back-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .detail-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 16px; }
+        .detail-card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--gray-500); margin-bottom: 12px; }
         
-        .company-detail-title {
-            display: flex; align-items: center; gap: 12px;
-        }
-        .company-detail-icon {
-            width: 40px; height: 40px; background: var(--primary); border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; font-size: 20px;
-        }
-        .company-detail-title h1 { font-size: 20px; font-weight: 600; }
-        
-        .company-detail-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-        }
-        
-        .detail-section {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 10px; padding: 16px;
-            box-shadow: var(--shadow-sm);
-        }
-        .detail-section h3 {
-            font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
-            color: var(--text-secondary); margin-bottom: 12px;
-            font-weight: 600;
-        }
+        .detail-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+        .detail-stat { background: var(--gray-50); border-radius: 6px; padding: 12px; text-align: center; }
+        .detail-stat-value { font-size: 20px; font-weight: 700; color: var(--primary-light); }
+        .detail-stat-label { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
         
         /* Team Grid */
         .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .team-card {
-            background: var(--surface-2); border: 1px solid var(--border);
-            border-radius: 8px; padding: 12px; text-align: center;
-            transition: 0.15s;
-        }
-        .team-card:hover { background: var(--surface-3); }
-        .team-avatar {
-            width: 40px; height: 40px; background: var(--primary);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 16px; color: white; font-weight: 600; margin: 0 auto 8px;
-        }
-        .team-name { font-weight: 600; font-size: 12px; }
-        .team-role { font-size: 10px; color: var(--text-muted); }
-        
-        /* Stats */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-        .stat-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 8px; padding: 14px; text-align: center;
-        }
-        .stat-value { font-size: 24px; font-weight: 700; color: var(--primary); }
-        .stat-label { font-size: 11px; color: var(--text-muted); }
+        .team-member { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 16px; text-align: center; }
+        .team-avatar { width: 44px; height: 44px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; margin: 0 auto 8px; }
+        .team-member-name { font-weight: 600; font-size: 13px; }
+        .team-member-role { font-size: 11px; color: var(--gray-500); }
         
         /* Org Chart */
-        .org-chart { 
-            background: var(--surface); border-radius: 10px; padding: 24px; 
-            box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+        .org-chart { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 32px; }
+        .org-row { display: flex; justify-content: center; gap: 32px; margin-bottom: 32px; }
+        .org-row:last-child { margin-bottom: 0; }
+        .org-person { text-align: center; }
+        .org-avatar { width: 56px; height: 56px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: 600; margin: 0 auto 8px; }
+        .org-name { font-weight: 600; font-size: 12px; }
+        .org-role { font-size: 10px; color: var(--gray-500); }
+        
+        @media (max-width: 768px) {
+            .task-grid { grid-template-columns: 1fr; }
+            .company-grid { grid-template-columns: repeat(2, 1fr); }
+            .detail-grid { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        .org-level { 
-            display: flex; justify-content: center; gap: 24px; margin-bottom: 24px; 
-            flex-wrap: wrap; 
-        }
-        .org-level:last-child { margin-bottom: 0; }
-        .org-person { display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .org-avatar {
-            width: 48px; height: 48px; 
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: white; font-weight: 600; margin-bottom: 6px;
-        }
-        .org-name { font-weight: 600; font-size: 11px; }
-        .org-role { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
     </style>
 </head>
 <body>
     <header class="header">
-        <div class="logo">
-            <div class="logo-icon">JS</div>
-            <h1>JSW Enterprises</h1>
+        <div class="header-left">
+            <div class="logo">JS</div>
+            <span class="logo-text">JSW Enterprises</span>
         </div>
         <nav class="nav">
-            <button class="nav-btn active" onclick="showView('overview')">Overview</button>
-            <button class="nav-btn" onclick="showView('companies')">Companies</button>
-            <button class="nav-btn" onclick="showView('team')">Team</button>
+            <button class="nav-btn active" onclick="showPage('overview')">Overview</button>
+            <button class="nav-btn" onclick="showPage('companies')">Companies</button>
+            <button class="nav-btn" onclick="showPage('team')">Team</button>
         </nav>
     </header>
 
     <main class="main">
-        <div class="container">
-            <!-- Overview View -->
-            <div id="overview" class="view active">
+        <!-- Overview Page -->
+        <div id="overview" class="view active">
+            <div class="page-header">
                 <h1 class="page-title">Task Queue</h1>
-                <div class="task-columns">
-                    <div class="task-column">
-                        <div class="column-header">
-                            <h2>Golias Tasks</h2>
-                            <span class="column-count" id="count-golias">0</span>
-                        </div>
-                        <div class="task-input-row">
-                            <input type="text" class="task-input" id="taskInput-golias" placeholder="Add task..." onkeypress="handleKeypress(event, 'golias')">
-                            <button class="add-btn" onclick="addTask('golias')">Add</button>
-                        </div>
-                        <ul class="task-list" id="taskList-golias"></ul>
+            </div>
+            <div class="task-grid">
+                <div class="task-col">
+                    <div class="task-col-header">
+                        <span class="task-col-title">Golias Tasks</span>
+                        <span class="task-count" id="count-golias">0</span>
                     </div>
-                    <div class="task-column">
-                        <div class="column-header">
-                            <h2>My Tasks</h2>
-                            <span class="column-count" id="count-mine">0</span>
-                        </div>
-                        <div class="task-input-row">
-                            <input type="text" class="task-input" id="taskInput-mine" placeholder="Add task..." onkeypress="handleKeypress(event, 'mine')">
-                            <button class="add-btn" onclick="addTask('mine')">Add</button>
-                        </div>
-                        <ul class="task-list" id="taskList-mine"></ul>
+                    <div class="task-input-group">
+                        <input type="text" class="task-input" id="input-golias" placeholder="Add task..." onkeypress="handleEnter(event, 'golias')">
+                        <button class="task-add-btn" onclick="addTask('golias')">Add</button>
                     </div>
-                    <div class="task-column">
-                        <div class="column-header">
-                            <h2>Log Task</h2>
-                            <span class="column-count" id="count-log">0</span>
-                        </div>
-                        <div class="task-input-row">
-                            <input type="text" class="task-input" id="taskInput-log" placeholder="Add task..." onkeypress="handleKeypress(event, 'log')">
-                            <button class="add-btn" onclick="addTask('log')">Add</button>
-                        </div>
-                        <ul class="task-list" id="taskList-log"></ul>
+                    <ul class="task-list" id="list-golias"></ul>
+                </div>
+                <div class="task-col">
+                    <div class="task-col-header">
+                        <span class="task-col-title">My Tasks</span>
+                        <span class="task-count" id="count-mine">0</span>
                     </div>
+                    <div class="task-input-group">
+                        <input type="text" class="task-input" id="input-mine" placeholder="Add task..." onkeypress="handleEnter(event, 'mine')">
+                        <button class="task-add-btn" onclick="addTask('mine')">Add</button>
+                    </div>
+                    <ul class="task-list" id="list-mine"></ul>
+                </div>
+                <div class="task-col">
+                    <div class="task-col-header">
+                        <span class="task-col-title">Log</span>
+                        <span class="task-count" id="count-log">0</span>
+                    </div>
+                    <div class="task-input-group">
+                        <input type="text" class="task-input" id="input-log" placeholder="Add task..." onkeypress="handleEnter(event, 'log')">
+                        <button class="task-add-btn" onclick="addTask('log')">Add</button>
+                    </div>
+                    <ul class="task-list" id="list-log"></ul>
                 </div>
             </div>
+        </div>
 
-            <!-- Companies View -->
-            <div id="companies" class="view">
+        <!-- Companies Page -->
+        <div id="companies" class="view">
+            <div class="page-header">
                 <h1 class="page-title">Companies</h1>
-                <div class="company-grid">
-                    <div class="company-card" onclick="openCompany('cliniciq')">
-                        <div class="icon">🏥</div>
-                        <div class="name">Clinic IQ</div>
-                    </div>
-                    <div class="company-card" onclick="openCompany('wilde')">
-                        <div class="icon">⚙️</div>
-                        <div class="name">Wilde Auto</div>
-                    </div>
-                    <div class="company-card" onclick="openCompany('sam')">
-                        <div class="icon">📄</div>
-                        <div class="name">Uncle Sam's</div>
-                    </div>
-                    <div class="company-card" onclick="openCompany('westwood')">
-                        <div class="icon">🌐</div>
-                        <div class="name">Westwood</div>
-                    </div>
+            </div>
+            <div class="company-grid">
+                <div class="company-card" onclick="openCompany('cliniciq')">
+                    <div class="company-icon">🏥</div>
+                    <div class="company-name">Clinic IQ</div>
+                </div>
+                <div class="company-card" onclick="openCompany('wilde')">
+                    <div class="company-icon">⚙️</div>
+                    <div class="company-name">Wilde Automations</div>
+                </div>
+                <div class="company-card" onclick="openCompany('sam')">
+                    <div class="company-icon">📄</div>
+                    <div class="company-name">Uncle Sam's</div>
+                </div>
+                <div class="company-card" onclick="openCompany('westwood')">
+                    <div class="company-icon">🌐</div>
+                    <div class="company-name">Westwood</div>
                 </div>
             </div>
+        </div>
 
-            <!-- Company Detail Dashboard -->
-            <div id="company-detail" class="company-detail">
-                <div class="company-detail-header">
-                    <button class="back-btn" onclick="closeCompany()">← Back</button>
-                    <div class="company-detail-title">
-                        <div class="company-detail-icon" id="detailIcon">🏥</div>
-                        <h1 id="detailTitle">Company Name</h1>
-                    </div>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="statTasks">0</div>
-                        <div class="stat-label">Active Tasks</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="statTeam">0</div>
-                        <div class="stat-label">Team Members</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="statDone">0</div>
-                        <div class="stat-label">Completed</div>
-                    </div>
-                </div>
-                
-                <div class="company-detail-grid">
-                    <div class="detail-section">
-                        <h3>Tasks</h3>
-                        <div class="task-input-row">
-                            <input type="text" class="task-input" id="taskInput-company" placeholder="Add task..." onkeypress="handleKeypress(event, 'company')">
-                            <button class="add-btn" onclick="addTask('company')">Add</button>
-                        </div>
-                        <ul class="task-list" id="taskList-company"></ul>
-                    </div>
-                    <div class="detail-section">
-                        <h3>Team</h3>
-                        <div class="team-grid" id="detailTeam"></div>
-                    </div>
+        <!-- Company Detail -->
+        <div id="company-detail" class="company-detail">
+            <div class="company-detail-header">
+                <button class="back-btn" onclick="closeCompany()">← Back</button>
+                <div class="company-detail-title">
+                    <div class="company-detail-icon" id="detail-icon">🏥</div>
+                    <h1 id="detail-name">Company</h1>
                 </div>
             </div>
+            <div class="detail-stats">
+                <div class="detail-stat">
+                    <div class="detail-stat-value" id="stat-active">0</div>
+                    <div class="detail-stat-label">Active Tasks</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-value" id="stat-team">0</div>
+                    <div class="detail-stat-label">Team</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-value" id="stat-completed">0</div>
+                    <div class="detail-stat-label">Completed</div>
+                </div>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <div class="detail-card-title">Tasks</div>
+                    <div class="task-input-group">
+                        <input type="text" class="task-input" id="input-company" placeholder="Add task..." onkeypress="handleEnter(event, 'company')">
+                        <button class="task-add-btn" onclick="addTask('company')">Add</button>
+                    </div>
+                    <ul class="task-list" id="list-company"></ul>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Team</div>
+                    <div class="team-grid" id="detail-team"></div>
+                </div>
+            </div>
+        </div>
 
-            <!-- Team View -->
-            <div id="team" class="view">
+        <!-- Team Page -->
+        <div id="team" class="view">
+            <div class="page-header">
                 <h1 class="page-title">Team</h1>
-                <div class="org-chart">
-                    <div class="org-level">
-                        <div class="org-person"><div class="org-avatar">👤</div><div class="org-name">Jack</div><div class="org-role">Owner</div></div>
-                    </div>
-                    <div class="org-level">
-                        <div class="org-person"><div class="org-avatar">🤖</div><div class="org-name">Golias</div><div class="org-role">Operations</div></div>
-                    </div>
-                    <div class="org-level">
-                        <div class="org-person"><div class="org-avatar" style="background:#10B981">E</div><div class="org-name">Effy</div><div class="org-role">Engineer</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:#6366F1">J</div><div class="org-name">JR</div><div class="org-role">QA</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:#F59E0B">W</div><div class="org-name">Wilson</div><div class="org-role">Lead</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:#EC4899">G</div><div class="org-name">Gretel</div><div class="org-role">Writer</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:#8B5CF6">S</div><div class="org-name">Stan</div><div class="org-role">Research</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:#3B82F6">B</div><div class="org-name">Bongo</div><div class="org-role">Content</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:#14B8A6">F</div><div class="org-name">Frankie</div><div class="org-role">Sec</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:#F97316">J</div><div class="org-name">Joon</div><div class="org-role">Social</div></div>
-                    </div>
+            </div>
+            <div class="org-chart">
+                <div class="org-row">
+                    <div class="org-person"><div class="org-avatar">👤</div><div class="org-name">Jack</div><div class="org-role">Owner</div></div>
+                </div>
+                <div class="org-row">
+                    <div class="org-person"><div class="org-avatar">🤖</div><div class="org-name">Golias</div><div class="org-role">Operations Manager</div></div>
+                </div>
+                <div class="org-row">
+                    <div class="org-person"><div class="org-avatar" style="background:#10B981">E</div><div class="org-name">Effy</div><div class="org-role">Software Engineer</div></div>
+                    <div class="org-person"><div class="org-avatar" style="background:#6366F1">J</div><div class="org-name">JR</div><div class="org-role">QA Engineer</div></div>
+                    <div class="org-person"><div class="org-avatar" style="background:#F59E0B">W</div><div class="org-name">Wilson</div><div class="org-role">Lead Developer</div></div>
+                    <div class="org-person"><div class="org-avatar" style="background:#EC4899">G</div><div class="org-name">Gretel</div><div class="org-role">Copywriter</div></div>
+                    <div class="org-person"><div class="org-avatar" style="background:#8B5CF6">S</div><div class="org-name">Stan</div><div class="org-role">Research</div></div>
+                    <div class="org-person"><div class="org-avatar" style="background:#3B82F6">B</div><div class="org-name">Bongo</div><div class="org-role">Content Analyst</div></div>
+                    <div class="org-person"><div class="org-avatar" style="background:#14B8A6">F</div><div class="org-name">Frankie</div><div class="org-role">Secretary</div></div>
+                    <div class="org-person"><div class="org-avatar" style="background:#F97316">J</div><div class="org-name">Joon</div><div class="org-role">Social Media</div></div>
                 </div>
             </div>
         </div>
     </main>
 
     <script>
-        const WEBHOOK_URL = 'https://hiv-fininished-yeah-national.trycloudflare.com/task';
+        const WEBHOOK = 'https://hiv-finished-yeah-national.trycloudflare.com/task';
         
-        const columns = ['golias', 'mine', 'log', 'company'];
-        const companyData = {
+        const companies = {
             cliniciq: { name: 'Clinic IQ', icon: '🏥', team: [
                 {name: 'Frankie', role: 'Project Manager'},
                 {name: 'Gretel', role: 'UI/UX Designer'},
@@ -412,35 +285,43 @@
         };
         
         let currentCompany = 'cliniciq';
+        const columns = ['golias', 'mine', 'log', 'company'];
         
-        function getTasks(key) { return JSON.parse(localStorage.getItem('jsw-task-' + key) || '[]'); }
-        function saveTasks(key, tasks) { localStorage.setItem('jsw-task-' + key, JSON.stringify(tasks)); }
+        function getTasks(key) {
+            return JSON.parse(localStorage.getItem('jsw-' + key) || '[]');
+        }
+        
+        function saveTasks(key, tasks) {
+            localStorage.setItem('jsw-' + key, JSON.stringify(tasks));
+        }
         
         function renderTasks(key) {
             const tasks = getTasks(key);
-            const list = document.getElementById('taskList-' + key);
+            const list = document.getElementById('list-' + key);
             const count = document.getElementById('count-' + key);
+            
             if (count) count.textContent = tasks.length;
+            
             if (!list) return;
             
             if (tasks.length === 0) {
-                list.innerHTML = '<li class="task-item" style="color:#94A3B8;justify-content:center;">No tasks</li>';
+                list.innerHTML = '<li class="task-item" style="color:#9CA3AF;justify-content:center;">No tasks</li>';
                 return;
             }
             
             list.innerHTML = tasks.map((t, i) => `
                 <li class="task-item ${t.completed ? 'completed' : ''}">
-                    <span class="task-text" onclick="toggleTask('${key}', ${i})">${t.text}</span>
+                    <span class="task-item-text" onclick="toggleTask('${key}', ${i})">${t.text}</span>
                     <div class="task-actions">
-                        <div class="check-btn ${t.completed ? 'checked' : ''}" onclick="toggleTask('${key}', ${i})">${t.completed ? '✓' : ''}</div>
-                        <button class="delete-btn" onclick="deleteTask('${key}', ${i})">×</button>
+                        <div class="task-check ${t.completed ? 'checked' : ''}" onclick="toggleTask('${key}', ${i})">${t.completed ? '✓' : ''}</div>
+                        <button class="task-delete" onclick="deleteTask('${key}', ${i})">×</button>
                     </div>
                 </li>
             `).join('');
         }
         
         function addTask(key) {
-            const input = document.getElementById('taskInput-' + key);
+            const input = document.getElementById('input-' + key);
             const text = input.value.trim();
             if (!text) return;
             
@@ -449,13 +330,14 @@
             saveTasks(key, tasks);
             input.value = '';
             renderTasks(key);
-            if (key === 'company') renderCompanyStats();
             
-            fetch(WEBHOOK_URL, {
+            if (key === 'company') updateCompanyStats();
+            
+            fetch(WEBHOOK, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({task: text})
-            }).catch(e => console.log('Webhook error:', e));
+            }).catch(() => {});
         }
         
         function toggleTask(key, i) {
@@ -463,7 +345,7 @@
             tasks[i].completed = !tasks[i].completed;
             saveTasks(key, tasks);
             renderTasks(key);
-            if (key === 'company') renderCompanyStats();
+            if (key === 'company') updateCompanyStats();
         }
         
         function deleteTask(key, i) {
@@ -471,41 +353,43 @@
             tasks.splice(i, 1);
             saveTasks(key, tasks);
             renderTasks(key);
-            if (key === 'company') renderCompanyStats();
+            if (key === 'company') updateCompanyStats();
         }
         
-        function handleKeypress(e, key) { if (e.key === 'Enter') addTask(key); }
+        function handleEnter(e, key) {
+            if (e.key === 'Enter') addTask(key);
+        }
         
-        function showView(viewId) {
+        function showPage(page) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-            document.querySelector('[onclick="showView(\'' + viewId + '\')"]').classList.add('active');
-            columns.forEach(c => renderTasks(c));
+            document.getElementById(page).classList.add('active');
+            document.querySelector(`[onclick="showPage('${page}')"]`).classList.add('active');
+            
+            if (page === 'overview') {
+                columns.forEach(c => renderTasks(c));
+            }
         }
         
         function openCompany(company) {
             currentCompany = company;
-            const data = companyData[company];
+            const data = companies[company];
             
-            document.getElementById('detailIcon').textContent = data.icon;
-            document.getElementById('detailTitle').textContent = data.name;
+            document.getElementById('detail-icon').textContent = data.icon;
+            document.getElementById('detail-name').textContent = data.name;
             
-            // Render team
             const teamHtml = data.team.map(t => `
-                <div class="team-card">
+                <div class="team-member">
                     <div class="team-avatar">${t.name[0]}</div>
-                    <div class="team-name">${t.name}</div>
-                    <div class="team-role">${t.role}</div>
+                    <div class="team-member-name">${t.name}</div>
+                    <div class="team-member-role">${t.role}</div>
                 </div>
             `).join('');
-            document.getElementById('detailTeam').innerHTML = teamHtml;
+            document.getElementById('detail-team').innerHTML = teamHtml;
             
-            renderCompanyStats();
+            updateCompanyStats();
             
-            document.getElementById('overview').classList.remove('active');
-            document.getElementById('companies').classList.remove('active');
-            document.getElementById('team').classList.remove('active');
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById('company-detail').classList.add('active');
             
             renderTasks('company');
@@ -514,16 +398,16 @@
         function closeCompany() {
             document.getElementById('company-detail').classList.remove('active');
             document.getElementById('overview').classList.add('active');
-            document.querySelector('[onclick="showView(\'overview\')"]').classList.add('active');
+            document.querySelector('[onclick="showPage(\'overview\')"]').classList.add('active');
             columns.forEach(c => renderTasks(c));
         }
         
-        function renderCompanyStats() {
+        function updateCompanyStats() {
             const tasks = getTasks('company');
-            const data = companyData[currentCompany];
-            document.getElementById('statTasks').textContent = tasks.filter(t => !t.completed).length;
-            document.getElementById('statTeam').textContent = data.team.length;
-            document.getElementById('statDone').textContent = tasks.filter(t => t.completed).length;
+            const data = companies[currentCompany];
+            document.getElementById('stat-active').textContent = tasks.filter(t => !t.completed).length;
+            document.getElementById('stat-team').textContent = data.team.length;
+            document.getElementById('stat-completed').textContent = tasks.filter(t => t.completed).length;
         }
         
         columns.forEach(c => renderTasks(c));
