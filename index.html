@@ -129,6 +129,7 @@
             <button class="nav-btn active" onclick="showPage('queue')">Smart Queue</button>
             <button class="nav-btn" onclick="showPage('companies')">Companies</button>
             <button class="nav-btn" onclick="showPage('team')">Team</button>
+            <button class="nav-btn" onclick="showPage('audit')">Auditing</button>
         </nav>
     </header>
 
@@ -237,6 +238,15 @@
                 </div>
             </div>
         </div>
+
+        <!-- Auditing Page -->
+        <div id="audit" class="view">
+            <h1 class="page-title">📋 Task Audit Log</h1>
+            <div class="queue-list">
+                <div class="queue-list-header">Completed Tasks</div>
+                <div id="auditItems"></div>
+            </div>
+        </div>
     </main>
 
     <script>
@@ -269,6 +279,21 @@
                 return allTasks;
             } catch (e) {
                 console.error('Error fetching tasks:', e);
+                return [];
+            }
+        }
+        
+        async function fetchCompletedTasks() {
+            try {
+                const res = await fetch(SUPABASE_URL + '/rest/v1/tasks?status=eq.completed&order=created_at.desc&limit=50', {
+                    headers: { 
+                        'apikey': SUPABASE_KEY, 
+                        'Authorization': 'Bearer ' + SUPABASE_KEY 
+                    }
+                });
+                return await res.json();
+            } catch (e) {
+                console.error('Error fetching completed tasks:', e);
                 return [];
             }
         }
@@ -480,12 +505,37 @@
         
         function handleEnter(e) { if (e.key === 'Enter') addCompanyTask(); }
         
+        async function renderAudit() {
+            const tasks = await fetchCompletedTasks();
+            const container = document.getElementById('auditItems');
+            
+            if (tasks.length === 0) {
+                container.innerHTML = '<div style="color:#9CA3AF;text-align:center;padding:20px;">No completed tasks yet</div>';
+                return;
+            }
+            
+            container.innerHTML = tasks.map(t => {
+                const date = t.created_at ? new Date(t.created_at).toLocaleString() : 'Unknown';
+                return `
+                    <div class="task-item" style="opacity:0.7;">
+                        <div class="task-num" style="background:#10B981;color:white;">✓</div>
+                        <div class="task-text">
+                            ${t.text}
+                            <span class="task-company">${companyInfo[t.company] ? companyInfo[t.company].icon + ' ' + companyInfo[t.company].name : t.company}</span>
+                            <span class="task-company" style="margin-left:8px;">📅 ${date}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
         function showPage(page) {
-            document.getElementById('queue').classList.remove('active'); document.getElementById('companies').classList.remove('active'); document.getElementById('team').classList.remove('active'); document.getElementById('company-detail').classList.remove('active');
+            document.getElementById('queue').classList.remove('active'); document.getElementById('companies').classList.remove('active'); document.getElementById('team').classList.remove('active'); document.getElementById('company-detail').classList.remove('active'); document.getElementById('audit').classList.remove('active');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(page).classList.add('active');
             document.querySelector('[onclick="showPage(\'' + page + '\')"]').classList.add('active');
             if (page === 'queue') renderQueue();
+            if (page === 'audit') renderAudit();
         }
         
         function openCompany(company) {
