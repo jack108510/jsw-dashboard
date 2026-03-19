@@ -3,90 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSW Task Queue</title>
+    <title>JSW Enterprises - Mission Control</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --rolex-green: #004B2B;
+            --rolex-light: #006B3D;
+            --gold: #D4AF37;
+            --white: #FFFFFF;
+            --gray-light: #F5F5F5;
+            --gray: #E5E5E5;
+            --dark: #1a1a1a;
+            --text: #333333;
+            --text-muted: #666666;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-            background: #ffffff; 
-            color: #1a1a1a; 
-            min-height: 100vh;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: var(--gray-light); color: var(--text); min-height: 100vh;
         }
-        .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
-        h1 { color: #004B2B; margin-bottom: 30px; font-size: 28px; }
-        .input-group { display: flex; gap: 10px; margin-bottom: 30px; }
-        input { 
-            flex: 1; padding: 14px 18px; border: 2px solid #e0e0e0; 
-            border-radius: 8px; font-size: 16px; outline: none;
-        }
-        input:focus { border-color: #004B2B; }
-        button { 
-            padding: 14px 28px; background: #004B2B; color: white; 
-            border: none; border-radius: 8px; font-size: 16px; cursor: pointer;
-        }
-        button:hover { background: #006b3d; }
-        ul { list-style: none; }
-        li { 
+        
+        /* Header */
+        .header {
+            background: var(--rolex-green); height: 64px;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 16px; border-bottom: 1px solid #eee; 
+            padding: 0 40px; position: fixed; top: 0; left: 0; right: 0; z-index: 100;
         }
-        li.completed { text-decoration: line-through; color: #999; }
-        .delete { 
-            background: #ff4444; padding: 8px 14px; font-size: 14px;
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--gold), #B8962E);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: white;
         }
-        .delete:hover { background: #cc3333; }
+        .logo h1 { color: white; font-size: 20px; font-weight: 600; }
+        
+        .nav { display: flex; gap: 4px; }
+        .nav-btn {
+            padding: 10px 24px; background: transparent; border: none;
+            color: rgba(255,255,255,0.7); font-weight: 500; cursor: pointer; border-radius: 6px; transition: 0.2s;
+        }
+        .nav-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+        .nav-btn.active { background: white; color: var(--rolex-green); }
+        
+        /* Main */
+        .main { padding-top: 80px; padding-bottom: 40px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+        
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
+        
+        .page-title { color: var(--rolex-green); font-size: 28px; margin-bottom: 24px; }
+        
+        /* Task Columns */
+        .task-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        
+        .task-column {
+            background: white; border-radius: 8px; padding: 24px;
+            border: 1px solid var(--gray);
+        }
+        .column-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-bottom: 16px; border-bottom: 2px solid var(--rolex-green); margin-bottom: 16px;
+        }
+        .column-header h2 { color: var(--rolex-green); font-size: 18px; }
+        
+        .task-input-row { display: flex; gap: 8px; margin-bottom: 16px; }
+        .task-input {
+            flex: 1; padding: 12px 16px; border: 2px solid var(--gray); border-radius: 6px; font-size: 14px; outline: none;
+        }
+        .task-input:focus { border-color: var(--rolex-green); }
+        .add-btn {
+            padding: 12px 20px; background: var(--rolex-green); color: white;
+            border: none; border-radius: 6px; font-weight: 600; cursor: pointer;
+        }
+        
+        .task-list { list-style: none; }
+        .task-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px; border-bottom: 1px solid var(--gray-light);
+        }
+        .task-item.completed { opacity: 0.5; }
+        .task-item.completed span { text-decoration: line-through; }
+        .task-text { cursor: pointer; flex: 1; }
+        .task-actions { display: flex; gap: 6px; }
+        .check-btn {
+            width: 24px; height: 24px; border: 2px solid var(--rolex-green);
+            border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .check-btn.checked { background: var(--rolex-green); color: white; }
+        .delete-btn {
+            background: #dc2626; color: white; border: none;
+            padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;
+        }
+        
+        /* Companies */
+        .company-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .company-bubble {
+            aspect-ratio: 1; background: white; border: 2px solid var(--gray);
+            border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s; text-align: center; padding: 20px;
+        }
+        .company-bubble:hover { border-color: var(--rolex-green); transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,75,43,0.15); }
+        .company-bubble .icon { font-size: 32px; margin-bottom: 8px; }
+        .company-bubble .name { color: var(--rolex-green); font-weight: 600; font-size: 14px; }
+        
+        /* Company Detail Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+            display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white; border-radius: 12px; width: 90%; max-width: 800px; max-height: 80vh; overflow-y: auto;
+        }
+        .modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 24px; border-bottom: 1px solid var(--gray);
+        }
+        .modal-header h2 { color: var(--rolex-green); font-size: 24px; }
+        .close-btn {
+            background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);
+        }
+        .modal-body { padding: 24px; }
+        
+        /* Team */
+        .org-chart { background: white; border-radius: 8px; padding: 40px; border: 1px solid var(--gray); }
+        .org-level { display: flex; justify-content: center; gap: 40px; margin-bottom: 50px; position: relative; }
+        .org-person {
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            position: relative;
+        }
+        .org-avatar {
+            width: 80px; height: 80px; background: var(--rolex-green); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; color: white; font-weight: 700; margin-bottom: 12px;
+        }
+        .org-name { font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+        .org-role { font-size: 13px; color: var(--text-muted); }
+        
+        .org-connector {
+            position: absolute; top: -25px; left: 50%; width: 2px; height: 25px; background: var(--gray);
+        }
+        .org-level:first-child .org-connector { display: none; }
+        
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📋 JSW Task Queue</h1>
-        <div class="input-group">
-            <input type="text" id="taskInput" placeholder="Add a task..." onkeypress="handleKeypress(event)">
-            <button onclick="addTask()">Add Task</button>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-building"></i></div>
+            <h1>JSW Enterprises</h1>
         </div>
-        <ul id="taskList"></ul>
+        <nav class="nav">
+            <button class="nav-btn active" onclick="showView('overview')">Overview</button>
+            <button class="nav-btn" onclick="showView('companies')">Companies</button>
+            <button class="nav-btn" onclick="showView('team')">Team</button>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Overview -->
+            <div id="overview" class="view active">
+                <h1 class="page-title">Task Queue</h1>
+                <div class="task-columns">
+                    <div class="task-column">
+                        <div class="column-header">
+                            <h2>My Tasks</h2>
+                        </div>
+                        <div class="task-input-row">
+                            <input type="text" class="task-input" id="taskInput-mine" placeholder="Add a task..." onkeypress="handleKeypress(event, 'mine')">
+                            <button class="add-btn" onclick="addTask('mine')">Add</button>
+                        </div>
+                        <ul class="task-list" id="taskList-mine"></ul>
+                    </div>
+                    <div class="task-column">
+                        <div class="column-header">
+                            <h2>Log Task</h2>
+                        </div>
+                        <div class="task-input-row">
+                            <input type="text" class="task-input" id="taskInput-log" placeholder="Add a task..." onkeypress="handleKeypress(event, 'log')">
+                            <button class="add-btn" onclick="addTask('log')">Add</button>
+                        </div>
+                        <ul class="task-list" id="taskList-log"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Companies -->
+            <div id="companies" class="view">
+                <h1 class="page-title">Companies</h1>
+                <div class="company-grid">
+                    <div class="company-bubble" onclick="openCompany('cliniciq')">
+                        <div class="icon">🏥</div>
+                        <div class="name">Clinic IQ</div>
+                    </div>
+                    <div class="company-bubble" onclick="openCompany('wilde')">
+                        <div class="icon">⚙️</div>
+                        <div class="name">Wilde Automations</div>
+                    </div>
+                    <div class="company-bubble" onclick="openCompany('sam')">
+                        <div class="icon">📄</div>
+                        <div class="name">Uncle Sam's</div>
+                    </div>
+                    <div class="company-bubble" onclick="openCompany('westwood')">
+                        <div class="icon">🌐</div>
+                        <div class="name">Westwood</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team -->
+            <div id="team" class="view">
+                <h1 class="page-title">Team</h1>
+                <div class="org-chart">
+                    <div class="org-level">
+                        <div class="org-person">
+                            <div class="org-avatar">👤</div>
+                            <div class="org-name">Jack</div>
+                            <div class="org-role">Owner</div>
+                        </div>
+                    </div>
+                    <div class="org-level">
+                        <div class="org-person">
+                            <div class="org-avatar">🤖</div>
+                            <div class="org-name">Golias</div>
+                            <div class="org-role">Operations Manager</div>
+                        </div>
+                    </div>
+                    <div class="org-level">
+                        <div class="org-person">
+                            <div class="org-avatar" style="background:#10b981">E</div>
+                            <div class="org-name">Effy</div>
+                            <div class="org-role">Software Engineer</div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-avatar" style="background:#6366f1">J</div>
+                            <div class="org-name">JR</div>
+                            <div class="org-role">QA Engineer</div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-avatar" style="background:#f59e0b">W</div>
+                            <div class="org-name">Wilson</div>
+                            <div class="org-role">Lead Developer</div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-avatar" style="background:#ec4899">G</div>
+                            <div class="org-name">Gretel</div>
+                            <div class="org-role">Copywriter</div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-avatar" style="background:#8b5cf6">S</div>
+                            <div class="org-name">Stan</div>
+                            <div class="org-role">Research</div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-avatar" style="background:#3b82f6">B</div>
+                            <div class="org-name">Bongo</div>
+                            <div class="org-role">Content Analyst</div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-avatar" style="background:#14b8a6">F</div>
+                            <div class="org-name">Frankie</div>
+                            <div class="org-role">Secretary</div>
+                        </div>
+                        <div class="org-person">
+                            <div class="org-avatar" style="background:#f97316">J</div>
+                            <div class="org-name">Joon</div>
+                            <div class="org-role">Social Media</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Company Modal -->
+    <div class="modal-overlay" id="companyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Company</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="task-column">
+                    <div class="column-header">
+                        <h2>Tasks</h2>
+                    </div>
+                    <div class="task-input-row">
+                        <input type="text" class="task-input" id="taskInput-company" placeholder="Add a task..." onkeypress="handleKeypress(event, 'company')">
+                        <button class="add-btn" onclick="addTask('company')">Add</button>
+                    </div>
+                    <ul class="task-list" id="taskList-company"></ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         const WEBHOOK_URL = 'https://hiv-finished-yeah-national.trycloudflare.com/task';
         
-        function getTasks() {
-            return JSON.parse(localStorage.getItem('jsw-tasks') || '[]');
+        const columns = ['mine', 'log', 'company'];
+        const companyNames = { cliniciq: 'Clinic IQ', wilde: 'Wilde Automations', sam: "Uncle Sam's Procurement", westwood: 'The Westwood Network' };
+        let currentCompany = 'cliniciq';
+        
+        function getTasks(key) {
+            return JSON.parse(localStorage.getItem('jsw-task-' + key) || '[]');
         }
         
-        function saveTasks(tasks) {
-            localStorage.setItem('jsw-tasks', JSON.stringify(tasks));
+        function saveTasks(key, tasks) {
+            localStorage.setItem('jsw-task-' + key, JSON.stringify(tasks));
         }
         
-        function renderTasks() {
-            const tasks = getTasks();
-            const list = document.getElementById('taskList');
+        function renderTasks(key) {
+            const tasks = getTasks(key);
+            const list = document.getElementById('taskList-' + key);
+            if (!list) return;
+            
+            if (tasks.length === 0) {
+                list.innerHTML = '<li class="task-item" style="color:#999;justify-content:center;">No tasks</li>';
+                return;
+            }
+            
             list.innerHTML = tasks.map((t, i) => `
-                <li class="${t.completed ? 'completed' : ''}">
-                    <span onclick="toggleTask(${i})">${t.text}</span>
-                    <button class="delete" onclick="deleteTask(${i})">✕</button>
+                <li class="task-item ${t.completed ? 'completed' : ''}">
+                    <span class="task-text" onclick="toggleTask('${key}', ${i})">${t.text}</span>
+                    <div class="task-actions">
+                        <div class="check-btn ${t.completed ? 'checked' : ''}" onclick="toggleTask('${key}', ${i})">${t.completed ? '✓' : ''}</div>
+                        <button class="delete-btn" onclick="deleteTask('${key}', ${i})">✕</button>
+                    </div>
                 </li>
             `).join('');
         }
         
-        function addTask() {
-            const input = document.getElementById('taskInput');
+        function addTask(key) {
+            const input = document.getElementById('taskInput-' + key);
             const text = input.value.trim();
             if (!text) return;
             
-            const tasks = getTasks();
+            const tasks = getTasks(key);
             tasks.push({ text, completed: false });
-            saveTasks(tasks);
+            saveTasks(key, tasks);
             input.value = '';
-            renderTasks();
+            renderTasks(key);
             
-            fetch('https://hiv-finished-yeah-national.trycloudflare.com/task', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({task: text})
-            }).catch(e => console.log('Webhook error:', e));
-            
-            // Send to webhook
             fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -94,25 +356,44 @@
             }).catch(e => console.log('Webhook error:', e));
         }
         
-        function toggleTask(i) {
-            const tasks = getTasks();
+        function toggleTask(key, i) {
+            const tasks = getTasks(key);
             tasks[i].completed = !tasks[i].completed;
-            saveTasks(tasks);
-            renderTasks();
+            saveTasks(key, tasks);
+            renderTasks(key);
         }
         
-        function deleteTask(i) {
-            const tasks = getTasks();
+        function deleteTask(key, i) {
+            const tasks = getTasks(key);
             tasks.splice(i, 1);
-            saveTasks(tasks);
-            renderTasks();
+            saveTasks(key, tasks);
+            renderTasks(key);
         }
         
-        function handleKeypress(e) {
-            if (e.key === 'Enter') addTask();
+        function handleKeypress(e, key) {
+            if (e.key === 'Enter') addTask(key);
         }
         
-        renderTasks();
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.querySelector('[onclick="showView(\'' + viewId + '\')"]').classList.add('active');
+            columns.forEach(c => renderTasks(c));
+        }
+        
+        function openCompany(company) {
+            currentCompany = company;
+            document.getElementById('modalTitle').textContent = companyNames[company];
+            document.getElementById('companyModal').classList.add('active');
+            renderTasks('company');
+        }
+        
+        function closeModal() {
+            document.getElementById('companyModal').classList.remove('active');
+        }
+        
+        columns.forEach(c => renderTasks(c));
     </script>
 </body>
 </html>
