@@ -403,9 +403,25 @@
         <!-- Auditing Page -->
         <div id="audit" class="view">
             <h1 class="page-title">📋 Task Audit Log</h1>
-            <div class="queue-list">
-                <div class="queue-list-header">Completed Tasks</div>
-                <div id="auditItems"></div>
+            
+            <!-- Stats -->
+            <div class="detail-stats" style="margin-bottom:20px;">
+                <div class="detail-stat">
+                    <div class="detail-stat-value" id="auditTotal">0</div>
+                    <div class="detail-stat-label">Total Completed</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-value" id="auditThisWeek">0</div>
+                    <div class="detail-stat-label">This Week</div>
+                </div>
+            </div>
+            
+            <div class="queue-section">
+                <div class="queue-header">
+                    <span class="queue-title">📜 Completed Tasks</span>
+                    <input type="text" id="auditSearch" placeholder="Search..." style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:12px;" oninput="renderAudit()">
+                </div>
+                <div id="auditItems" style="max-height:500px;overflow-y:auto;"></div>
             </div>
         </div>
     </main>
@@ -745,22 +761,39 @@
         async function renderAudit() {
             const tasks = await fetchCompletedTasks();
             const container = document.getElementById('auditItems');
+            const search = (document.getElementById('auditSearch')?.value || '').toLowerCase();
             
-            if (tasks.length === 0) {
-                container.innerHTML = '<div style="color:#9CA3AF;text-align:center;padding:20px;">No completed tasks yet</div>';
+            // Filter by search
+            const filtered = tasks.filter(t => !search || t.text.toLowerCase().includes(search) || (companyInfo[t.company]?.name || '').toLowerCase().includes(search));
+            
+            // Calculate stats
+            const total = tasks.length;
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            const thisWeek = tasks.filter(t => new Date(t.created_at) > oneWeekAgo).length;
+            
+            document.getElementById('auditTotal').textContent = total;
+            document.getElementById('auditThisWeek').textContent = thisWeek;
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="color:#9CA3AF;text-align:center;padding:20px;">No completed tasks</div>';
                 return;
             }
             
-            container.innerHTML = tasks.map(t => {
-                const date = t.created_at ? new Date(t.created_at).toLocaleString() : 'Recently';
+            container.innerHTML = filtered.map(t => {
+                const date = t.created_at ? new Date(t.created_at).toLocaleDateString() : 'Recently';
                 return `
-                    <div class="task-item" style="opacity:0.7;">
-                        <div class="task-num" style="background:#10B981;color:white;">✓</div>
-                        <div class="task-text">
-                            ${t.text}
-                            <span class="task-company">${companyInfo[t.company] ? companyInfo[t.company].icon + ' ' + companyInfo[t.company].name : t.company}</span>
-                            <span class="task-company" style="margin-left:8px;">📅 ${date}</span>
+                    <div style="padding:14px;border-bottom:1px solid var(--gray-100);background:white;border-radius:8px;margin-bottom:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:start;">
+                            <div>
+                                <div style="font-weight:500;">${t.text}</div>
+                                <div style="font-size:12px;color:var(--gray-500);margin-top:4px;">
+                                    ${companyInfo[t.company] ? companyInfo[t.company].icon + ' ' + companyInfo[t.company].name : t.company} • ${date}
+                                </div>
+                            </div>
+                            <div style="background:#10B981;color:white;padding:2px 8px;border-radius:12px;font-size:11px;">✓</div>
                         </div>
+                        ${t.comments ? '<div style="margin-top:8px;padding:8px;background:var(--gray-50);border-radius:6px;font-size:12px;color:var(--gray-600);">📝 ' + t.comments + '</div>' : ''}
                     </div>
                 `;
             }).join('');
