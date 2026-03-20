@@ -382,33 +382,35 @@
         <!-- Timeline Page -->
         <div id="timeline" class="view">
             <h1 class="page-title">📅 Timeline</h1>
+            
+            <!-- Add New Timeline Item -->
             <div class="queue-section">
                 <div class="queue-header">
-                    <span class="queue-title">Add Goal to Timeline</span>
+                    <span class="queue-title">➕ Add New Timeline Item</span>
                 </div>
-                <div class="task-input-group">
-                    <select id="timelineCompany" style="flex:1;padding:8px;border:1px solid var(--gray-300);border-radius:6px;" onchange="loadCompanyGoals()">
+                <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:8px;align-items:center;">
+                    <select id="timelineCompany" style="padding:10px;border:1px solid var(--gray-300);border-radius:6px;" onchange="loadCompanyGoals()">
                         <option value="">Select Company</option>
-                        <option value="jsw">JSW Enterprises</option>
-                        <option value="cliniciq">Clinic IQ</option>
-                        <option value="wilde">Wilde Automations</option>
-                        <option value="sam">Uncle Sam's Procurement</option>
-                        <option value="westwood">The Westwood Network</option>
+                        <option value="jsw">🏢 JSW Enterprises</option>
+                        <option value="cliniciq">🏥 Clinic IQ</option>
+                        <option value="wilde">⚙️ Wilde Auto</option>
+                        <option value="sam">📄 Uncle Sam's</option>
+                        <option value="westwood">🌐 Westwood</option>
                     </select>
-                </div>
-                <div class="task-input-group">
-                    <select id="timelineGoal" style="flex:1;padding:8px;border:1px solid var(--gray-300);border-radius:6px;">
-                        <option value="">Select Goal</option>
+                    <select id="timelineGoal" style="padding:10px;border:1px solid var(--gray-300);border-radius:6px;">
+                        <option value="">Select Goal from Goals Page</option>
                     </select>
-                    <input type="date" id="timelineDate" style="padding:8px;border:1px solid var(--gray-300);border-radius:6px;">
-                    <button class="task-add-btn" onclick="addToTimeline()">Add</button>
+                    <input type="date" id="timelineDate" style="padding:10px;border:1px solid var(--gray-300);border-radius:6px;">
+                    <button class="task-add-btn" onclick="addToTimeline()" style="padding:10px 20px;">Add to Timeline</button>
                 </div>
             </div>
+            
+            <!-- Timeline View -->
             <div class="queue-section">
                 <div class="queue-header">
-                    <span class="queue-title">Timeline</span>
+                    <span class="queue-title">📆 Your Timeline</span>
                 </div>
-                <div id="timelineItems" style="padding:20px;color:var(--gray-500);">Select a company to view timeline...</div>
+                <div id="timelineItems" style="padding:20px;color:var(--gray-500);">Select a company above to add timeline items...</div>
             </div>
         </div>
 
@@ -876,7 +878,7 @@
             const container = document.getElementById('timelineItems');
             
             if (timeline.length === 0) {
-                container.innerHTML = '<div style="color:#9CA3AF;text-align:center;">No timeline items. Select a goal and date above.</div>';
+                container.innerHTML = '<div style="color:#9CA3AF;text-align:center;padding:40px;">📭 No timeline items yet.<br>Add goals from the Goals page and set target dates above.</div>';
                 return;
             }
             
@@ -884,17 +886,47 @@
             
             const today = new Date().toISOString().split('T')[0];
             
-            container.innerHTML = timeline.map(t => {
-                const isOverdue = t.date < today;
-                const style = isOverdue ? 'border-left:3px solid #EF4444;' : 'border-left:3px solid #10B981;';
-                return `
-                    <div style="padding:12px;margin-bottom:8px;background:white;border-radius:8px;${style}">
-                        <div style="font-size:12px;color:${isOverdue ? '#EF4444' : '#10B981'};font-weight:600;">${isOverdue ? '⚠️ OVERDUE' : '📅 ' + t.date}</div>
-                        <div style="font-weight:500;">${t.goal}</div>
-                        <div style="font-size:12px;color:var(--gray-500);">${companyInfo[t.company] ? companyInfo[t.company].icon + ' ' + companyInfo[t.company].name : t.company}</div>
+            // Group by status
+            const overdue = timeline.filter(t => t.date < today);
+            const upcoming = timeline.filter(t => t.date >= today);
+            
+            let html = '';
+            
+            if (overdue.length > 0) {
+                html += '<div style="margin-bottom:20px;"><h3 style="color:#EF4444;font-size:14px;margin-bottom:10px;">⚠️ Overdue (' + overdue.length + ')</h3>';
+                html += overdue.map(t => `
+                    <div style="padding:14px;margin-bottom:8px;background:#FEF2F2;border-radius:10px;border-left:4px solid #EF4444;">
+                        <div style="font-size:12px;color:#EF4444;font-weight:600;">${t.date}</div>
+                        <div style="font-weight:500;margin-top:4px;">${t.goal}</div>
+                        <div style="font-size:12px;color:#6B7280;margin-top:4px;">${companyInfo[t.company]?.icon || ''} ${companyInfo[t.company]?.name || t.company}</div>
                     </div>
-                `;
-            }).join('');
+                `).join('');
+                html += '</div>';
+            }
+            
+            if (upcoming.length > 0) {
+                html += '<div><h3 style="color:#10B981;font-size:14px;margin-bottom:10px;">✅ Upcoming (' + upcoming.length + ')</h3>';
+                html += upcoming.map(t => {
+                    const daysDiff = Math.ceil((new Date(t.date) - new Date(today)) / (1000 * 60 * 60 * 24));
+                    let label = '';
+                    if (daysDiff === 0) label = '🔥 Today';
+                    else if (daysDiff === 1) label = '� Tomorrow';
+                    else label = daysDiff + ' days';
+                    
+                    return `
+                        <div style="padding:14px;margin-bottom:8px;background:#ECFDF5;border-radius:10px;border-left:4px solid #10B981;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <div style="font-size:12px;color:#10B981;font-weight:600;">${label} - ${t.date}</div>
+                            </div>
+                            <div style="font-weight:500;margin-top:4px;">${t.goal}</div>
+                            <div style="font-size:12px;color:#6B7280;margin-top:4px;">${companyInfo[t.company]?.icon || ''} ${companyInfo[t.company]?.name || t.company}</div>
+                        </div>
+                    `;
+                }).join('');
+                html += '</div>';
+            }
+            
+            container.innerHTML = html;
         }
         
         function openCompany(company) {
