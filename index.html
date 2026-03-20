@@ -265,25 +265,71 @@
         <!-- Team Page -->
         <div id="team" class="view">
             <h1 class="page-title">Team</h1>
-            <div class="org-chart">
-                <div class="org-level">
-                    <div class="org-level-label">Leadership</div>
-                    <div class="org-row">
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#374151,#111827);">👤</div><div class="org-name">Jack</div><div class="org-role">Owner</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#059669,#047857);">🤖</div><div class="org-name">Golias</div><div class="org-role">Operations</div></div>
+            
+            <!-- Leadership -->
+            <div class="queue-section">
+                <div class="queue-header">
+                    <span class="queue-title">👑 Leadership</span>
+                </div>
+                <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+                    <div style="text-align:center;padding:20px;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);min-width:140px;">
+                        <div style="width:64px;height:64px;background:linear-gradient(135deg,#374151,#111827);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;font-weight:bold;margin:0 auto 12px;">👤</div>
+                        <div style="font-weight:600;">Jack</div>
+                        <div style="font-size:12px;color:var(--gray-500);">Owner</div>
+                    </div>
+                    <div style="text-align:center;padding:20px;background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);min-width:140px;">
+                        <div style="width:64px;height:64px;background:linear-gradient(135deg,#059669,#047857);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;font-weight:bold;margin:0 auto 12px;">🤖</div>
+                        <div style="font-weight:600;">Golias</div>
+                        <div style="font-size:12px;color:var(--gray-500);">Operations</div>
                     </div>
                 </div>
-                <div class="org-level">
-                    <div class="org-level-label">Team</div>
-                    <div class="org-row">
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#10B981,#059669)">E</div><div class="org-name">Effy</div><div class="org-role">Engineer</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#6366F1,#4F46E5)">J</div><div class="org-name">JR</div><div class="org-role">QA</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#F59E0B,#D97706)">W</div><div class="org-name">Wilson</div><div class="org-role">Lead</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#EC4899,#DB2777)">G</div><div class="org-name">Gretel</div><div class="org-role">Writer</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#8B5CF6,#7C3AED)">S</div><div class="org-name">Stan</div><div class="org-role">Research</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#3B82F6,#2563EB)">B</div><div class="org-name">Bongo</div><div class="org-role">Content</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#14B8A6,#0D9488)">F</div><div class="org-name">Frankie</div><div class="org-role">Sec</div></div>
-                        <div class="org-person"><div class="org-avatar" style="background:linear-gradient(135deg,#F97316,#EA580C)">J</div><div class="org-name">Joon</div><div class="org-role">Social</div></div>
+            </div>
+            
+            <!-- Team Members -->
+            <div class="queue-section">
+                <div class="queue-header">
+                    <span class="queue-title">💼 Team Members</span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+                    <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:1px solid var(--gray-200);">
+                        <div style="width:48px;height:48px;background:linear-gradient(135deg,#10B981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin:0 auto 8px;">E</div>
+                        <div style="font-weight:600;font-size:13px;">Effy</div>
+                        <div style="font-size:11px;color:var(--gray-500);">Engineer</div>
+                    </div>
+                    <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:1px solid var(--gray-200);">
+                        <div style="width:48px;height:48px;background:linear-gradient(135deg,#6366F1,#4F46E5);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin:0 auto 8px;">J</div>
+                        <div style="font-weight:600;font-size:13px;">JR</div>
+                        <div style="font-size:11px;color:var(--gray-500);">QA</div>
+                    </div>
+                    <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:1px solid var(--gray-200);">
+                        <div style="width:48px;height:48px;background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin:0 auto 8px;">W</div>
+                        <div style="font-weight:600;font-size:13px;">Wilson</div>
+                        <div style="font-size:11px;color:var(--gray-500);">Lead</div>
+                    </div>
+                    <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:1px solid var(--gray-200);">
+                        <div style="width:48px;height:48px;background:linear-gradient(135deg,#EC4899,#DB2777);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin:0 auto 8px;">G</div>
+                        <div style="font-weight:600;font-size:13px;">Gretel</div>
+                        <div style="font-size:11px;color:var(--gray-500);">Writer</div>
+                    </div>
+                    <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:1px solid var(--gray-200);">
+                        <div style="width:48px;height:48px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin:0 auto 8px;">S</div>
+                        <div style="font-weight:600;font-size:13px;">Stan</div>
+                        <div style="font-size:11px;color:var(--gray-500);">Research</div>
+                    </div>
+                    <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:1px solid var(--gray-200);">
+                        <div style="width:48px;height:48px;background:linear-gradient(135deg,#3B82F6,#2563EB);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin:0 auto 8px;">B</div>
+                        <div style="font-weight:600;font-size:13px;">Bongo</div>
+                        <div style="font-size:11px;color:var(--gray-500);">Content</div>
+                    </div>
+                    <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:1px solid var(--gray-200);">
+                        <div style="width:48px;height:48px;background:linear-gradient(135deg,#14B8A6,#0D9488);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin:0 auto 8px;">F</div>
+                        <div style="font-weight:600;font-size:13px;">Frankie</div>
+                        <div style="font-size:11px;color:var(--gray-500);">Secretary</div>
+                    </div>
+                    <div style="text-align:center;padding:16px;background:white;border-radius:10px;border:1px solid var(--gray-200);">
+                        <div style="width:48px;height:48px;background:linear-gradient(135deg,#F97316,#EA580C);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin:0 auto 8px;">J</div>
+                        <div style="font-weight:600;font-size:13px;">Joon</div>
+                        <div style="font-size:11px;color:var(--gray-500);">Social</div>
                     </div>
                 </div>
             </div>
