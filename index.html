@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSW Enterprises - Mission Control</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // Password protection
+        const correctPassword = 'Harlem1085';
+        if (!sessionStorage.getItem('jsw-auth')) {
+            const password = prompt('Enter password to access JSW Dashboard:');
+            if (password !== correctPassword) {
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#666;">Access Denied</div>';
+            } else {
+                sessionStorage.setItem('jsw-auth', 'true');
+            }
+        }
+    </script>
     <style>
         :root {
             --primary: #059669;
