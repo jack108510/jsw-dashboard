@@ -316,9 +316,31 @@
             <h1 class="page-title">📅 Timeline</h1>
             <div class="queue-section">
                 <div class="queue-header">
-                    <span class="queue-title">Activity Timeline</span>
+                    <span class="queue-title">Add Goal to Timeline</span>
                 </div>
-                <div id="timelineItems" style="padding:20px;color:var(--gray-500);">Loading timeline...</div>
+                <div class="task-input-group">
+                    <select id="timelineCompany" style="flex:1;padding:8px;border:1px solid var(--gray-300);border-radius:6px;" onchange="loadCompanyGoals()">
+                        <option value="">Select Company</option>
+                        <option value="jsw">JSW Enterprises</option>
+                        <option value="cliniciq">Clinic IQ</option>
+                        <option value="wilde">Wilde Automations</option>
+                        <option value="sam">Uncle Sam's Procurement</option>
+                        <option value="westwood">The Westwood Network</option>
+                    </select>
+                </div>
+                <div class="task-input-group">
+                    <select id="timelineGoal" style="flex:1;padding:8px;border:1px solid var(--gray-300);border-radius:6px;">
+                        <option value="">Select Goal</option>
+                    </select>
+                    <input type="date" id="timelineDate" style="padding:8px;border:1px solid var(--gray-300);border-radius:6px;">
+                    <button class="task-add-btn" onclick="addToTimeline()">Add</button>
+                </div>
+            </div>
+            <div class="queue-section">
+                <div class="queue-header">
+                    <span class="queue-title">Timeline</span>
+                </div>
+                <div id="timelineItems" style="padding:20px;color:var(--gray-500);">Select a company to view timeline...</div>
             </div>
         </div>
 
@@ -677,21 +699,68 @@
         }
         
         async function loadTimeline() {
-            const tasks = await fetchCompletedTasks();
-            const container = document.getElementById('timelineItems');
+            renderTimeline();
+        }
+        
+        function loadCompanyGoals() {
+            const company = document.getElementById('timelineCompany').value;
+            const goalSelect = document.getElementById('timelineGoal');
+            goalSelect.innerHTML = '<option value="">Select Goal</option>';
             
-            if (!tasks || tasks.length === 0) {
-                container.innerHTML = '<div style="color:#9CA3AF;text-align:center;">No activity yet</div>';
+            if (!company) return;
+            
+            const goals = localStorage.getItem('jsw-goals-' + company) || '';
+            const goalList = goals.split('\n').filter(g => g.trim());
+            
+            goalList.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                opt.textContent = g;
+                goalSelect.appendChild(opt);
+            });
+        }
+        
+        function addToTimeline() {
+            const company = document.getElementById('timelineCompany').value;
+            const goal = document.getElementById('timelineGoal').value;
+            const date = document.getElementById('timelineDate').value;
+            
+            if (!company || !goal || !date) {
+                alert('Please fill all fields');
                 return;
             }
             
-            container.innerHTML = tasks.map(t => `
-                <div style="padding:12px 0;border-bottom:1px solid var(--gray-100);">
-                    <div style="font-size:12px;color:var(--gray-500);">${t.created_at ? new Date(t.created_at).toLocaleString() : 'Recently'}</div>
-                    <div style="font-weight:500;">${t.text}</div>
-                    <div style="font-size:12px;color:var(--gray-500);">${companyInfo[t.company] ? companyInfo[t.company].icon + ' ' + companyInfo[t.company].name : t.company}</div>
-                </div>
-            `).join('');
+            const timeline = JSON.parse(localStorage.getItem('jsw-timeline') || '[]');
+            timeline.push({ company, goal, date, added: new Date().toISOString() });
+            localStorage.setItem('jsw-timeline', JSON.stringify(timeline));
+            
+            renderTimeline();
+        }
+        
+        function renderTimeline() {
+            const timeline = JSON.parse(localStorage.getItem('jsw-timeline') || '[]');
+            const container = document.getElementById('timelineItems');
+            
+            if (timeline.length === 0) {
+                container.innerHTML = '<div style="color:#9CA3AF;text-align:center;">No timeline items. Select a goal and date above.</div>';
+                return;
+            }
+            
+            timeline.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            container.innerHTML = timeline.map(t => {
+                const isOverdue = t.date < today;
+                const style = isOverdue ? 'border-left:3px solid #EF4444;' : 'border-left:3px solid #10B981;';
+                return `
+                    <div style="padding:12px;margin-bottom:8px;background:white;border-radius:8px;${style}">
+                        <div style="font-size:12px;color:${isOverdue ? '#EF4444' : '#10B981'};font-weight:600;">${isOverdue ? '⚠️ OVERDUE' : '📅 ' + t.date}</div>
+                        <div style="font-weight:500;">${t.goal}</div>
+                        <div style="font-size:12px;color:var(--gray-500);">${companyInfo[t.company] ? companyInfo[t.company].icon + ' ' + companyInfo[t.company].name : t.company}</div>
+                    </div>
+                `;
+            }).join('');
         }
         
         function openCompany(company) {
