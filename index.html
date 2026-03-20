@@ -324,7 +324,7 @@
         
         async function fetchCompletedTasks() {
             try {
-                const res = await fetch(SUPABASE_URL + '/rest/v1/tasks?status=eq.completed&order=completed_at.desc&limit=50', {
+                const res = await fetch(SUPABASE_URL + '/rest/v1/tasks?status=eq.completed&order=created_at.desc&limit=50', {
                     headers: { 
                         'apikey': SUPABASE_KEY, 
                         'Authorization': 'Bearer ' + SUPABASE_KEY 
@@ -364,7 +364,7 @@
                         'Authorization': 'Bearer ' + SUPABASE_KEY,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ status: 'completed', completed_at: new Date().toISOString() })
+                    body: JSON.stringify({ status: 'completed', created_at: new Date().toISOString() })
                 });
                 await fetchTasks();
             } catch (e) {
@@ -438,7 +438,7 @@
                 const task = tasks[0];
                 const statusColor = '#10B981';
                 const statusIcon = '✅';
-                const date = task.completed_at ? new Date(task.completed_at).toLocaleString() : 'Recently';
+                const date = task.created_at ? new Date(task.created_at).toLocaleString() : 'Recently';
                 
                 container.innerHTML = `
                     <div style="margin-bottom:8px;">
@@ -447,7 +447,7 @@
                     </div>
                     <div style="font-weight:500;">"${task.text}"</div>
                     <div style="color:var(--gray-500);font-size:12px;margin-top:4px;">${companyInfo[task.company] ? companyInfo[task.company].icon + ' ' + companyInfo[task.company].name : task.company}</div>
-                    ${task.evidence ? '<div style="margin-top:8px;padding:8px;background:white;border-radius:6px;border-left:3px solid var(--primary);font-size:13px;">📝 ' + task.evidence + '</div>' : ''}
+                    ${task.comments ? '<div style="margin-top:8px;padding:8px;background:white;border-radius:6px;border-left:3px solid var(--primary);font-size:13px;">📝 ' + task.comments + '</div>' : ''}
                 `;
             });
         }
@@ -589,7 +589,7 @@
             }
             
             container.innerHTML = tasks.map(t => {
-                const date = t.completed_at ? new Date(t.completed_at).toLocaleString() : 'Recently';
+                const date = t.created_at ? new Date(t.created_at).toLocaleString() : 'Recently';
                 return `
                     <div class="task-item" style="opacity:0.7;">
                         <div class="task-num" style="background:#10B981;color:white;">✓</div>
