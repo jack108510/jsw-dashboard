@@ -246,6 +246,10 @@
                     <div class="detail-stat-value" id="statActive">0</div>
                     <div class="detail-stat-label">Active Tasks</div>
                 </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-value" id="statCompleted">0</div>
+                    <div class="detail-stat-label">Completed</div>
+                </div>
             </div>
             <div class="detail-grid">
                 <div class="detail-card">
@@ -461,13 +465,24 @@
         // Supabase functions
         async function fetchTasks() {
             try {
-                const res = await fetch(SUPABASE_URL + '/rest/v1/tasks?status=eq.pending&order=created_at', {
-                    headers: { 
-                        'apikey': SUPABASE_KEY, 
-                        'Authorization': 'Bearer ' + SUPABASE_KEY 
-                    }
-                });
-                allTasks = await res.json();
+                // Fetch both pending and completed
+                const [pendingRes, completedRes] = await Promise.all([
+                    fetch(SUPABASE_URL + '/rest/v1/tasks?status=eq.pending&order=created_at', {
+                        headers: { 
+                            'apikey': SUPABASE_KEY, 
+                            'Authorization': 'Bearer ' + SUPABASE_KEY 
+                        }
+                    }),
+                    fetch(SUPABASE_URL + '/rest/v1/tasks?status=eq.completed&order=created_at.desc&limit=100', {
+                        headers: { 
+                            'apikey': SUPABASE_KEY, 
+                            'Authorization': 'Bearer ' + SUPABASE_KEY 
+                        }
+                    })
+                ]);
+                const pending = await pendingRes.json();
+                const completed = await completedRes.json();
+                allTasks = [...pending, ...completed];
                 return allTasks;
             } catch (e) {
                 console.error('Error fetching tasks:', e);
@@ -684,18 +699,21 @@
         
         function renderCompanyTasks() {
             if (!currentCompany) return;
-            const tasks = allTasks.filter(t => t.company === currentCompany && t.status === 'pending');
+            const pendingTasks = allTasks.filter(t => t.company === currentCompany && t.status === 'pending');
+            const completedTasks = allTasks.filter(t => t.company === currentCompany && t.status === 'completed');
             const list = document.getElementById('companyTaskList');
             const active = document.getElementById('statActive');
+            const completed = document.getElementById('statCompleted');
             
-            active.textContent = tasks.length;
+            active.textContent = pendingTasks.length;
+            completed.textContent = completedTasks.length;
             
-            if (tasks.length === 0) {
+            if (pendingTasks.length === 0) {
                 list.innerHTML = '<li style="color:#9CA3AF;text-align:center;padding:20px;">No tasks</li>';
                 return;
             }
             
-            list.innerHTML = tasks.map((t, i) => `
+            list.innerHTML = pendingTasks.map((t, i) => `
                 <li class="task-list-item">
                     <span>${i + 1}. ${t.text}</span>
                     <button class="task-delete" onclick="deleteCompanyTask(${t.id})">×</button>
