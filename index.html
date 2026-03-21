@@ -620,7 +620,10 @@
     </main>
 
     <script>
-        // Supabase config
+        // API config - use local API for task processing
+        const USE_LOCAL_API = true; // Set to false to use Supabase
+        const LOCAL_API = 'http://localhost:3457';
+        
         const SUPABASE_URL = 'https://xacehhtgvubcqdoltazg.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhY2VoaHRndnViY3Fkb2x0YXpnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Mzk0Mjg2NywiZXhwIjoyMDg5NTE4ODY3fQ.5sqLtRtRnWEEuytTsfGhh1hmrQkTilL4Bd_rMrqmQ9A';
         const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1484011426694697022/tzl0_nYIYCiPwxayAjxbzSl6hEvhty1DgcPjspnV9BKhoTNcnWKfwqQSEmlkxPLn2GPl';
@@ -689,26 +692,22 @@
         let allTasks = [];
         
         // Supabase functions
+        // API helper functions
+        async function getTasksFromAPI() {
+            if (USE_LOCAL_API) {
+                const res = await fetch(LOCAL_API + '/tasks');
+                return await res.json();
+            } else {
+                const res = await fetch(SUPABASE_URL + '/rest/v1/tasks?order=created_at', {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+                });
+                return await res.json();
+            }
+        }
+        
         async function fetchTasks() {
             try {
-                // Fetch both pending and completed
-                const [pendingRes, completedRes] = await Promise.all([
-                    fetch(SUPABASE_URL + '/rest/v1/tasks?status=eq.pending&order=created_at', {
-                        headers: { 
-                            'apikey': SUPABASE_KEY, 
-                            'Authorization': 'Bearer ' + SUPABASE_KEY 
-                        }
-                    }),
-                    fetch(SUPABASE_URL + '/rest/v1/tasks?status=eq.completed&order=created_at.desc&limit=100', {
-                        headers: { 
-                            'apikey': SUPABASE_KEY, 
-                            'Authorization': 'Bearer ' + SUPABASE_KEY 
-                        }
-                    })
-                ]);
-                const pending = await pendingRes.json();
-                const completed = await completedRes.json();
-                allTasks = [...pending, ...completed];
+                allTasks = await getTasksFromAPI();
                 return allTasks;
             } catch (e) {
                 console.error('Error fetching tasks:', e);
@@ -718,13 +717,8 @@
         
         async function fetchCompletedTasks() {
             try {
-                const res = await fetch(SUPABASE_URL + '/rest/v1/tasks?status=eq.completed&order=created_at.desc&limit=50', {
-                    headers: { 
-                        'apikey': SUPABASE_KEY, 
-                        'Authorization': 'Bearer ' + SUPABASE_KEY 
-                    }
-                });
-                return await res.json();
+                const tasks = await getTasksFromAPI();
+                return tasks.filter(t => t.status === 'completed');
             } catch (e) {
                 console.error('Error fetching completed tasks:', e);
                 return [];
@@ -733,15 +727,23 @@
         
         async function addTask(text, company) {
             try {
-                await fetch(SUPABASE_URL + '/rest/v1/tasks', {
-                    method: 'POST',
-                    headers: { 
-                        'apikey': SUPABASE_KEY, 
-                        'Authorization': 'Bearer ' + SUPABASE_KEY,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ text, company, status: 'pending' })
-                });
+                if (USE_LOCAL_API) {
+                    await fetch(LOCAL_API + '/tasks', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text, company })
+                    });
+                } else {
+                    await fetch(SUPABASE_URL + '/rest/v1/tasks', {
+                        method: 'POST',
+                        headers: { 
+                            'apikey': SUPABASE_KEY, 
+                            'Authorization': 'Bearer ' + SUPABASE_KEY,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ text, company, status: 'pending' })
+                    });
+                }
                 await fetchTasks();
                 renderQueue();
             } catch (e) {
@@ -751,15 +753,23 @@
         
         async function completeTaskById(id) {
             try {
-                await fetch(SUPABASE_URL + '/rest/v1/tasks?id=eq.' + id, {
-                    method: 'PATCH',
-                    headers: { 
-                        'apikey': SUPABASE_KEY, 
-                        'Authorization': 'Bearer ' + SUPABASE_KEY,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ status: 'completed', created_at: new Date().toISOString() })
-                });
+                if (USE_LOCAL_API) {
+                    await fetch(LOCAL_API + '/tasks/' + id + '/complete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ evidence: 'Completed via dashboard' })
+                    });
+                } else {
+                    await fetch(SUPABASE_URL + '/rest/v1/tasks?id=eq.' + id, {
+                        method: 'PATCH',
+                        headers: { 
+                            'apikey': SUPABASE_KEY, 
+                            'Authorization': 'Bearer ' + SUPABASE_KEY,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ status: 'completed' })
+                    });
+                }
                 await fetchTasks();
             } catch (e) {
                 console.error('Error completing task:', e);
@@ -768,13 +778,22 @@
         
         async function deleteTaskById(id) {
             try {
-                await fetch(SUPABASE_URL + '/rest/v1/tasks?id=eq.' + id, {
-                    method: 'DELETE',
-                    headers: { 
-                        'apikey': SUPABASE_KEY, 
-                        'Authorization': 'Bearer ' + SUPABASE_KEY
-                    }
-                });
+                if (USE_LOCAL_API) {
+                    // Local API doesn't have delete - just mark as skipped
+                    await fetch(LOCAL_API + '/tasks/' + id + '/complete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ evidence: 'Skipped' })
+                    });
+                } else {
+                    await fetch(SUPABASE_URL + '/rest/v1/tasks?id=eq.' + id, {
+                        method: 'DELETE',
+                        headers: { 
+                            'apikey': SUPABASE_KEY, 
+                            'Authorization': 'Bearer ' + SUPABASE_KEY
+                        }
+                    });
+                }
                 await fetchTasks();
             } catch (e) {
                 console.error('Error deleting task:', e);
