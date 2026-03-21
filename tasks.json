@@ -277,5 +277,14 @@
     "created_at": "2026-03-21T22:18:00.290Z",
     "evidence": "Redesigned with modern purple gradient theme, updated hero, buttons, stats, and logo",
     "completed_at": "2026-03-21T22:18:01.551Z"
+  },
+  {
+    "id": 1774133044975,
+    "text": "Add to each companys private dashboard where you can schedule commands with options for Repeating Company: jsw",
+    "company": "jsw",
+    "status": "completed",
+    "created_at": "2026-03-21T22:44:04.975Z",
+    "evidence": "Added Scheduled Commands section to each company dashboard - allows adding commands with time and repeat options (daily/weekly/monthly/none)",
+    "completed_at": "2026-03-21T22:44:06.370Z"
   }
 ]
