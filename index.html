@@ -135,6 +135,21 @@
         .schedule-item-repeats { font-size: 11px; color: var(--gray-500); background: white; padding: 4px 8px; border-radius: 4px; }
         .schedule-item-delete { color: #EF4444; cursor: pointer; font-size: 14px; }
         
+        /* Calendar */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .calendar-header { font-weight: 600; text-align: center; padding: 8px; background: var(--gray-100); border-radius: 6px; }
+        .calendar-day { min-height: 80px; border: 1px solid var(--gray-200); border-radius: 8px; padding: 8px; background: white; }
+        .calendar-day.drag-over { background: #E0E7FF; border-color: #667EEA; }
+        .calendar-day-number { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .calendar-event { font-size: 10px; padding: 4px 6px; background: #667EEA; color: white; border-radius: 4px; margin-bottom: 4px; cursor: grab; }
+        .calendar-event:hover { background: #5A6FD6; }
+        .calendar-today { border-color: #667EEA; border-width: 2px; }
+        .calendar-empty { color: #9CA3AF; font-size: 11px; }
+        .goals-to-schedule { background: var(--gray-50); border: 1px dashed var(--gray-300); border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+        .goals-to-schedule-title { font-weight: 600; font-size: 13px; margin-bottom: 8px; }
+        .goal-drag-item { font-size: 12px; padding: 8px 12px; background: white; border: 1px solid var(--gray-200); border-radius: 6px; margin-bottom: 6px; cursor: grab; }
+        .goal-drag-item:active { cursor: grabbing; }
+        
         /* Team Page */
         .org-chart { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; padding: 24px; }
         .org-title { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--gray-500); margin-bottom: 16px; text-align: center; }
@@ -692,6 +707,15 @@
                     <span class="queue-title">📆 Your Timeline</span>
                 </div>
                 <div id="timelineItems" style="padding:20px;color:var(--gray-500);">Select a company above to add timeline items...</div>
+            </div>
+            
+            <!-- Calendar View -->
+            <div class="queue-section">
+                <div class="queue-header">
+                    <span class="queue-title">🗓️ Smart Calendar</span>
+                    <button onclick="renderCalendar()" style="padding:6px 12px;background:var(--primary);color:white;border:none;border-radius:6px;cursor:pointer;">⟳ Refresh</button>
+                </div>
+                <div id="calendarView" style="padding:20px;"></div>
             </div>
         </div>
 
@@ -1400,6 +1424,12 @@
         
         function saveGoals(company) {
             localStorage.setItem('jsw-goals-' + company, document.getElementById('goals-' + company).value);
+            
+            // Also save to combined list for calendar
+            const allGoals = JSON.parse(localStorage.getItem('jsw-goals-all') || '{}');
+            const goalsText = document.getElementById('goals-' + company).value;
+            allGoals[company] = goalsText.split('\n').filter(g => g.trim());
+            localStorage.setItem('jsw-goals-all', JSON.stringify(allGoals));
         }
         
         async function loadTimeline() {
@@ -1418,6 +1448,7 @@
             loadCompanyGoals();
             
             renderTimeline();
+            renderCalendar();
         }
         
         function loadCompanyGoals() {
@@ -1584,6 +1615,100 @@
                     <span class="schedule-item-delete" onclick="deleteSchedule(${s.id})">✕</span>
                 </div>
             `).join('');
+        }
+        
+        // Calendar functions
+        function renderCalendar() {
+            const container = document.getElementById('calendarView');
+            const timeline = JSON.parse(localStorage.getItem('jsw-timeline') || '[]');
+            const goals = JSON.parse(localStorage.getItem('jsw-goals-all') || '{}');
+            
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth();
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay();
+            const daysInMonth = lastDay.getDate();
+            
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // Get all goals that can be scheduled
+            let allGoals = [];
+            Object.keys(goals).forEach(company => {
+                if (goals[company]) {
+                    goals[company].forEach(g => {
+                        allGoals.push({ company, text: g });
+                    });
+                }
+            });
+            
+            let html = `
+                <div class="goals-to-schedule">
+                    <div class="goals-to-schedule-title">📌 Drag goals to calendar dates</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;" ondragover="event.preventDefault()" ondrop="dropGoalBack(event)">
+                        ${allGoals.slice(0, 10).map((g, i) => `
+                            <div class="goal-drag-item" draggable="true" ondragstart="dragGoal(event, '${g.company}', '${g.text.replace(/'/g, "\\'")}')">
+                                ${g.text.substring(0, 30)}${g.text.length > 30 ? '...' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            html += `<div class="calendar-grid">`;
+            html += ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `<div class="calendar-header">${d}</div>`).join('');
+            
+            // Empty days before first
+            for (let i = 0; i < startDay; i++) {
+                html += `<div class="calendar-day" style="background:var(--gray-50);"></div>`;
+            }
+            
+            const todayStr = today.toISOString().split('T')[0];
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayEvents = timeline.filter(t => t.date === dateStr);
+                const isToday = dateStr === todayStr;
+                
+                html += `
+                    <div class="calendar-day ${isToday ? 'calendar-today' : ''}" 
+                         ondragover="event.preventDefault(); this.classList.add('drag-over')" 
+                         ondragleave="this.classList.remove('drag-over')"
+                         ondrop="dropGoal(event, '${dateStr}')">
+                        <div class="calendar-day-number">${day}</div>
+                        ${dayEvents.map(e => `<div class="calendar-event">${e.goal.substring(0, 20)}</div>`).join('')}
+                    </div>
+                `;
+            }
+            
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+        
+        let draggedGoal = null;
+        
+        function dragGoal(event, company, text) {
+            draggedGoal = { company, text };
+            event.dataTransfer.setData('text/plain', JSON.stringify(draggedGoal));
+        }
+        
+        function dropGoal(event, dateStr) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('drag-over');
+            
+            if (draggedGoal) {
+                const timeline = JSON.parse(localStorage.getItem('jsw-timeline') || '[]');
+                timeline.push({ company: draggedGoal.company, goal: draggedGoal.text, date: dateStr, added: new Date().toISOString() });
+                localStorage.setItem('jsw-timeline', JSON.stringify(timeline));
+                renderCalendar();
+                draggedGoal = null;
+            }
+        }
+        
+        function dropGoalBack(event) {
+            event.preventDefault();
         }
         
         // Notes functions
