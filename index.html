@@ -1725,12 +1725,16 @@
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             const companyColors = { jsw: '#667EEA', cliniciq: '#10B981', wilde: '#F59E0B', sam: '#EF4444', westwood: '#8B5CF6' };
             
-            // Get all goals that can be scheduled
+            // Get all goals that can be scheduled (filter out already scheduled)
+            const scheduled = JSON.parse(localStorage.getItem('jsw-scheduled-goals') || '[]');
             let allGoals = [];
             Object.keys(goals).forEach(company => {
                 if (goals[company]) {
                     goals[company].forEach(g => {
-                        allGoals.push({ company, text: g });
+                        const isScheduled = scheduled.some(s => s.company === company && s.goal === g);
+                        if (!isScheduled) {
+                            allGoals.push({ company, text: g });
+                        }
                     });
                 }
             });
@@ -1823,6 +1827,12 @@
                 const timeline = JSON.parse(localStorage.getItem('jsw-timeline') || '[]');
                 timeline.push({ company: draggedGoal.company, goal: draggedGoal.text, date: dateStr, added: new Date().toISOString() });
                 localStorage.setItem('jsw-timeline', JSON.stringify(timeline));
+                
+                // Remove from available goals
+                const scheduled = JSON.parse(localStorage.getItem('jsw-scheduled-goals') || '[]');
+                scheduled.push({ company: draggedGoal.company, goal: draggedGoal.text });
+                localStorage.setItem('jsw-scheduled-goals', JSON.stringify(scheduled));
+                
                 renderCalendar();
                 draggedGoal = null;
             }
