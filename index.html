@@ -1755,15 +1755,6 @@
             document.getElementById('scheduleModal').remove();
             renderSchedules();
         }
-                return;
-            }
-            
-            const schedules = getSchedules(currentCompany);
-            schedules.push({ cmd: task, time, repeat, id: Date.now() });
-            saveSchedules(currentCompany, schedules);
-            document.getElementById('scheduleModal').remove();
-            renderSchedules();
-        }
         
         function deleteSchedule(id) {
             if (!currentCompany) return;
