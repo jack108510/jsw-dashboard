@@ -1663,17 +1663,68 @@
         
         function addSchedule() {
             if (!currentCompany) return;
-            const cmd = prompt('Enter command to schedule:');
-            if (!cmd) return;
             
-            const time = prompt('Enter time (HH:MM format, e.g., 09:00):');
-            if (!time) return;
+            // Get tasks for this company
+            const tasks = JSON.parse(localStorage.getItem('jsw-tasks') || '[]').filter(t => t.company === currentCompany && t.status === 'pending');
             
-            const repeat = prompt('Repeat? (daily/weekly/monthly/none):', 'daily');
+            // Get goals for this company
+            const goals = (localStorage.getItem('jsw-goals-' + currentCompany) || '').split('\n').filter(g => g.trim());
+            
+            // Build options
+            let options = '<option value="">Select a task...</option>';
+            tasks.forEach(t => {
+                options += `<option value="task:${t.id}:${t.text.substring(0,50)}">📋 Task: ${t.text.substring(0,40)}</option>`;
+            });
+            goals.forEach(g => {
+                options += `<option value="goal:${g.substring(0,50)}">🎯 Goal: ${g.substring(0,40)}</option>`;
+            });
+            
+            // Create a modal form
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:9999;';
+            modal.innerHTML = `
+                <div style="background:white;padding:24px;border-radius:12px;width:90%;max-width:400px;">
+                    <h3 style="margin:0 0 16px;">⏰ Schedule Command</h3>
+                    <div style="margin-bottom:12px;">
+                        <label style="display:block;margin-bottom:4px;font-size:12px;">Select Task/Goal:</label>
+                        <select id="scheduleSelect" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;">${options}</select>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="display:block;margin-bottom:4px;font-size:12px;">Time:</label>
+                        <input type="time" id="scheduleTime" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;">
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label style="display:block;margin-bottom:4px;font-size:12px;">Repeat:</label>
+                        <select id="scheduleRepeat" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;">
+                            <option value="none">One time only</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:8px;">
+                        <button onclick="saveNewSchedule()" style="flex:1;background:#10B981;color:white;border:none;padding:12px;border-radius:6px;cursor:pointer;">Save</button>
+                        <button onclick="this.closest('[style*=\\"position:fixed\\"]').remove()" style="flex:1;background:#EF4444;color:white;border:none;padding:12px;border-radius:6px;cursor:pointer;">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function saveNewSchedule() {
+            const select = document.getElementById('scheduleSelect').value;
+            const time = document.getElementById('scheduleTime').value;
+            const repeat = document.getElementById('scheduleRepeat').value;
+            
+            if (!select || !time) {
+                alert('Please select a task and time');
+                return;
+            }
             
             const schedules = getSchedules(currentCompany);
-            schedules.push({ cmd, time, repeat: repeat || 'none', id: Date.now() });
+            schedules.push({ cmd: select, time, repeat, id: Date.now() });
             saveSchedules(currentCompany, schedules);
+            document.querySelector('[style*="position:fixed"]').remove();
             renderSchedules();
         }
         
@@ -1694,14 +1745,17 @@
                 return;
             }
             
-            list.innerHTML = schedules.map(s => `
+            list.innerHTML = schedules.map(s => {
+                const cmdLabel = s.cmd.startsWith('task:') ? '📋 ' + s.cmd.split(':').slice(2).join(':') : 
+                                s.cmd.startsWith('goal:') ? '🎯 ' + s.cmd.split(':').slice(1).join(':') : s.cmd;
+                return `
                 <div class="schedule-item">
                     <span class="schedule-item-time">${s.time}</span>
-                    <span class="schedule-item-cmd">${s.cmd}</span>
+                    <span class="schedule-item-cmd">${cmdLabel}</span>
                     <span class="schedule-item-repeats">${s.repeat}</span>
                     <span class="schedule-item-delete" onclick="deleteSchedule(${s.id})">✕</span>
                 </div>
-            `).join('');
+            `}).join('');
         }
         
         // Calendar functions
