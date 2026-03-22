@@ -540,6 +540,11 @@
                     <div class="detail-stat-label">Completed</div>
                 </div>
             </div>
+            <!-- Related Sites Widget -->
+            <div class="detail-card" style="margin-bottom:12px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;">
+                <div class="detail-card-title" style="color:white;">🌐 Related Sites</div>
+                <div id="relatedSites" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px;"></div>
+            </div>
             <div class="detail-grid">
                 <div class="detail-card">
                     <div class="detail-card-title">Tasks</div>
@@ -1615,12 +1620,52 @@
             document.getElementById('whiteboard').value = localStorage.getItem('jsw-whiteboard-' + company) || '';
             renderCompanyNotes();
             renderCompanyLinks();
+            renderRelatedSites(company);
             renderSchedules();
             
             renderCompanyTasks();
             
             document.getElementById('queue').classList.remove('active'); document.getElementById('companies').classList.remove('active'); document.getElementById('team').classList.remove('active');
             document.getElementById('company-detail').classList.add('active');
+        }
+        
+        // Auto-discover and render related sites
+        function renderRelatedSites(company) {
+            const knownSites = {
+                jsw: [
+                    {t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'},
+                    {t:'Wilde Automations',u:'https://jack108510.github.io/wilde-automations/'},
+                    {t:'Clinic IQ',u:'https://jack108510.github.io/jsw-clinic-iq/'}
+                ],
+                cliniciq: [
+                    {t:'Clinic IQ',u:'https://jack108510.github.io/jsw-clinic-iq/'},
+                    {t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'},
+                    {t:'Wilde Automations',u:'https://jack108510.github.io/wilde-automations/'}
+                ],
+                wilde: [
+                    {t:'Wilde Automations',u:'https://jack108510.github.io/wilde-automations/'},
+                    {t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'},
+                    {t:'JSW Enterprises',u:'https://jack108510.github.io/jsw-dashboard/'}
+                ],
+                sam: [
+                    {t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'},
+                    {t:'Wilde Automations',u:'https://jack108510.github.io/wilde-automations/'},
+                    {t:'Clinic IQ',u:'https://jack108510.github.io/jsw-clinic-iq/'}
+                ],
+                westwood: [
+                    {t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'},
+                    {t:'Wilde Automations',u:'https://jack108510.github.io/wilde-automations/'},
+                    {t:'Clinic IQ',u:'https://jack108510.github.io/jsw-clinic-iq/'}
+                ]
+            };
+            
+            const sites = knownSites[company] || [];
+            const container = document.getElementById('relatedSites');
+            container.innerHTML = sites.map(s => `
+                <a href="${s.u}" target="_blank" style="background:rgba(255,255,255,0.2);padding:10px 12px;border-radius:8px;text-decoration:none;color:white;font-size:12px;display:block;text-align:center;">
+                    ${s.t}
+                </a>
+            `).join('');
         }
         
         function saveWhiteboard() {
