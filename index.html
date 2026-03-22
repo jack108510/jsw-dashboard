@@ -1752,6 +1752,12 @@
             const schedules = getSchedules(currentCompany);
             schedules.push({ cmd: task, time, repeat, customDays, id: Date.now() });
             saveSchedules(currentCompany, schedules);
+            
+            // Send to webhook
+            try {
+                fetch('https://jackwilde.app.n8n.cloud/webhook/ea513425-fb54-4273-b1e2-fc763c835ea4?company=' + encodeURIComponent(currentCompany) + '&task=' + encodeURIComponent(task) + '&time=' + encodeURIComponent(time) + '&repeat=' + encodeURIComponent(repeat));
+            } catch(e) { console.log('Webhook error:', e); }
+            
             document.getElementById('scheduleModal').remove();
             renderSchedules();
         }
