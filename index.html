@@ -733,46 +733,10 @@
 
         <!-- Timeline Page -->
         <div id="timeline" class="view">
-            <h1 class="page-title">📅 Timeline</h1>
+            <h1 class="page-title">📅 Smart Calendar</h1>
             
-            <!-- Add New Timeline Item -->
-            <div class="queue-section">
-                <div class="queue-header">
-                    <span class="queue-title">➕ Add New Timeline Item</span>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:8px;align-items:center;">
-                    <select id="timelineCompany" style="padding:10px;border:1px solid var(--gray-300);border-radius:6px;" onchange="loadCompanyGoals()">
-                        <option value="">Select Company</option>
-                        <option value="jsw">🏢 JSW Enterprises</option>
-                        <option value="cliniciq">🏥 Clinic IQ</option>
-                        <option value="wilde">⚙️ Wilde Auto</option>
-                        <option value="sam">📄 Uncle Sam's</option>
-                        <option value="westwood">🌐 Westwood</option>
-                    </select>
-                    <select id="timelineGoal" style="padding:10px;border:1px solid var(--gray-300);border-radius:6px;">
-                        <option value="">Select Goal from Goals Page</option>
-                    </select>
-                    <input type="date" id="timelineDate" style="padding:10px;border:1px solid var(--gray-300);border-radius:6px;">
-                    <button class="task-add-btn" onclick="addToTimeline()" style="padding:10px 20px;">Add to Timeline</button>
-                </div>
-            </div>
-            
-            <!-- Timeline View -->
-            <div class="queue-section">
-                <div class="queue-header">
-                    <span class="queue-title">📆 Your Timeline</span>
-                </div>
-                <div id="timelineItems" style="padding:20px;color:var(--gray-500);">Select a company above to add timeline items...</div>
-            </div>
-            
-            <!-- Calendar View -->
-            <div class="queue-section">
-                <div class="queue-header">
-                    <span class="queue-title">🗓️ Smart Calendar</span>
-                    <button onclick="renderCalendar()" style="padding:6px 12px;background:var(--primary);color:white;border:none;border-radius:6px;cursor:pointer;">⟳ Refresh</button>
-                </div>
-                <div id="calendarView" style="padding:20px;"></div>
-            </div>
+            <!-- Calendar -->
+            <div id="calendarView" style="padding:20px;"></div>
         </div>
 
         <!-- Auditing Page -->
@@ -1491,21 +1455,6 @@
         }
         
         async function loadTimeline() {
-            // Load company dropdown
-            const companySelect = document.getElementById('timelineCompany');
-            if (companySelect.options.length <= 1) {
-                companies.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c;
-                    opt.textContent = companyInfo[c].icon + ' ' + companyInfo[c].name;
-                    companySelect.appendChild(opt);
-                });
-            }
-            
-            // Load goals for first company by default
-            loadCompanyGoals();
-            
-            renderTimeline();
             renderCalendar();
         }
         
