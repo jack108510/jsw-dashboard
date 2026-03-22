@@ -1690,12 +1690,25 @@
                     </div>
                     <div style="margin-bottom:16px;">
                         <label style="display:block;margin-bottom:4px;font-size:12px;">Repeat:</label>
-                        <select id="scheduleRepeat" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;">
+                        <select id="scheduleRepeat" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;" onchange="toggleCustomDaysWeb()">
                             <option value="none">One time only</option>
                             <option value="daily">Daily</option>
                             <option value="weekly">Weekly</option>
                             <option value="monthly">Monthly</option>
+                            <option value="custom">Custom</option>
                         </select>
+                    </div>
+                    <div id="customDaysWeb" style="display:none;margin-bottom:12px;">
+                        <label style="display:block;margin-bottom:4px;font-size:12px;">Select Days</label>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                            <label style="display:flex;align-items:center;gap:4px;font-size:11px;"><input type="checkbox" value="0"> Sun</label>
+                            <label style="display:flex;align-items:center;gap:4px;font-size:11px;"><input type="checkbox" value="1"> Mon</label>
+                            <label style="display:flex;align-items:center;gap:4px;font-size:11px;"><input type="checkbox" value="2"> Tue</label>
+                            <label style="display:flex;align-items:center;gap:4px;font-size:11px;"><input type="checkbox" value="3"> Wed</label>
+                            <label style="display:flex;align-items:center;gap:4px;font-size:11px;"><input type="checkbox" value="4"> Thu</label>
+                            <label style="display:flex;align-items:center;gap:4px;font-size:11px;"><input type="checkbox" value="5"> Fri</label>
+                            <label style="display:flex;align-items:center;gap:4px;font-size:11px;"><input type="checkbox" value="6"> Sat</label>
+                        </div>
                     </div>
                     <div style="display:flex;gap:8px;">
                         <button onclick="saveNewSchedule()" style="flex:1;background:#10B981;color:white;border:none;padding:12px;border-radius:6px;cursor:pointer;">Save</button>
@@ -1706,11 +1719,23 @@
             document.body.appendChild(modal);
         }
         
+        function toggleCustomDaysWeb() {
+            const repeat = document.getElementById('scheduleRepeat').value;
+            document.getElementById('customDaysWeb').style.display = repeat === 'custom' ? 'block' : 'none';
+        }
+        
         function saveNewSchedule() {
             const taskInput = document.getElementById('scheduleTaskInput').value.trim();
             const select = document.getElementById('scheduleSelect').value;
             const time = document.getElementById('scheduleTime').value;
             const repeat = document.getElementById('scheduleRepeat').value;
+            
+            // Custom days
+            let customDays = [];
+            if (repeat === 'custom') {
+                const checkboxes = document.querySelectorAll('#customDaysWeb input:checked');
+                checkboxes.forEach(cb => customDays.push(cb.value));
+            }
             
             // Use typed task OR selected task
             let task = taskInput;
@@ -1720,6 +1745,15 @@
             
             if (!task || !time) {
                 alert('Please enter a task and time');
+                return;
+            }
+            
+            const schedules = getSchedules(currentCompany);
+            schedules.push({ cmd: task, time, repeat, customDays, id: Date.now() });
+            saveSchedules(currentCompany, schedules);
+            document.querySelector('[style*="position:fixed"]').remove();
+            renderSchedules();
+        }
                 return;
             }
             
