@@ -555,16 +555,6 @@
                     <ul class="task-list" id="companyTaskList"></ul>
                 </div>
             </div>
-            <!-- Links -->
-            <div class="detail-card" style="margin-top:12px;">
-                <div class="detail-card-title">🔗 Quick Links</div>
-                <div class="task-input-group">
-                    <input type="text" class="task-input" id="inputLinkTitle" placeholder="Title" style="flex:1;margin-right:6px;">
-                    <input type="text" class="task-input" id="inputLinkUrl" placeholder="URL" style="flex:2;margin-right:6px;">
-                    <button class="task-add-btn" onclick="addCompanyLink()">Add</button>
-                </div>
-                <ul class="task-list" id="companyLinksList"></ul>
-            </div>
             <!-- Notes/Ideas -->
             <div class="detail-card" style="margin-top:12px;">
                 <div class="detail-card-title">💡 Ideas & Notes</div>
@@ -1619,7 +1609,6 @@
             // Load whiteboard and notes
             document.getElementById('whiteboard').value = localStorage.getItem('jsw-whiteboard-' + company) || '';
             renderCompanyNotes();
-            renderCompanyLinks();
             renderRelatedSites(company);
             renderSchedules();
             
