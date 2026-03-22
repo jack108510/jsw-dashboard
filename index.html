@@ -1681,21 +1681,24 @@
         }
         
         // Calendar functions
+        let calendarYear, calendarMonth;
+
         function renderCalendar() {
             const container = document.getElementById('calendarView');
             const timeline = JSON.parse(localStorage.getItem('jsw-timeline') || '[]');
             const goals = JSON.parse(localStorage.getItem('jsw-goals-all') || '{}');
             
             const today = new Date();
-            const year = today.getFullYear();
-            const month = today.getMonth();
+            calendarYear = calendarYear || today.getFullYear();
+            calendarMonth = calendarMonth || today.getMonth();
             
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
+            const firstDay = new Date(calendarYear, calendarMonth, 1);
+            const lastDay = new Date(calendarYear, calendarMonth + 1, 0);
             const startDay = firstDay.getDay();
             const daysInMonth = lastDay.getDate();
             
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const companyColors = { jsw: '#667EEA', cliniciq: '#10B981', wilde: '#F59E0B', sam: '#EF4444', westwood: '#8B5CF6' };
             
             // Get all goals that can be scheduled
             let allGoals = [];
@@ -1708,12 +1711,17 @@
             });
             
             let html = `
-                <div class="goals-to-schedule">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <button onclick="prevMonth()" style="padding:8px 16px;background:var(--primary);color:white;border:none;border-radius:6px;cursor:pointer;">← Prev</button>
+                    <h2 style="margin:0;font-size:20px;">${monthNames[calendarMonth]} ${calendarYear}</h2>
+                    <button onclick="nextMonth()" style="padding:8px 16px;background:var(--primary);color:white;border:none;border-radius:6px;cursor:pointer;">Next →</button>
+                </div>
+                <div class="goals-to-schedule" style="margin-bottom:16px;">
                     <div class="goals-to-schedule-title">📌 Drag goals to calendar dates</div>
                     <div style="display:flex;flex-wrap:wrap;gap:8px;" ondragover="event.preventDefault()" ondrop="dropGoalBack(event)">
-                        ${allGoals.slice(0, 10).map((g, i) => `
-                            <div class="goal-drag-item" draggable="true" ondragstart="dragGoal(event, '${g.company}', '${g.text.replace(/'/g, "\\'")}')">
-                                ${g.text.substring(0, 30)}${g.text.length > 30 ? '...' : ''}
+                        ${allGoals.slice(0, 15).map((g, i) => `
+                            <div class="goal-drag-item" draggable="true" ondragstart="dragGoal(event, '${g.company}', '${g.text.replace(/'/g, "\\'")}')" style="background:${companyColors[g.company] || '#667EEA'};">
+                                ${g.text.substring(0, 25)}${g.text.length > 25 ? '...' : ''}
                             </div>
                         `).join('')}
                     </div>
@@ -1725,13 +1733,13 @@
             
             // Empty days before first
             for (let i = 0; i < startDay; i++) {
-                html += `<div class="calendar-day" style="background:var(--gray-50);"></div>`;
+                html += `<div class="calendar-day" style="background:var(--gray-50);opacity:0.5;"></div>`;
             }
             
             const todayStr = today.toISOString().split('T')[0];
             
             for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayEvents = timeline.filter(t => t.date === dateStr);
                 const isToday = dateStr === todayStr;
                 
@@ -1739,15 +1747,40 @@
                     <div class="calendar-day ${isToday ? 'calendar-today' : ''}" 
                          ondragover="event.preventDefault(); this.classList.add('drag-over')" 
                          ondragleave="this.classList.remove('drag-over')"
-                         ondrop="dropGoal(event, '${dateStr}')">
-                        <div class="calendar-day-number">${day}</div>
-                        ${dayEvents.map(e => `<div class="calendar-event">${e.goal.substring(0, 20)}</div>`).join('')}
+                         ondrop="dropGoal(event, '${dateStr}')"
+                         onclick="showDateEvents('${dateStr}')"
+                         style="cursor:pointer;">
+                        <div class="calendar-day-number" style="color:${isToday ? 'var(--primary)' : 'inherit'};">${day}</div>
+                        ${dayEvents.slice(0, 3).map(e => `<div class="calendar-event" style="background:${companyColors[e.company] || '#667EEA'};">${e.goal.substring(0, 18)}</div>`).join('')}
+                        ${dayEvents.length > 3 ? `<div class="calendar-event" style="background:var(--gray-400);">+${dayEvents.length - 3} more</div>` : ''}
                     </div>
                 `;
             }
             
             html += `</div>`;
             container.innerHTML = html;
+        }
+        
+        function prevMonth() {
+            calendarMonth--;
+            if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+            renderCalendar();
+        }
+        
+        function nextMonth() {
+            calendarMonth++;
+            if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+            renderCalendar();
+        }
+        
+        function showDateEvents(dateStr) {
+            const timeline = JSON.parse(localStorage.getItem('jsw-timeline') || '[]');
+            const events = timeline.filter(t => t.date === dateStr);
+            if (events.length === 0) {
+                alert('No events on ' + dateStr);
+                return;
+            }
+            alert('Events on ' + dateStr + ':\n\n' + events.map(e => '• ' + e.goal + ' (' + e.company + ')').join('\n'));
         }
         
         let draggedGoal = null;
