@@ -1662,7 +1662,7 @@
             const goals = (localStorage.getItem('jsw-goals-' + currentCompany) || '').split('\n').filter(g => g.trim());
             
             // Build options
-            let options = '<option value="">Select a task...</option>';
+            let options = '<option value="">-- Select existing --</option>';
             tasks.forEach(t => {
                 options += `<option value="task:${t.id}:${t.text.substring(0,50)}">📋 Task: ${t.text.substring(0,40)}</option>`;
             });
@@ -1677,7 +1677,11 @@
                 <div style="background:white;padding:24px;border-radius:12px;width:90%;max-width:400px;">
                     <h3 style="margin:0 0 16px;">⏰ Schedule Command</h3>
                     <div style="margin-bottom:12px;">
-                        <label style="display:block;margin-bottom:4px;font-size:12px;">Select Task/Goal:</label>
+                        <label style="display:block;margin-bottom:4px;font-size:12px;">Type new task:</label>
+                        <input type="text" id="scheduleTaskInput" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;" placeholder="Enter new task...">
+                    </div>
+                    <div style="margin-bottom:12px;text-align:center;color:#999;font-size:11px;">— OR select existing —</div>
+                    <div style="margin-bottom:12px;">
                         <select id="scheduleSelect" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;">${options}</select>
                     </div>
                     <div style="margin-bottom:12px;">
@@ -1703,17 +1707,24 @@
         }
         
         function saveNewSchedule() {
+            const taskInput = document.getElementById('scheduleTaskInput').value.trim();
             const select = document.getElementById('scheduleSelect').value;
             const time = document.getElementById('scheduleTime').value;
             const repeat = document.getElementById('scheduleRepeat').value;
             
-            if (!select || !time) {
-                alert('Please select a task and time');
+            // Use typed task OR selected task
+            let task = taskInput;
+            if (!task && select) {
+                task = select;
+            }
+            
+            if (!task || !time) {
+                alert('Please enter a task and time');
                 return;
             }
             
             const schedules = getSchedules(currentCompany);
-            schedules.push({ cmd: select, time, repeat, id: Date.now() });
+            schedules.push({ cmd: task, time, repeat, id: Date.now() });
             saveSchedules(currentCompany, schedules);
             document.querySelector('[style*="position:fixed"]').remove();
             renderSchedules();
