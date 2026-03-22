@@ -1115,6 +1115,7 @@
         }
         
         async function addTask(text, company) {
+            const N8N_WEBHOOK = 'http://localhost:5678/webhook/86d19a39-003d-446d-a0a0-859ee0f7c06e';
             try {
                 if (USE_LOCAL_API) {
                     await fetch(LOCAL_API + '/tasks', {
@@ -1133,6 +1134,14 @@
                         body: JSON.stringify({ text, company, status: 'pending' })
                     });
                 }
+                // Send to n8n webhook
+                try {
+                    await fetch(N8N_WEBHOOK, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text, company, action: 'task_created' })
+                    });
+                } catch (e) { console.log('Webhook error:', e); }
                 await fetchTasks();
                 renderQueue();
             } catch (e) {
