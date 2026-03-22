@@ -1678,8 +1678,12 @@
                 <div style="background:white;padding:24px;border-radius:12px;width:90%;max-width:400px;">
                     <h3 style="margin:0 0 16px;">⏰ Schedule Command</h3>
                     <div style="margin-bottom:12px;">
-                        <label style="display:block;margin-bottom:4px;font-size:12px;">Type new task:</label>
-                        <input type="text" id="scheduleTaskInput" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;" placeholder="Enter new task...">
+                        <label style="display:block;margin-bottom:4px;font-size:12px;">Title (short preview):</label>
+                        <input type="text" id="scheduleTitle" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;" placeholder="e.g., Morning standup">
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="display:block;margin-bottom:4px;font-size:12px;">Full command/task:</label>
+                        <textarea id="scheduleTaskInput" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;min-height:60px;" placeholder="Enter full task details..."></textarea>
                     </div>
                     <div style="margin-bottom:12px;text-align:center;color:#999;font-size:11px;">— OR select existing —</div>
                     <div style="margin-bottom:12px;">
@@ -1726,6 +1730,7 @@
         }
         
         function saveNewSchedule() {
+            const title = document.getElementById('scheduleTitle').value.trim();
             const taskInput = document.getElementById('scheduleTaskInput').value.trim();
             const select = document.getElementById('scheduleSelect').value;
             const time = document.getElementById('scheduleTime').value;
@@ -1750,7 +1755,7 @@
             }
             
             const schedules = getSchedules(currentCompany);
-            schedules.push({ cmd: task, time, repeat, customDays, id: Date.now() });
+            schedules.push({ cmd: task, title, time, repeat, customDays, id: Date.now() });
             saveSchedules(currentCompany, schedules);
             
             // Send to webhook
@@ -1780,16 +1785,24 @@
             }
             
             list.innerHTML = schedules.map(s => {
-                const cmdLabel = s.cmd.startsWith('task:') ? '📋 ' + s.cmd.split(':').slice(2).join(':') : 
-                                s.cmd.startsWith('goal:') ? '🎯 ' + s.cmd.split(':').slice(1).join(':') : s.cmd;
+                const cmdLabel = s.title || (s.cmd.startsWith('task:') ? '📋 ' + s.cmd.split(':').slice(2).join(':').substring(0,30) : 
+                                s.cmd.startsWith('goal:') ? '🎯 ' + s.cmd.split(':').slice(1).join(':').substring(0,30) : s.cmd.substring(0,30));
                 return `
                 <div class="schedule-item">
                     <span class="schedule-item-time">${s.time}</span>
-                    <span class="schedule-item-cmd">${cmdLabel}</span>
+                    <span class="schedule-item-cmd">${cmdLabel}${s.cmd.length > 30 ? '...' : ''}</span>
                     <span class="schedule-item-repeats">${s.repeat}</span>
+                    <span onclick="viewSchedule(${s.id})" style="cursor:pointer;color:#10B981;font-size:12px;">👁</span>
                     <span class="schedule-item-delete" onclick="deleteSchedule(${s.id})">✕</span>
                 </div>
             `}).join('');
+        }
+        
+        function viewSchedule(id) {
+            const schedules = getSchedules(currentCompany);
+            const s = schedules.find(x => x.id === id);
+            if (!s) return;
+            alert('Full Command:\n\n' + s.cmd + '\n\nTime: ' + s.time + '\nRepeat: ' + s.repeat);
         }
         
         // Calendar functions
