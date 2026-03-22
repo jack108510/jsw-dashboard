@@ -1569,15 +1569,13 @@
         
         // Auto-discover and render related sites
         function renderRelatedSites(company) {
-            const companyColors = { jsw: '#667EEA', cliniciq: '#10B981', wilde: '#F59E0B', sam: '#EF4444', westwood: '#8B5CF6' };
-            const color = companyColors[company] || '#667EEA';
-            
             // Get saved custom sites from localStorage
             const savedSites = JSON.parse(localStorage.getItem('jsw-related-sites-' + company) || 'null');
             
             const defaultSites = {
                 jsw: [
                     {t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'},
+                    {t:'Mission Control Mobile',u:'https://jack108510.github.io/JSW-Dashboard-Mobile/'},
                     {t:'Wilde Automations',u:'https://jack108510.github.io/wilde-automations/'},
                     {t:'Clinic IQ',u:'https://jack108510.github.io/jsw-clinic-iq/'}
                 ],
@@ -1617,15 +1615,6 @@
                     <span onclick="event.preventDefault();removeRelatedSite('${company}', ${i})" style="cursor:pointer;opacity:0.7;">✕</span>
                 </a>
             `).join('');
-            
-            // Add new site form
-            container.innerHTML += `
-                <div style="grid-column:1/-1;display:flex;gap:4px;margin-top:4px;">
-                    <input type="text" id="newRelatedSiteTitle" placeholder="Title" style="flex:1;padding:8px;border-radius:6px;border:1px solid #ddd;font-size:11px;">
-                    <input type="text" id="newRelatedSiteUrl" placeholder="URL" style="flex:2;padding:8px;border-radius:6px;border:1px solid #ddd;font-size:11px;">
-                    <button onclick="addRelatedSite('${company}')" style="background:white;color:#10B981;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-weight:bold;">+</button>
-                </div>
-            `;
         }
         
         function removeRelatedSite(company, index) {
