@@ -1792,10 +1792,31 @@
                     <span class="schedule-item-time">${s.time}</span>
                     <span class="schedule-item-cmd">${cmdLabel}${s.cmd.length > 30 ? '...' : ''}</span>
                     <span class="schedule-item-repeats">${s.repeat}</span>
+                    <span onclick="editSchedule(${s.id})" style="cursor:pointer;color:#F59E0B;font-size:12px;">✏️</span>
                     <span onclick="viewSchedule(${s.id})" style="cursor:pointer;color:#10B981;font-size:12px;">👁</span>
                     <span class="schedule-item-delete" onclick="deleteSchedule(${s.id})">✕</span>
                 </div>
             `}).join('');
+        }
+        
+        function editSchedule(id) {
+            const schedules = getSchedules(currentCompany);
+            const s = schedules.find(x => x.id === id);
+            if (!s) return;
+            
+            const newTime = prompt('Enter new time (HH:MM):', s.time);
+            if (!newTime) return;
+            
+            const newRepeat = prompt('Repeat (none/daily/weekly/monthly/custom):', s.repeat);
+            if (!newRepeat) return;
+            
+            const newTitle = prompt('Enter new title:', s.title || s.cmd);
+            if (!newTitle) return;
+            
+            // Update the schedule
+            const updated = schedules.map(x => x.id === id ? {...x, time: newTime, repeat: newRepeat, title: newTitle} : x);
+            saveSchedules(currentCompany, updated);
+            renderSchedules();
         }
         
         function viewSchedule(id) {
