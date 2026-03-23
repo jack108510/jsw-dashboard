@@ -1928,8 +1928,9 @@
         
         function renderSchedules() {
             if (!currentCompany) return;
-            const schedules = getSchedules(currentCompany);
             const list = document.getElementById('scheduleList');
+            if (!list) return;
+            const schedules = getSchedules(currentCompany);
             
             if (schedules.length === 0) {
                 list.innerHTML = '<div style="color:#9CA3AF;text-align:center;padding:20px;">No scheduled commands yet</div>';
