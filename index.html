@@ -509,13 +509,9 @@
                     <div class="company-icon">🌐</div>
                     <div class="company-name">The Westwood Network</div>
                 </div>
-                <div class="company-card" onclick="openCompany('policypro')">
-                    <div class="company-icon">📋</div>
-                    <div class="company-name">Policy Pro</div>
-                </div>
                 <div class="company-card" onclick="openCompany('policy')">
                     <div class="company-icon">🐦</div>
-                    <div class="company-name">Policy Pigeon</div>
+                    <div class="company-name">Policy Pilot</div>
                 </div>
             </div>
         </div>
@@ -988,8 +984,7 @@
             wildrose: { name: 'Wildrose Automations', icon: '⚙️', team: [{n:'Wilson',r:'Lead'},{n:'Effy',r:'Engineer'}], links: [{t:'Wildrose Automations',u:'https://jack108510.github.io/wilde-automations/'},{t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'},{t:'Inventory & Intelligence',u:'#inventory'},{t:'Email',u:'#email'},{t:'Marketing Automation',u:'#marketing'},{t:'Admin Automation',u:'#admin'},{t:'Revenue Optimization',u:'#revenue'},{t:'AI Receptionist',u:'#receptionist'}] },
             sam: { name: "Uncle Sam's Procurement", icon: '📄', team: [{n:'Stan',r:'Research'}], links: [{t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'},{t:'Wildrose Automations',u:'https://jack108510.github.io/wilde-automations/'},{t:'Clinic IQ',u:'https://jack108510.github.io/jsw-clinic-iq/'}] },
             westwood: { name: 'The Westwood Network', icon: '🌐', team: [{n:'Bongo',r:'Content'}], links: [{t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'},{t:'Wildrose Automations',u:'https://jack108510.github.io/wilde-automations/'},{t:'Clinic IQ',u:'https://jack108510.github.io/jsw-clinic-iq/'}] },
-            policypro: { name: 'Policy Pro', icon: '📋', team: [{n:'TBD',r:'Lead'}], links: [{t:'Policy Pro Website',u:'https://github.com/jack108510/policy-manager'},{t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'}] },
-            policy: { name: 'Policy Pigeon', icon: '🐦', team: [{n:'TBD',r:'Lead'}], links: [{t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'}] }
+            policy: { name: 'Policy Pilot', icon: '🐦', team: [{n:'TBD',r:'Lead'}], links: [{t:'Mission Control',u:'https://jack108510.github.io/jsw-dashboard/'}] }
         };
 
         // Load links from localStorage
@@ -1043,7 +1038,7 @@
             renderCompanyLinks();
         }
         
-        const companies = ['jsw', 'cliniciq', 'wildrose', 'sam', 'westwood', 'policypro', 'policy'];
+        const companies = ['jsw', 'cliniciq', 'wildrose', 'sam', 'westwood', 'policy'];
         let currentCompany = null;
         let allTasks = [];
         
@@ -1924,7 +1919,7 @@
             const daysInMonth = lastDay.getDate();
             
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            const companyColors = { jsw: '#667EEA', cliniciq: '#10B981', wildrose: '#EF4444', sam: '#EF4444', westwood: '#8B5CF6', policypro: '#3B82F6', policy: '#F59E0B' };
+            const companyColors = { jsw: '#667EEA', cliniciq: '#10B981', wildrose: '#EF4444', sam: '#EF4444', westwood: '#8B5CF6', policy: '#F59E0B' };
             
             // Get all goals that can be scheduled (filter out already scheduled)
             const scheduled = JSON.parse(localStorage.getItem('jsw-scheduled-goals') || '[]');
