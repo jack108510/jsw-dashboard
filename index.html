@@ -557,7 +557,14 @@
             </div>
             <!-- Whiteboard -->
             <div class="detail-card" style="margin-top:12px;">
-                <div class="detail-card-title">📝 Company Whiteboard</div>
+                <div class="detail-card-title">🔐 API Keys</div>
+                <div class="task-input-group">
+                    <input type="text" class="task-input" id="apiKeyName" placeholder="Key name (e.g., OpenAI)" style="flex:1;margin-right:6px;">
+                    <input type="password" class="task-input" id="apiKeyValue" placeholder="API Key" style="flex:2;margin-right:6px;">
+                    <button class="task-add-btn" onclick="addApiKey()">Add</button>
+                </div>
+                <ul class="task-list" id="apiKeysList"></ul>
+            </div>
                 <textarea class="whiteboard" id="whiteboard" placeholder="Paste company details, important info, notes..." oninput="saveWhiteboard()"></textarea>
             </div>
             
@@ -1647,6 +1654,68 @@
         // Scheduler functions
         function getSchedules(company) {
             return JSON.parse(localStorage.getItem('jsw-schedules-' + company) || '[]');
+        }
+        
+        // API Keys functions
+        function getApiKeys(company) {
+            return JSON.parse(localStorage.getItem('jsw-api-keys-' + company) || '[]');
+        }
+        
+        function saveApiKeys(company, keys) {
+            localStorage.setItem('jsw-api-keys-' + company, JSON.stringify(keys));
+        }
+        
+        function renderApiKeys() {
+            if (!currentCompany) return;
+            const keys = getApiKeys(currentCompany);
+            const list = document.getElementById('apiKeysList');
+            if (!list) return;
+            
+            if (keys.length === 0) {
+                list.innerHTML = '<li style="padding:8px;color:var(--gray-500);font-size:12px;">No API keys stored</li>';
+                return;
+            }
+            
+            list.innerHTML = keys.map((k, i) => `
+                <li style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--gray-100);">
+                    <span style="font-size:13px;font-weight:500;">${k.name}</span>
+                    <div>
+                        <span onclick="showApiKey(${i})" style="cursor:pointer;margin-right:8px;color:var(--primary);">👁</span>
+                        <span onclick="deleteApiKey(${i})" style="cursor:pointer;color:#EF4444;">✕</span>
+                    </div>
+                </li>
+            `).join('');
+        }
+        
+        function addApiKey() {
+            if (!currentCompany) return;
+            const name = document.getElementById('apiKeyName').value.trim();
+            const value = document.getElementById('apiKeyValue').value.trim();
+            
+            if (!name || !value) return;
+            
+            const keys = getApiKeys(currentCompany);
+            keys.push({ name, value });
+            saveApiKeys(currentCompany, keys);
+            
+            document.getElementById('apiKeyName').value = '';
+            document.getElementById('apiKeyValue').value = '';
+            renderApiKeys();
+        }
+        
+        function deleteApiKey(index) {
+            if (!currentCompany) return;
+            const keys = getApiKeys(currentCompany);
+            keys.splice(index, 1);
+            saveApiKeys(currentCompany, keys);
+            renderApiKeys();
+        }
+        
+        function showApiKey(index) {
+            if (!currentCompany) return;
+            const keys = getApiKeys(currentCompany);
+            const key = keys[index];
+            prompt('API Key for ' + key.name + ':', key.value);
         }
         
         function saveSchedules(company, schedules) {
