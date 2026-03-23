@@ -430,6 +430,7 @@
             <button class="nav-btn" onclick="showPage('team')">Team</button>
             <button class="nav-btn" onclick="showPage('goals')">Goals</button>
             <button class="nav-btn" onclick="showPage('timeline')">Timeline</button>
+            <button class="nav-btn" onclick="showPage('apikeys')">API Keys</button>
             <button class="nav-btn" onclick="showPage('audit')">Auditing</button>
             <button class="nav-btn" onclick="showPage('analytics')">Analytics</button>
         </nav>
@@ -733,6 +734,27 @@
         </div>
 
         <!-- Auditing Page -->
+        <div id="apikeys" class="view">
+            <h1 class="page-title">🔐 API Keys Bank</h1>
+            <p style="color:var(--gray-500);margin-bottom:20px;">Access API keys stored across all companies</p>
+            
+            <div class="detail-card">
+                <div class="detail-card-title">Select Company</div>
+                <select id="apikeysCompanySelect" class="task-input" style="margin-bottom:16px;" onchange="renderAllApiKeys()">
+                </select>
+            </div>
+            
+            <div class="detail-card" style="margin-top:16px;">
+                <div class="detail-card-title">🔐 API Keys</div>
+                <div class="task-input-group">
+                    <input type="text" class="task-input" id="globalApiKeyName" placeholder="Key name" style="flex:1;margin-right:6px;">
+                    <input type="password" class="task-input" id="globalApiKeyValue" placeholder="API Key" style="flex:2;margin-right:6px;">
+                    <button class="task-add-btn" onclick="addGlobalApiKey()">Add</button>
+                </div>
+                <ul class="task-list" id="globalApiKeysList"></ul>
+            </div>
+        </div>
+
         <div id="audit" class="view">
             <h1 class="page-title">📋 Task Audit Log</h1>
             
@@ -1421,7 +1443,7 @@
         }
         
         function showPage(page) {
-            document.getElementById('queue').classList.remove('active'); document.getElementById('companies').classList.remove('active'); document.getElementById('team').classList.remove('active'); document.getElementById('company-detail').classList.remove('active'); document.getElementById('audit').classList.remove('active'); document.getElementById('goals').classList.remove('active'); document.getElementById('timeline').classList.remove('active'); document.getElementById('analytics').classList.remove('active');
+            document.getElementById('queue').classList.remove('active'); document.getElementById('companies').classList.remove('active'); document.getElementById('team').classList.remove('active'); document.getElementById('company-detail').classList.remove('active'); document.getElementById('audit').classList.remove('active'); document.getElementById('goals').classList.remove('active'); document.getElementById('timeline').classList.remove('active'); document.getElementById('analytics').classList.remove('active'); document.getElementById('apikeys').classList.remove('active');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(page).classList.add('active');
             document.querySelector('[onclick="showPage(\'' + page + '\')"]').classList.add('active');
@@ -1430,6 +1452,63 @@
             if (page === 'goals') loadGoals();
             if (page === 'timeline') loadTimeline();
             if (page === 'analytics') initAnalyticsCharts();
+            if (page === 'apikeys') loadApiKeysPage();
+        }
+        
+        function loadApiKeysPage() {
+            const select = document.getElementById('apikeysCompanySelect');
+            select.innerHTML = companies.map(c => `<option value="${c}">${companyInfo[c].name}</option>`).join('');
+            renderAllApiKeys();
+        }
+        
+        function renderAllApiKeys() {
+            const company = document.getElementById('apikeysCompanySelect').value;
+            const keys = getApiKeys(company);
+            const list = document.getElementById('globalApiKeysList');
+            
+            if (keys.length === 0) {
+                list.innerHTML = '<li style="padding:8px;color:var(--gray-500);font-size:12px;">No API keys stored for this company</li>';
+                return;
+            }
+            
+            list.innerHTML = keys.map((k, i) => `
+                <li style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--gray-100);">
+                    <span style="font-size:13px;font-weight:500;">${k.name}</span>
+                    <div>
+                        <span onclick="showGlobalApiKey('${company}', ${i})" style="cursor:pointer;margin-right:8px;color:var(--primary);">👁</span>
+                        <span onclick="deleteGlobalApiKey('${company}', ${i})" style="cursor:pointer;color:#EF4444;">✕</span>
+                    </div>
+                </li>
+            `).join('');
+        }
+        
+        function addGlobalApiKey() {
+            const company = document.getElementById('apikeysCompanySelect').value;
+            const name = document.getElementById('globalApiKeyName').value.trim();
+            const value = document.getElementById('globalApiKeyValue').value.trim();
+            
+            if (!name || !value) return;
+            
+            const keys = getApiKeys(company);
+            keys.push({ name, value });
+            saveApiKeys(company, keys);
+            
+            document.getElementById('globalApiKeyName').value = '';
+            document.getElementById('globalApiKeyValue').value = '';
+            renderAllApiKeys();
+        }
+        
+        function deleteGlobalApiKey(company, index) {
+            const keys = getApiKeys(company);
+            keys.splice(index, 1);
+            saveApiKeys(company, keys);
+            renderAllApiKeys();
+        }
+        
+        function showGlobalApiKey(company, index) {
+            const keys = getApiKeys(company);
+            const key = keys[index];
+            prompt('API Key for ' + key.name + ':', key.value);
         }
         
         function loadGoals() {
