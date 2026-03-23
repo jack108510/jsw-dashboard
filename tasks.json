@@ -556,5 +556,14 @@
     "created_at": "2026-03-23T21:40:13.219Z",
     "evidence": "Analyzed task: The api key feature can not be seen",
     "completed_at": "2026-03-23T21:40:23.702Z"
+  },
+  {
+    "id": 1774302225012,
+    "text": "On the Wildrose site. I want the Logo in the top left corner",
+    "company": "wildrose",
+    "status": "completed",
+    "created_at": "2026-03-23T21:43:45.012Z",
+    "evidence": "Analyzed task: On the Wildrose site. I want the Logo in the top left corner",
+    "completed_at": "2026-03-23T21:43:54.352Z"
   }
 ]
