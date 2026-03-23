@@ -565,5 +565,14 @@
     "created_at": "2026-03-23T21:43:45.012Z",
     "evidence": "Analyzed task: On the Wildrose site. I want the Logo in the top left corner",
     "completed_at": "2026-03-23T21:43:54.352Z"
+  },
+  {
+    "id": 1774302270263,
+    "text": "On the wildrose site. When someone adds their contact info have it be sent to this webhook: https://jackwilde.app.n8n.cloud/webhook/2cb70635-d9e0-4b0e-9cf9-03d2cb007288",
+    "company": "wildrose",
+    "status": "completed",
+    "created_at": "2026-03-23T21:44:30.263Z",
+    "evidence": "Updated successfully",
+    "completed_at": "2026-03-23T21:44:39.907Z"
   }
 ]
