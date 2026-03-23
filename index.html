@@ -570,7 +570,14 @@
                 </div>
                 <ul class="task-list" id="apiKeysList"></ul>
             </div>
-                <textarea class="whiteboard" id="whiteboard" placeholder="Paste company details, important info, notes..." oninput="saveWhiteboard()"></textarea>
+            
+            <!-- Scheduled Commands -->
+            <div class="scheduler-section">
+                <div class="scheduler-header">
+                    <span class="scheduler-title">⏰ Scheduled Commands</span>
+                    <button class="scheduler-add" onclick="addSchedule()">+ Add</button>
+                </div>
+                <div id="scheduleList"></div>
             </div>
             </div>
         </div>
@@ -1633,6 +1640,7 @@
             renderCompanyNotes();
             renderApiKeys();
             renderRelatedSites(company);
+            renderSchedules();
             
             renderCompanyTasks();
             
