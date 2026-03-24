@@ -1635,8 +1635,6 @@
             document.getElementById('detailIcon').textContent = info.icon;
             document.getElementById('detailName').textContent = info.name;
             
-            // Load whiteboard and notes
-            document.getElementById('whiteboard').value = localStorage.getItem('jsw-whiteboard-' + company) || '';
             renderCompanyNotes();
             renderApiKeys();
             renderRelatedSites(company);
