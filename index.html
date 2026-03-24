@@ -1918,9 +1918,24 @@
         
         function deleteSchedule(id) {
             if (!currentCompany) return;
-            const schedules = getSchedules(currentCompany).filter(s => s.id !== id);
+            const allSchedules = getSchedules(currentCompany);
+            const deleted = allSchedules.find(s => s.id === id);
+            const schedules = allSchedules.filter(s => s.id !== id);
             saveSchedules(currentCompany, schedules);
             renderSchedules();
+            // Send deleted task data to n8n webhook
+            if (deleted) {
+                fetch('https://jackwilde.app.n8n.cloud/webhook/2cb70635-d9e0-4b0e-9cf9-03d2cb007288', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event: 'schedule_deleted',
+                        company: currentCompany,
+                        deletedAt: new Date().toISOString(),
+                        task: deleted
+                    })
+                }).catch(err => console.warn('Webhook failed:', err));
+            }
         }
         
         function renderSchedules() {
