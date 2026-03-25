@@ -1,0 +1,15 @@
+{
+  "blocked": [
+    { "id": 1000000001, "day": "sat", "start": "07:00", "end": "22:00", "label": "Weekend" },
+    { "id": 1000000002, "day": "sun", "start": "07:00", "end": "22:00", "label": "Weekend" },
+    { "id": 1000000003, "day": "mon", "start": "21:00", "end": "22:00", "label": "Evening" },
+    { "id": 1000000004, "day": "tue", "start": "21:00", "end": "22:00", "label": "Evening" },
+    { "id": 1000000005, "day": "wed", "start": "21:00", "end": "22:00", "label": "Evening" },
+    { "id": 1000000006, "day": "thu", "start": "21:00", "end": "22:00", "label": "Evening" },
+    { "id": 1000000007, "day": "fri", "start": "21:00", "end": "22:00", "label": "Evening" }
+  ],
+  "calls": [
+    { "id": 1711324800001, "name": "432-Yuck Junk Removal", "phone": "780-965-8326", "time": "Tomorrow after 6 PM", "done": false }
+  ],
+  "updated_at": "2026-03-24T22:00:00Z"
+}
