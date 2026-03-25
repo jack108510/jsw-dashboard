@@ -1,0 +1,34 @@
+[
+  {
+    "id": "reply-1",
+    "from": "432-Yuck Junk Removal <info@team432yuck.com>",
+    "subject": "Re: 432-Yuck Junk Removal \u2014 quick question",
+    "timestamp": "2026-03-24T21:49:36.000Z",
+    "preview": "HI. my number is 7809658326. I am free after 6pm today or tomorrow is fine too",
+    "thread_id": "07c668ab-ed2d-4288-82e0-b4f8855fc1c0",
+    "status": "auto_replied",
+    "phone": "780-965-8326",
+    "thread": [
+      {
+        "from": "Wildrose Sales Team",
+        "time": "2026-03-24T21:18:57Z",
+        "text": "Hi there,\n\nMost local service businesses in Edmonton are losing jobs every week the same way \u2014 leads come in, follow-up is too slow, and the customer books someone else.\n\nWe build automation systems that respond to new leads in under 60 seconds, handle the qualifying questions, and lock in the booking \u2014 without anyone on your team doing the work.\n\nClients typically recover 3\u20135 lost jobs per week within the first 30 days.\n\nOpen to a 15-minute call this week to see if it's a fit for 432-Yuck Junk Removal?\n\nJack Wilde\nCEO, Wildrose Automations\nwildroseautomations.com"
+      },
+      {
+        "from": "432-Yuck Junk Removal",
+        "time": "2026-03-24T21:20:20Z",
+        "text": "Yea sure. You can call me right now I have some time available"
+      },
+      {
+        "from": "Wildrose Sales Team",
+        "time": "2026-03-24T21:34:00Z",
+        "text": "Hey, appreciate the quick reply!\n\nWhat's the best number to reach you at? And would sometime after 6 PM work \u2014 either today or anytime tomorrow?\n\nJack Wilde\nCEO, Wildrose Automations\nwildroseautomations.com"
+      },
+      {
+        "from": "432-Yuck Junk Removal",
+        "time": "2026-03-24T21:49:36Z",
+        "text": "HI. my number is 7809658326. I am free after 6pm today or tomorrow is fine too"
+      }
+    ]
+  }
+]
