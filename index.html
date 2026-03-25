@@ -416,6 +416,84 @@
         @media (max-width: 900px) {
             .company-performance-grid { grid-template-columns: 1fr; }
         }
+        /* Goals Redesign */
+        .goal-company-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .goal-company-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .goal-card-header {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .goal-card-icon {
+            font-size: 24px;
+        }
+        .goal-card-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--gray-900);
+        }
+        .goal-card-body {
+            padding: 16px 20px;
+        }
+        .goal-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gray-50);
+        }
+        .goal-item:last-child { border-bottom: none; }
+        .goal-checkbox {
+            width: 18px; height: 18px; border-radius: 50%;
+            border: 2px solid var(--gray-300);
+            cursor: pointer; flex-shrink: 0; margin-top: 1px;
+            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; color: white;
+        }
+        .goal-checkbox.done {
+            background: #10B981; border-color: #10B981;
+        }
+        .goal-item-text {
+            font-size: 13px; color: var(--gray-700); flex: 1; line-height: 1.4;
+        }
+        .goal-item-text.done { text-decoration: line-through; color: var(--gray-400); }
+        .goal-item-delete {
+            background: none; border: none; color: var(--gray-300);
+            cursor: pointer; font-size: 14px; line-height: 1;
+        }
+        .goal-item-delete:hover { color: #EF4444; }
+        .goal-add-row {
+            display: flex; gap: 6px; margin-top: 12px;
+        }
+        .goal-add-input {
+            flex: 1; padding: 8px 12px;
+            border: 1px solid var(--gray-200); border-radius: 8px;
+            font-size: 12px; outline: none;
+        }
+        .goal-add-input:focus { border-color: #10B981; }
+        .goal-add-btn {
+            padding: 8px 14px; background: #10B981; color: white;
+            border: none; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600;
+        }
+        @media (max-width: 900px) {
+            #goalsGrid { grid-template-columns: repeat(2,1fr) !important; }
+        }
+        @media (max-width: 600px) {
+            #goalsGrid { grid-template-columns: 1fr !important; }
+        }
     </style>
 </head>
 <body>
@@ -427,11 +505,9 @@
         <nav class="nav">
             <button class="nav-btn active" onclick="showPage('queue')">Smart Queue</button>
             <button class="nav-btn" onclick="showPage('companies')">Companies</button>
-            <button class="nav-btn" onclick="showPage('team')">Team</button>
             <button class="nav-btn" onclick="showPage('goals')">Goals</button>
             <button class="nav-btn" onclick="showPage('timeline')">Timeline</button>
-            <button class="nav-btn" onclick="showPage('audit')">Auditing</button>
-            <button class="nav-btn" onclick="showPage('analytics')">Analytics</button>
+            <button class="nav-btn" onclick="showPage('team')">Team</button>
         </nav>
     </header>
 
@@ -702,33 +778,7 @@
         <!-- Goals Page -->
         <div id="goals" class="view">
             <h1 class="page-title">🎯 Goals</h1>
-            <div class="queue-section">
-                <div class="queue-header">
-                    <span class="queue-title">Company Goals</span>
-                </div>
-                <div class="detail-grid">
-                    <div class="detail-card">
-                        <div class="detail-card-title">🏢 JSW Enterprises</div>
-                        <textarea class="whiteboard" id="goals-jsw" placeholder="Enter goals..." oninput="saveGoals('jsw')"></textarea>
-                    </div>
-                    <div class="detail-card">
-                        <div class="detail-card-title">🏥 Clinic IQ</div>
-                        <textarea class="whiteboard" id="goals-cliniciq" placeholder="Enter goals..." oninput="saveGoals('cliniciq')"></textarea>
-                    </div>
-                    <div class="detail-card">
-                        <div class="detail-card-title">⚙️ Wildrose Automations</div>
-                        <textarea class="whiteboard" id="goals-wilde" placeholder="Enter goals..." oninput="saveGoals('wilde')"></textarea>
-                    </div>
-                    <div class="detail-card">
-                        <div class="detail-card-title">📄 Uncle Sam's Procurement</div>
-                        <textarea class="whiteboard" id="goals-sam" placeholder="Enter goals..." oninput="saveGoals('sam')"></textarea>
-                    </div>
-                    <div class="detail-card">
-                        <div class="detail-card-title">🌐 The Westwood Network</div>
-                        <textarea class="whiteboard" id="goals-westwood" placeholder="Enter goals..." oninput="saveGoals('westwood')"></textarea>
-                    </div>
-                </div>
-            </div>
+            <div id="goalsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;"></div>
         </div>
 
         <!-- Timeline Page -->
@@ -1518,19 +1568,75 @@
         }
         
         function loadGoals() {
-            companies.forEach(c => {
-                document.getElementById('goals-' + c).value = localStorage.getItem('jsw-goals-' + c) || '';
-            });
+            const companies_data = [
+                { id: 'jsw', name: 'JSW Enterprises', icon: '🏢', color: '#374151' },
+                { id: 'cliniciq', name: 'Clinic IQ', icon: '🏥', color: '#10B981' },
+                { id: 'wildrose', name: 'Wildrose Automations', icon: '⚙️', color: '#6366F1' },
+                { id: 'sam', name: "Uncle Sam's", icon: '📄', color: '#EF4444' },
+                { id: 'westwood', name: 'Westwood Network', icon: '🌐', color: '#F59E0B' },
+                { id: 'policy', name: 'Policy Pilot', icon: '🐦', color: '#EC4899' }
+            ];
+            const grid = document.getElementById('goalsGrid');
+            grid.innerHTML = companies_data.map(c => {
+                const goals = JSON.parse(localStorage.getItem('jsw-goals-items-' + c.id) || '[]');
+                return `
+                    <div class="goal-company-card">
+                        <div class="goal-card-header" style="border-left: 4px solid ${c.color};">
+                            <span class="goal-card-icon">${c.icon}</span>
+                            <span class="goal-card-title">${c.name}</span>
+                        </div>
+                        <div class="goal-card-body">
+                            <div id="goal-list-${c.id}">
+                                ${renderGoalItems(c.id, goals)}
+                            </div>
+                            <div class="goal-add-row">
+                                <input class="goal-add-input" id="goal-input-${c.id}" placeholder="Add goal..." onkeypress="if(event.key==='Enter') addGoalItem('${c.id}')">
+                                <button class="goal-add-btn" onclick="addGoalItem('${c.id}')">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
-        
+
+        function renderGoalItems(companyId, goals) {
+            if (!goals || goals.length === 0) return '<div style="color:#9CA3AF;font-size:12px;padding:8px 0;">No goals yet</div>';
+            return goals.map((g, i) => `
+                <div class="goal-item">
+                    <div class="goal-checkbox ${g.done ? 'done' : ''}" onclick="toggleGoal('${companyId}', ${i})">${g.done ? '✓' : ''}</div>
+                    <span class="goal-item-text ${g.done ? 'done' : ''}">${g.text}</span>
+                    <button class="goal-item-delete" onclick="deleteGoalItem('${companyId}', ${i})">×</button>
+                </div>
+            `).join('');
+        }
+
+        function addGoalItem(companyId) {
+            const input = document.getElementById('goal-input-' + companyId);
+            const text = input.value.trim();
+            if (!text) return;
+            const goals = JSON.parse(localStorage.getItem('jsw-goals-items-' + companyId) || '[]');
+            goals.push({ text, done: false });
+            localStorage.setItem('jsw-goals-items-' + companyId, JSON.stringify(goals));
+            input.value = '';
+            document.getElementById('goal-list-' + companyId).innerHTML = renderGoalItems(companyId, goals);
+        }
+
+        function toggleGoal(companyId, index) {
+            const goals = JSON.parse(localStorage.getItem('jsw-goals-items-' + companyId) || '[]');
+            goals[index].done = !goals[index].done;
+            localStorage.setItem('jsw-goals-items-' + companyId, JSON.stringify(goals));
+            document.getElementById('goal-list-' + companyId).innerHTML = renderGoalItems(companyId, goals);
+        }
+
+        function deleteGoalItem(companyId, index) {
+            const goals = JSON.parse(localStorage.getItem('jsw-goals-items-' + companyId) || '[]');
+            goals.splice(index, 1);
+            localStorage.setItem('jsw-goals-items-' + companyId, JSON.stringify(goals));
+            document.getElementById('goal-list-' + companyId).innerHTML = renderGoalItems(companyId, goals);
+        }
+
         function saveGoals(company) {
-            localStorage.setItem('jsw-goals-' + company, document.getElementById('goals-' + company).value);
-            
-            // Also save to combined list for calendar
-            const allGoals = JSON.parse(localStorage.getItem('jsw-goals-all') || '{}');
-            const goalsText = document.getElementById('goals-' + company).value;
-            allGoals[company] = goalsText.split('\n').filter(g => g.trim());
-            localStorage.setItem('jsw-goals-all', JSON.stringify(allGoals));
+            // Legacy support - no-op now handled by addGoalItem/toggleGoal/deleteGoalItem
         }
         
         async function loadTimeline() {
