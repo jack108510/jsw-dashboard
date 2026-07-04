@@ -2327,7 +2327,7 @@ window.startCall = async function(){
     ref.innerHTML=`<strong>You:</strong> ${esc(s.sellerTitle||'AE')} at ${esc(s.sellerCompany||s.product)}<br><strong>Product:</strong> ${esc(s.productName||s.product)}<br><strong>Buyer:</strong> ${esc(s.buyer.split(',')[0])} at ${esc(s.company)}<br><strong>Goal:</strong> ${esc(s.goal)}`;
   }
 
-  log('Connecting to '+s.buyer+'...','sys');
+  log('Connecting to '+(s.contact_name||s.buyer||'buyer')+'...','sys');
 
   try{
     const {data:{session}}=await sb.auth.getSession();
@@ -2360,9 +2360,10 @@ window.startCall = async function(){
         }
       })
     });
-    const data=await resp.json();
+    let data;
+    try{data=await resp.json();}catch(e){log('Server error ('+resp.status+'): response was not JSON','sys');endCallView();return;}
     if(!data.access_token){
-      log('Connection error','sys');
+      log('Connection error ('+resp.status+'): '+(data.error||data.message||JSON.stringify(data)),'sys');
       endCallView(); return;
     }
     log('Connected. Start pitching!','sys');
